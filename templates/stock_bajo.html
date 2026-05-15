@@ -1,0 +1,101 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+
+                ⚠ Alertas de Inventario
+
+            </h1>
+
+            <p class="text-muted">
+
+                Productos que llegaron al punto de reorden
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="card shadow-lg border-0">
+
+        <div class="card-body">
+
+            <table class="table table-hover">
+
+                <thead class="table-danger">
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Producto</th>
+                        <th>Stock Actual</th>
+                        <th>Punto Reorden</th>
+                        <th>Estado</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for p in productos %}
+
+                    <tr>
+
+                        <td>
+
+                            {{p.id}}
+
+                        </td>
+
+                        <td>
+
+                            {{p.nombre}}
+
+                        </td>
+
+                        <td>
+
+                            {{p.stock}}
+
+                        </td>
+
+                        <td>
+
+                            {{p.reorden}}
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge bg-danger">
+
+                                Reabastecer
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

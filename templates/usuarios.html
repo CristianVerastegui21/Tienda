@@ -1,0 +1,145 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+
+                👥 Gestión de Usuarios
+
+            </h1>
+
+            <p class="text-muted">
+
+                Administración de accesos del sistema
+
+            </p>
+
+        </div>
+
+        <a
+            href="/agregar_usuario"
+            class="btn btn-primary"
+        >
+
+            ➕ Nuevo Usuario
+
+        </a>
+
+    </div>
+
+    <!-- TABLA -->
+
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Usuario</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for usuario in usuarios %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ usuario.id }}
+
+                        </td>
+
+                        <td>
+
+                            {{ usuario.nombre }}
+
+                        </td>
+
+                        <td>
+
+                            {{ usuario.usuario }}
+
+                        </td>
+
+                        <td>
+
+                            {% if usuario.rol == 'admin' %}
+
+                            <span class="badge bg-danger">
+                                Admin
+                            </span>
+
+                            {% elif usuario.rol == 'supervisor' %}
+
+                            <span class="badge bg-warning text-dark">
+                                Supervisor
+                            </span>
+
+                            {% else %}
+
+                            <span class="badge bg-success">
+                                Cajero
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="/editar_usuario/{{ usuario.id }}"
+                                class="btn btn-warning btn-sm"
+                            >
+
+                                ✏ Editar
+
+                            </a>
+
+                            <a
+                                href="/eliminar_usuario/{{ usuario.id }}"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Eliminar usuario?')"
+                            >
+
+                                🗑 Eliminar
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

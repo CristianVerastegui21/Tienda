@@ -1,0 +1,704 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+
+                📊 Reportes Profesionales
+
+            </h1>
+
+            <p class="text-muted mb-0">
+
+                Estadísticas avanzadas y análisis empresarial
+
+            </p>
+
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a
+                href="/reporte_pdf"
+                class="btn btn-danger shadow-sm"
+            >
+
+                <i class="fa fa-file-pdf"></i>
+
+                Exportar PDF
+
+            </a>
+
+            <a
+                href="/exportar_ventas"
+                class="btn btn-success shadow-sm"
+            >
+
+                <i class="fa fa-file-excel"></i>
+
+                Excel
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- FILTROS -->
+
+    <div class="card shadow border-0 rounded-4 mb-4">
+
+        <div class="card-body">
+
+            <form method="GET">
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-bold">
+
+                            Desde
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="desde"
+                            class="form-control"
+                            value="{{ request.args.get('desde','') }}"
+                        >
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-bold">
+
+                            Hasta
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="hasta"
+                            class="form-control"
+                            value="{{ request.args.get('hasta','') }}"
+                        >
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-bold">
+
+                            Periodo
+
+                        </label>
+
+                        <select
+                            name="periodo"
+                            class="form-select"
+                        >
+
+                            <option value="diario">
+
+                                Diario
+
+                            </option>
+
+                            <option value="mensual">
+
+                                Mensual
+
+                            </option>
+
+                            <option value="anual">
+
+                                Anual
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3">
+
+                        <button
+                            class="btn btn-primary w-100"
+                        >
+
+                            <i class="fa fa-filter"></i>
+
+                            Generar Reporte
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    <!-- KPIs -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- VENTAS -->
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow rounded-4 bg-primary text-white">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <h6 class="text-light">
+
+                                Total Ventas
+
+                            </h6>
+
+                            <h2 class="fw-bold">
+
+                                {{ total_ventas }}
+
+                            </h2>
+
+                        </div>
+
+                        <div class="fs-1">
+
+                            <i class="fa fa-cart-shopping"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- INGRESOS -->
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow rounded-4 bg-success text-white">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <h6>
+
+                                Ingresos
+
+                            </h6>
+
+                            <h2 class="fw-bold">
+
+                                S/. {{ ingresos }}
+
+                            </h2>
+
+                        </div>
+
+                        <div class="fs-1">
+
+                            <i class="fa fa-dollar-sign"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PRODUCTOS -->
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow rounded-4 bg-warning">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <h6>
+
+                                Productos Vendidos
+
+                            </h6>
+
+                            <h2 class="fw-bold">
+
+                                {{ productos_vendidos_total }}
+
+                            </h2>
+
+                        </div>
+
+                        <div class="fs-1">
+
+                            <i class="fa fa-box"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- STOCK -->
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow rounded-4 bg-danger text-white">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <h6>
+
+                                Stock Bajo
+
+                            </h6>
+
+                            <h2 class="fw-bold">
+
+                                {{ stock_bajo_total }}
+
+                            </h2>
+
+                        </div>
+
+                        <div class="fs-1">
+
+                            <i class="fa fa-triangle-exclamation"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- GRAFICOS -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- LINEAS -->
+
+        <div class="col-lg-8">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold mb-4">
+
+                        📈 Evolución de Ventas
+
+                    </h4>
+
+                    <canvas id="graficoVentas"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- BARRAS -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold mb-4">
+
+                        🏆 Productos Top
+
+                    </h4>
+
+                    <canvas id="graficoProductos"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SEGUNDA FILA -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- GRAFICO BARRAS -->
+
+        <div class="col-lg-6">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold mb-4">
+
+                        📊 Comparación de Ventas
+
+                    </h4>
+
+                    <canvas id="graficoBarras"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PIE -->
+
+        <div class="col-lg-6">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold mb-4">
+
+                        🥧 Distribución Productos
+
+                    </h4>
+
+                    <canvas id="graficoPie"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLAS -->
+
+    <div class="row g-4">
+
+        <!-- PRODUCTOS TOP -->
+
+        <div class="col-lg-6">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold text-success mb-4">
+
+                        🏆 Productos Más Vendidos
+
+                    </h4>
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-dark">
+
+                            <tr>
+
+                                <th>Producto</th>
+                                <th>Vendidos</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for producto in productos_top %}
+
+                            <tr>
+
+                                <td>
+
+                                    {{ producto.nombre }}
+
+                                </td>
+
+                                <td>
+
+                                    <span class="badge bg-success">
+
+                                        {{ producto.total }}
+
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- STOCK -->
+
+        <div class="col-lg-6">
+
+            <div class="card shadow border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold text-danger mb-4">
+
+                        ⚠ Productos con Bajo Stock
+
+                    </h4>
+
+                    <table class="table table-hover align-middle">
+
+                        <thead class="table-dark">
+
+                            <tr>
+
+                                <th>Producto</th>
+                                <th>Stock</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for producto in stock_bajo %}
+
+                            <tr>
+
+                                <td>
+
+                                    {{ producto.nombre }}
+
+                                </td>
+
+                                <td>
+
+                                    <span class="badge bg-danger">
+
+                                        {{ producto.stock }}
+
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CHART JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const dias = JSON.parse('{{ dias | tojson | safe }}')
+
+const totales = JSON.parse('{{ totales | tojson | safe }}')
+
+const productos = JSON.parse('{{ nombres_productos | tojson | safe }}')
+
+const cantidades = JSON.parse('{{ cantidades_productos | tojson | safe }}')
+
+/* GRAFICO LINEAS */
+
+new Chart(
+
+    document.getElementById('graficoVentas'),
+
+    {
+
+        type: 'line',
+
+        data: {
+
+            labels: dias,
+
+            datasets: [{
+
+                label: 'Ventas',
+
+                data: totales,
+
+                borderWidth: 4,
+
+                fill: true,
+
+                tension: 0.4
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true
+
+        }
+
+    }
+
+)
+
+/* GRAFICO PRODUCTOS */
+
+new Chart(
+
+    document.getElementById('graficoProductos'),
+
+    {
+
+        type: 'bar',
+
+        data: {
+
+            labels: productos,
+
+            datasets: [{
+
+                label: 'Vendidos',
+
+                data: cantidades,
+
+                borderWidth: 2
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true
+
+        }
+
+    }
+
+)
+
+/* GRAFICO BARRAS */
+
+new Chart(
+
+    document.getElementById('graficoBarras'),
+
+    {
+
+        type: 'bar',
+
+        data: {
+
+            labels: dias,
+
+            datasets: [{
+
+                label: 'Ingresos',
+
+                data: totales,
+
+                borderWidth: 2
+
+            }]
+
+        }
+
+    }
+
+)
+
+/* GRAFICO PIE */
+
+new Chart(
+
+    document.getElementById('graficoPie'),
+
+    {
+
+        type: 'pie',
+
+        data: {
+
+            labels: productos,
+
+            datasets: [{
+
+                data: cantidades
+
+            }]
+
+        }
+
+    }
+
+)
+
+</script>
+
+{% endblock %}

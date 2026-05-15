@@ -1,0 +1,497 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+
+                📊 Dashboard General
+
+            </h1>
+
+            <p class="text-muted">
+
+                Panel de control del sistema
+
+            </p>
+
+        </div>
+
+        <div>
+
+            <a
+                href="/reportes"
+                class="btn btn-primary"
+            >
+
+                📈 Ver Reportes
+
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- KPIs -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- PRODUCTOS -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-lg border-0 rounded-4 bg-primary text-white h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <h6 class="text-uppercase">
+
+                                Productos
+
+                            </h6>
+
+                            <h1 class="fw-bold">
+
+                                {{ total_productos }}
+
+                            </h1>
+
+                        </div>
+
+                        <div class="fs-1">
+
+                            <i class="fa fa-box"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- VENTAS -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-lg border-0 rounded-4 bg-success text-white h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <h6 class="text-uppercase">
+
+                                Ventas
+
+                            </h6>
+
+                            <h1 class="fw-bold">
+
+                                {{ total_ventas }}
+
+                            </h1>
+
+                        </div>
+
+                        <div class="fs-1">
+
+                            <i class="fa fa-cart-shopping"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- INGRESOS -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-lg border-0 rounded-4 bg-warning h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <h6 class="text-uppercase">
+
+                                Ingresos
+
+                            </h6>
+
+                            <h1 class="fw-bold">
+
+                                S/. {{ ingresos }}
+
+                            </h1>
+
+                        </div>
+
+                        <div class="fs-1">
+
+                            <i class="fa fa-money-bill-wave"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- STOCK -->
+
+        <div class="col-md-3">
+
+            <div class="card shadow-lg border-0 rounded-4 bg-danger text-white h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <h6 class="text-uppercase">
+
+                                Bajo Stock
+
+                            </h6>
+
+                            <h1 class="fw-bold">
+
+                                {{ stock_bajo|length }}
+
+                            </h1>
+
+                        </div>
+
+                        <div class="fs-1">
+
+                            <i class="fa fa-triangle-exclamation"></i>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- GRAFICOS -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- GRAFICO VENTAS -->
+
+        <div class="col-md-8">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold mb-4">
+
+                        📈 Ventas por Día
+
+                    </h4>
+
+                    <canvas id="graficoVentas"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- GRAFICO PRODUCTOS -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold mb-4">
+
+                        🏆 Productos Top
+
+                    </h4>
+
+                    <canvas id="graficoProductos"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLAS -->
+
+    <div class="row g-4">
+
+        <!-- ULTIMAS VENTAS -->
+
+        <div class="col-md-7">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold mb-4">
+
+                        🧾 Últimas Ventas
+
+                    </h4>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead class="table-dark">
+
+                                <tr>
+
+                                    <th>ID</th>
+                                    <th>Total</th>
+                                    <th>Fecha</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {% for venta in ultimas_ventas %}
+
+                                <tr>
+
+                                    <td>
+
+                                        #{{ venta.id }}
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-success">
+
+                                            S/. {{ venta.total }}
+
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        {{ venta.fecha }}
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- STOCK BAJO -->
+
+        <div class="col-md-5">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <div class="card-body">
+
+                    <h4 class="fw-bold text-danger mb-4">
+
+                        ⚠ Productos con Bajo Stock
+
+                    </h4>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead class="table-dark">
+
+                                <tr>
+
+                                    <th>Producto</th>
+                                    <th>Stock</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {% for producto in stock_bajo %}
+
+                                <tr>
+
+                                    <td>
+
+                                        {{ producto.nombre }}
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="badge bg-danger">
+
+                                            {{ producto.stock }}
+
+                                        </span>
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CHART JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const dias = JSON.parse('{{ dias | tojson | safe }}')
+
+const totales = JSON.parse('{{ totales | tojson | safe }}')
+
+const productos = JSON.parse('{{ nombres_productos | tojson | safe }}')
+
+const cantidades = JSON.parse('{{ cantidades_productos | tojson | safe }}')
+
+
+// ==========================
+// GRAFICO VENTAS
+// ==========================
+
+const ctxVentas = document
+    .getElementById('graficoVentas')
+    .getContext('2d')
+
+new Chart(ctxVentas, {
+
+    type: 'line',
+
+    data: {
+
+        labels: dias,
+
+        datasets: [{
+
+            label: 'Ventas',
+
+            data: totales,
+
+            borderWidth: 3,
+
+            tension: 0.4,
+
+            fill: true
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true
+
+    }
+
+})
+
+
+// ==========================
+// GRAFICO PRODUCTOS
+// ==========================
+
+const ctxProductos = document
+    .getElementById('graficoProductos')
+    .getContext('2d')
+
+new Chart(ctxProductos, {
+
+    type: 'doughnut',
+
+    data: {
+
+        labels: productos,
+
+        datasets: [{
+
+            data: cantidades
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true
+
+    }
+
+})
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,269 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-8">
+
+            <div class="card shadow-lg border-0 rounded-4">
+
+                <div class="card-body p-5">
+
+                    <h1 class="text-center fw-bold mb-4">
+
+                        📦 Agregar Producto
+
+                    </h1>
+
+                    <form
+                        method="POST"
+                        enctype="multipart/form-data"
+                    >
+
+                        <!-- NOMBRE -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+
+                                Nombre del Producto
+
+                            </label>
+
+                            <input
+                                type="text"
+                                name="nombre"
+                                class="form-control form-control-lg"
+                                placeholder="Ejemplo: Arroz Costeño"
+                                required
+                            >
+
+                        </div>
+
+                        <!-- PRECIO -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+
+                                Precio
+
+                            </label>
+
+                            <input
+                                type="number"
+                                step="0.01"
+                                name="precio"
+                                class="form-control form-control-lg"
+                                placeholder="0.00"
+                                required
+                            >
+
+                        </div>
+
+                        <!-- STOCK -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+
+                                Stock
+
+                            </label>
+
+                            <input
+                                type="number"
+                                name="stock"
+                                class="form-control form-control-lg"
+                                placeholder="Cantidad disponible"
+                                required
+                            >
+
+                        </div>
+                    
+                        <div class="mb-3">
+
+                            
+                            <label class="form-label fw-bold">
+
+                                Punto de Reorden
+
+                            </label>
+
+                            <input
+                                type="number"
+                                name="reorden"
+                                class="form-control"
+                                value="5"
+                                min="1"
+                                required
+                            >
+
+                            <small class="text-muted">
+
+                                Cuando el stock llegue a este valor se mostrará alerta.
+
+                            </small>
+
+                        </div>
+
+                        <!-- CODIGO -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+
+                                Código de Barras / QR
+
+                            </label>
+
+                            <div class="input-group">
+
+                                <input
+                                    type="text"
+                                    name="codigo"
+                                    id="codigo"
+                                    class="form-control form-control-lg"
+                                    placeholder="Escanear o escribir código"
+                                >
+
+                                <button
+                                    type="button"
+                                    class="btn btn-success"
+                                    onclick="abrirScanner()"
+                                >
+
+                                    📷 Escanear
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                        <!-- IMAGEN -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+
+                                Imagen del Producto
+
+                            </label>
+
+                            <input
+                                type="file"
+                                name="imagen"
+                                class="form-control form-control-lg"
+                                accept="image/*"
+                                onchange="previewImagen(event)"
+                            >
+
+                        </div>
+
+                        <!-- PREVIEW -->
+
+                        <div class="text-center mb-4">
+
+                            <img
+                                id="preview"
+                                src=""
+                                style="
+                                    max-width:250px;
+                                    display:none;
+                                    border-radius:20px;
+                                    box-shadow:0 0 15px rgba(0,0,0,0.2);
+                                "
+                            >
+
+                        </div>
+
+                        <!-- BOTONES -->
+
+                        <div class="d-grid gap-3">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary btn-lg"
+                            >
+
+                                💾 Guardar Producto
+
+                            </button>
+
+                            <a
+                                href="/productos"
+                                class="btn btn-outline-secondary"
+                            >
+
+                                ← Volver
+
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- SCRIPT SCANNER -->
+
+<script>
+
+function abrirScanner() {
+
+    fetch('/scanner_codigo')
+
+    .then(response => response.text())
+
+    .then(data => {
+
+        document.getElementById(
+            'codigo'
+        ).value = data
+
+    })
+
+}
+
+</script>
+
+<!-- PREVIEW IMAGEN -->
+
+<script>
+
+function previewImagen(event) {
+
+    const input = event.target
+
+    const preview = document.getElementById(
+        'preview'
+    )
+
+    const file = input.files[0]
+
+    if(file) {
+
+        preview.src =
+            URL.createObjectURL(file)
+
+        preview.style.display = 'block'
+
+    }
+
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,343 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+    <div class="container-fluid mt-4">
+
+    <div class="row">
+
+        <!-- PANEL IZQUIERDO -->
+
+        <div class="col-md-7">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+
+                        <h2 class="fw-bold">
+
+                            🛒 Punto de Venta
+
+                        </h2>
+
+                        <a href="/scanner_ventas"
+                           class="btn btn-success">
+
+                            📷 Escanear Producto
+
+                        </a>
+
+                    </div>
+
+                    <!-- BUSCADOR -->
+
+                    <input
+                        type="text"
+                        id="buscador"
+                        class="form-control form-control-lg mb-4"
+                        placeholder="Buscar producto..."
+                        autofocus
+                    >
+
+                    <!-- PRODUCTOS -->
+
+                    <div style="
+                        max-height:700px;
+                        overflow-y:auto;
+                    ">
+
+                        <div class="row">
+
+                            {% for producto in productos %}
+
+                            <div
+                                class="col-md-4 mb-4 producto-card"
+                                data-nombre="{{ producto.nombre|lower }}"
+                            >
+
+                                <div class="card shadow-sm h-100 border-0">
+
+                                    {% if producto.imagen %}
+
+                                    <img
+                                        src="{{ url_for(
+                                            'static',
+                                            filename='productos/' + producto.imagen
+                                        ) }}"
+                                        class="card-img-top"
+                                        style="
+                                            height:220px;
+                                            object-fit:cover;
+                                        "
+                                    >
+
+                                    {% else %}
+
+                                    <img
+                                        src="https://via.placeholder.com/300x220?text=Sin+Imagen"
+                                        class="card-img-top"
+                                        style="
+                                            height:220px;
+                                            object-fit:cover;
+                                        "
+                                    >
+
+                                    {% endif %}
+
+                                    <div class="card-body d-flex flex-column">
+
+                                        <h5 class="card-title">
+
+                                            {{ producto.nombre }}
+
+                                        </h5>
+
+                                        <p class="card-text">
+
+                                            <strong class="text-success">
+
+                                                S/. {{ producto.precio }}
+
+                                            </strong>
+
+                                            <br>
+
+                                            Stock:
+                                            {{ producto.stock }}
+
+                                        </p>
+
+                                        <form method="POST" class="mt-auto">
+
+                                            <input
+                                                type="hidden"
+                                                name="producto_id"
+                                                value="{{ producto.id }}"
+                                            >
+
+                                            <input
+                                                type="hidden"
+                                                name="cantidad"
+                                                value="1"
+                                            >
+
+                                            <button
+                                                class="btn btn-primary w-100">
+
+                                                Agregar al carrito
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- PANEL DERECHO -->
+
+        <div class="col-md-5">
+
+            <div class="card shadow border-0">
+
+                <div class="card-body">
+
+                    <h2 class="fw-bold mb-4">
+
+                        🧾 Carrito
+
+                    </h2>
+
+                    <div style="
+                        max-height:500px;
+                        overflow-y:auto;
+                    ">
+
+                        <table class="table align-middle">
+
+                            <thead class="table-dark">
+
+                                <tr>
+
+                                    <th>Producto</th>
+                                    <th>Cant.</th>
+                                    <th>Subtotal</th>
+                                    <th></th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                {% for item in carrito %}
+
+                                {% set index = loop.index0 %}
+
+                                <tr>
+
+                                    <td>
+
+                                        {{ item.nombre }}
+
+                                    </td>
+
+                                    <td>
+
+                                        <div class="d-flex align-items-center">
+
+                                            <a href="/disminuir/{{ index }}"
+                                               class="btn btn-warning btn-sm">
+
+                                                -
+
+                                            </a>
+
+                                            <strong class="mx-2">
+
+                                                {{ item.cantidad }}
+
+                                            </strong>
+
+                                            <a href="/aumentar/{{ index }}"
+                                               class="btn btn-success btn-sm">
+
+                                                +
+
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+
+                                        S/. {{ item.subtotal }}
+
+                                    </td>
+
+                                    <td>
+
+                                        <a href="/eliminar_carrito/{{ index }}"
+                                           class="btn btn-danger btn-sm">
+
+                                            X
+
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                    <hr>
+
+                    <!-- TOTAL -->
+
+                    <div class="text-end mb-4">
+
+                        <h2>
+
+                            Total:
+
+                            <span class="text-success fw-bold">
+
+                                S/. {{ total }}
+
+                            </span>
+
+                        </h2>
+
+                    </div>
+
+                    <!-- BOTONES -->
+
+                    <div class="d-grid gap-3">
+
+                        <a href="/finalizar_venta"
+                           class="btn btn-success btn-lg">
+
+                            ✅ Finalizar Venta
+
+                        </a>
+
+                        <a href="/vaciar_carrito"
+                           class="btn btn-outline-danger">
+
+                            🗑 Vaciar Carrito
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- BUSCADOR JS -->
+
+<script>
+
+const buscador = document.getElementById(
+    'buscador'
+)
+
+buscador.addEventListener('keyup', () => {
+
+    const texto = buscador.value.toLowerCase()
+
+    const productos = document.querySelectorAll(
+        '.producto-card'
+    )
+
+    productos.forEach(producto => {
+
+        const nombre = producto.dataset.nombre
+
+        if (nombre.includes(texto)) {
+
+            producto.style.display = 'block'
+
+        } else {
+
+            producto.style.display = 'none'
+
+        }
+
+    })
+
+})
+
+</script>
+
+{% endblock %}

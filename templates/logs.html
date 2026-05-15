@@ -1,0 +1,98 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+
+                📜 Logs del Sistema
+
+            </h1>
+
+            <p class="text-muted">
+
+                Historial de actividades del sistema
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- TABLA -->
+
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th>ID</th>
+                        <th>Usuario</th>
+                        <th>Acción</th>
+                        <th>Fecha</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for log in logs %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ log.id }}
+
+                        </td>
+
+                        <td>
+
+                            <span class="badge bg-primary">
+
+                                {{ log.usuario }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            {{ log.accion }}
+
+                        </td>
+
+                        <td>
+
+                            {{ log.fecha }}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

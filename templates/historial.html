@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="container-fluid mt-4">
+
+    <div class="mb-4">
+
+        <a
+            href="/"
+            class="btn btn-outline-dark"
+        >
+
+            ← Menú Principal
+
+        </a>
+
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4">
+
+        <div class="card-body p-5">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <h1 class="fw-bold">
+
+                    🧾 Historial de Ventas
+
+                </h1>
+
+                <a
+                    href="/exportar_ventas"
+                    class="btn btn-success"
+                >
+
+                    📥 Exportar Excel
+
+                </a>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table class="table align-middle table-hover">
+
+                    <thead class="table-dark">
+
+                        <tr>
+
+                            <th>ID</th>
+                            <th>Total</th>
+                            <th>Fecha</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        {% for venta in ventas %}
+
+                        <tr>
+
+                            <td>
+
+                                <strong>
+
+                                    #{{ venta.id }}
+
+                                </strong>
+
+                            </td>
+
+                            <td>
+
+                                <span class="text-success fw-bold">
+
+                                    S/. {{ venta.total }}
+
+                                </span>
+
+                            </td>
+
+                            <td>
+
+                                {{ venta.fecha }}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

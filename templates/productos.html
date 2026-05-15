@@ -1,0 +1,297 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+
+    <!-- CABECERA -->
+
+    <div class="d-flex
+                justify-content-between
+                align-items-center
+                mb-4">
+
+        <div>
+
+            <h1 class="fw-bold">
+
+                📦 Gestión de Productos
+
+            </h1>
+
+            <p class="text-muted">
+
+                Total productos:
+                <span class="badge bg-primary">
+
+                    {{ productos|length }}
+
+                </span>
+
+            </p>
+
+        </div>
+
+        <a href="/agregar"
+           class="btn btn-primary btn-lg">
+
+            ➕ Agregar Producto
+
+        </a>
+        {% if session['rol'] in ['admin','supervisor'] %}
+
+
+    </div>
+
+
+    <!-- BUSCADOR -->
+
+    <div class="card shadow border-0 rounded-4 mb-4">
+
+        <div class="card-body">
+
+            <form method="GET"
+                  action="/productos">
+
+                <div class="row">
+
+                    <div class="col-md-10">
+
+                        <input
+                        type="text"
+                        name="buscar"
+
+                        class="form-control form-control-lg"
+
+                        placeholder="Buscar por nombre o código..."
+
+                        value="{{ request.args.get('buscar','') }}">
+
+                    </div>
+
+                    <div class="col-md-2">
+
+                        <button
+                        class="btn btn-success btn-lg w-100">
+
+                        🔍 Buscar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- TABLA -->
+
+    <div class="card shadow border-0 rounded-4">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table
+                              table-hover
+                              align-middle">
+
+                    <thead
+                    class="table-dark">
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Imagen</th>
+
+                        <th>Nombre</th>
+
+                        <th>Precio</th>
+
+                        <th>Stock</th>
+
+                        <th>Reorden</th>
+
+                        <th>Código</th>
+
+                        <th>Acciones</th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                    {% for producto in productos %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ producto.id }}
+
+                        </td>
+
+
+                        <td>
+
+                        {% if producto.imagen %}
+
+                        <img
+
+                        src="{{ url_for('static',
+
+                        filename='productos/' + producto.imagen ) }}"
+
+                        width="60"
+
+                        height="60"
+
+                        class="rounded shadow">
+
+                        {% else %}
+
+                        <span class="badge bg-secondary">
+
+                        Sin imagen
+
+                        </span>
+
+                        {% endif %}
+
+                        </td>
+
+
+
+                        <td>
+
+                            <strong>
+
+                            {{ producto.nombre }}
+
+                            </strong>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                            class="badge bg-success">
+
+                            S/. {{ producto.precio }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                        {% if producto.stock <=5 %}
+
+                        <span
+                        class="badge bg-danger">
+
+                        ⚠ {{ producto.stock }}
+
+                        </span>
+
+                        {% else %}
+
+                        <span
+                        class="badge bg-primary">
+
+                        {{ producto.stock }}
+
+                        </span>
+
+                        {% endif %}
+
+                        </td>
+                       
+                         <td>
+
+                            {{ producto.reorden }}
+
+                        </td>
+
+
+                        <td>
+
+                        {{ producto.codigo_barra }}
+
+                        </td>
+
+                       
+
+                        <td>
+
+                            <a href="/editar/{{ producto.id }}"
+
+                            class="btn btn-warning btn-sm">
+
+                            ✏ Editar
+
+                            </a>
+
+
+                            <a href="/eliminar/{{ producto.id }}"
+
+                            onclick="return confirm('¿Eliminar producto?')"
+
+                            class="btn btn-danger btn-sm">
+
+                            🗑 Eliminar
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                    {% if not productos %}
+
+                    <tr>
+
+                        <td colspan="7">
+
+                            <div class="text-center p-4">
+
+                                <h5>
+
+                                No se encontraron productos
+
+                                </h5>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endif %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}
