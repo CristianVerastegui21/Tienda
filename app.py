@@ -10,10 +10,16 @@ from flask import (
 import sqlite3
 import os
 import shutil
-import cv2
 import matplotlib.pyplot as plt
 
-from pyzbar.pyzbar import decode
+try:
+    import cv2
+    from pyzbar.pyzbar import decode
+    SCANNER=True
+
+except:
+
+    SCANNER=False
 
 from datetime import datetime
 from functools import wraps
@@ -476,6 +482,9 @@ def agregar_producto():
 @app.route('/scanner_codigo')
 @rol_requerido(['admin', 'supervisor'])
 def scanner_codigo():
+    if not SCANNER:
+
+        return "Scanner no disponible en servidor"
 
     cap = cv2.VideoCapture(0)
 
@@ -665,6 +674,9 @@ def ventas():
 @app.route('/scanner_ventas')
 @rol_requerido(['admin', 'supervisor', 'cajero'])
 def scanner_ventas():
+    if not SCANNER:
+
+        return "Scanner no disponible en servidor"
 
     cap = cv2.VideoCapture(0)
 
