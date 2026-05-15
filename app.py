@@ -66,9 +66,27 @@ app.secret_key = 'bodega_verastegui'
 # BASE DE DATOS
 # =========================================
 
+#def conectar():
+
+   # conexion = sqlite3.connect('database/bodega.db')
+
+    #conexion.row_factory = sqlite3.Row
+
+    #return conexion
+
+# =========================================
+# BASE DE DATOS
+# =========================================
+
 def conectar():
 
-    conexion = sqlite3.connect('database/bodega.db')
+    if not os.path.exists("database"):
+
+        os.makedirs("database")
+
+    conexion = sqlite3.connect(
+        "database/bodega.db"
+    )
 
     conexion.row_factory = sqlite3.Row
 
