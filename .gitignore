@@ -5,7 +5,7 @@ __pycache__/
 database/*.db
 
 backups/
-
+reportes/
 tickets/
 
-reportes/
+.env
