@@ -1,276 +1,269 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Bodega</title>
+<title>Sistema JV</title>
 
-    <!-- BOOTSTRAP -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- ICONOS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- CHART -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
 
-    <style>
+body{
+    background:#f4f6f9;
+    overflow-x:hidden;
+}
 
-        body {
-            background: #f4f6f9;
-            overflow-x: hidden;
-        }
+/* SIDEBAR */
 
-        /* SIDEBAR */
-        .sidebar {
-            width: 260px;
-            height: 100vh;
-            position: fixed;
-            background: linear-gradient(180deg, #6a11cb, #2575fc);
-            color: white;
-            padding-top: 20px;
-        }
+.sidebar{
 
-        .sidebar h3 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-weight: bold;
-        }
+    width:260px;
+    height:100vh;
 
-        .sidebar a {
-            display: block;
-            color: white;
-            padding: 15px 25px;
-            text-decoration: none;
-            transition: 0.3s;
-            font-size: 17px;
-        }
+    position:fixed;
+    left:0;
+    top:0;
 
-        .sidebar a:hover {
-            background: rgba(255,255,255,0.2);
-            padding-left: 35px;
-        }
+    background:linear-gradient(
+        180deg,
+        #6a11cb,
+        #2575fc
+    );
 
-        .sidebar i {
-            margin-right: 10px;
-        }
+    color:white;
 
-        /* CONTENT */
-        .content {
-            margin-left: 260px;
-            padding: 25px;
-        }
+    z-index:1000;
 
-        /* TOPBAR */
-        .topbar {
-            background: white;
-            padding: 15px 25px;
-            border-radius: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
+    transition:.3s;
+}
 
-    </style>
+
+.logo{
+
+    padding:25px;
+    font-size:28px;
+    font-weight:bold;
+}
+
+.sidebar a{
+
+    color:white;
+    text-decoration:none;
+
+    display:block;
+
+    padding:16px 30px;
+
+    font-size:20px;
+
+    transition:.3s;
+}
+
+.sidebar a:hover{
+
+    background:rgba(255,255,255,.15);
+
+    padding-left:40px;
+}
+
+/* CONTENIDO */
+
+.main{
+
+    margin-left:260px;
+
+    padding:25px;
+
+    transition:.3s;
+}
+
+/* BOTON HAMBURGUESA */
+
+.menu-btn{
+
+    display:none;
+
+    border:none;
+
+    font-size:28px;
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:10px 15px;
+
+    box-shadow:0 3px 10px rgba(0,0,0,.2);
+}
+
+/* FONDO OSCURO */
+
+.overlay{
+
+    display:none;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,.5);
+
+    z-index:999;
+}
+
+/* MOVIL */
+
+@media(max-width:768px){
+
+.sidebar{
+
+    left:-260px;
+}
+
+.sidebar.active{
+
+    left:0;
+}
+
+.main{
+
+    margin-left:0;
+}
+
+.menu-btn{
+
+display:block;
+
+margin-bottom:20px;
+}
+
+.overlay.active{
+
+display:block;
+}
+
+}
+
+</style>
 
 </head>
 
 <body>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
 
-        <h3>🏪 Sistema JV</h3>
+<div class="overlay"
+id="overlay"
+onclick="toggleMenu()">
+</div>
 
-        <!-- INICIO -->
-        <a href="/">
-            <i class="fa fa-home"></i> Inicio
-        </a>
+<!-- SIDEBAR -->
 
-        <!-- PRODUCTOS -->
-        {% if session['rol'] in ['admin', 'supervisor'] %}
-        <a href="/productos">
-            <i class="fa fa-box"></i> Productos
-        </a>
-        {% endif %}
+<div class="sidebar" id="sidebar">
 
-        <!-- VENTAS (TODOS) -->
-        <a href="/ventas">
-            <i class="fa fa-cash-register"></i> Ventas
-        </a>
+<div class="logo">
 
-        <!-- USUARIOS SOLO ADMIN -->
-        {% if session['rol'] == 'admin' %}
-        <a href="/usuarios">
-            <i class="fa fa-users"></i> Usuarios
-        </a>
-        {% endif %}
+🏪 Sistema JV
+
+</div>
 
 
-        <!-- LOGS  -->
-         
-        {% if session['rol'] == 'admin' %}
-        <a href="/logs">
-            <i class="fa fa-clipboard-list"></i>
-            Logs
-        </a>
-        {% endif %}
+<a href="/">
+<i class="fa fa-house"></i>
+Inicio
+</a>
 
-        <!-- STOCK BAJO -->
-        {% if session['rol'] in ['admin', 'supervisor'] %}
-        <a href="/stock_bajo">
-            <i class="fa fa-triangle-exclamation"></i> Alertas Stock
-        </a>
-        {% endif %}
 
-        <!-- HISTORIAL -->
-        {% if session['rol'] in ['admin', 'supervisor'] %}
-        <a href="/historial">
-            <i class="fa fa-clock-rotate-left"></i> Historial
-        </a>
-        {% endif %}
+<a href="/productos">
+<i class="fa fa-box"></i>
+Productos
+</a>
 
-        <!-- REPORTES -->
-        {% if session['rol'] in ['admin', 'supervisor'] %}
-        <a href="/reportes">
-            <i class="fa fa-chart-line"></i> Reportes
-        </a>
-        {% endif %}
+<a href="/ventas">
+<i class="fa fa-cash-register"></i>
+Ventas
+</a>
 
-        <!-- DASHBOARD -->
-        {% if session['rol'] in ['admin', 'supervisor'] %}
-        <a href="/dashboard">
-            <i class="fa fa-chart-pie"></i> Dashboard
-        </a>
-        {% endif %}
+<a href="/usuarios">
+<i class="fa fa-users"></i>
+Usuarios
+</a>
 
-        <!-- LOGOUT -->
-        <a href="/logout">
-            <i class="fa fa-right-from-bracket"></i> Cerrar Sesión
-        </a>
+<a href="/logs">
+<i class="fa fa-clipboard"></i>
+Logs
+</a>
 
-    </div>
+<a href="/stock_bajo">
+<i class="fa fa-triangle-exclamation"></i>
+Alertas Stock
+</a>
 
-    <!-- CONTENIDO -->
-    <div class="content">
+<a href="/historial">
+<i class="fa fa-clock-rotate-left"></i>
+Historial
+</a>
 
-        <!-- TOPBAR -->
-        <div class="topbar d-flex justify-content-between align-items-center">
+<a href="/reportes">
+<i class="fa fa-chart-line"></i>
+Reportes
+</a>
 
-            <h4 class="fw-bold">Bodega </h4>
+<a href="/dashboard">
+<i class="fa fa-chart-pie"></i>
+Dashboard
+</a>
 
-           <div class="d-flex align-items-center gap-4">
+<a href="/logout">
+<i class="fa fa-right-from-bracket"></i>
+Cerrar Sesión
+</a>
 
-            <!-- NOTIFICACIONES -->
+</div>
 
-            <div class="dropdown">
 
-                <button
-                    class="btn position-relative"
-                    data-bs-toggle="dropdown"
-                >
+<div class="main">
 
-                    <i
-                        class="fa-solid fa-bell fa-xl"
-                    ></i>
+<button
+class="menu-btn"
+onclick="toggleMenu()">
 
-                    {% if total_alertas > 0 %}
+☰
 
-                    <span
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                    >
+</button>
 
-                        {{ total_alertas }}
+{% block content %}
+{% endblock %}
 
-                    </span>
+</div>
 
-                    {% endif %}
 
-                </button>
+<script>
 
-                <ul
-                    class="dropdown-menu dropdown-menu-end shadow"
-                    style="width:350px;"
-                >
+function toggleMenu(){
 
-                    <li>
+document
+.getElementById("sidebar")
+.classList.toggle("active");
 
-                        <h6
-                            class="dropdown-header"
-                        >
+document
+.getElementById("overlay")
+.classList.toggle("active");
 
-                            Productos con bajo stock
+}
 
-                        </h6>
+</script>
 
-                    </li>
-
-                    {% if alertas %}
-
-                        {% for p in alertas %}
-
-                        <li>
-
-                            <a
-                                class="dropdown-item"
-                                href="/stock_bajo"
-                            >
-
-                                ⚠ {{ p.nombre }}
-
-                                <span class="text-danger">
-
-                                    ({{ p.stock }})
-
-                                </span>
-
-                            </a>
-
-                        </li>
-
-                        {% endfor %}
-
-                    {% else %}
-
-                    <li>
-
-                        <span
-                            class="dropdown-item text-success"
-                        >
-
-                            ✔ Todo correcto
-
-                        </span>
-
-                    </li>
-
-                    {% endif %}
-
-                </ul>
-
-            </div>
-
-            <!-- USUARIO -->
-
-            <div>
-
-                👤 {{session.usuario}}
-
-            </div>
-
-        </div>
-
-        </div>
-
-        {% block content %}
-        {% endblock %}
-
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
-
 </html>
