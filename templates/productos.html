@@ -32,14 +32,15 @@
 
         </div>
 
+        {% if session['rol'] in ['admin','supervisor'] %}
         <a href="/agregar"
            class="btn btn-primary btn-lg">
 
             ➕ Agregar Producto
 
         </a>
-        {% if session['rol'] in ['admin','supervisor'] %}
-
+        
+        {% endif %}
 
     </div>
 
