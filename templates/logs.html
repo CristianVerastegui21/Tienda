@@ -1,98 +1,362 @@
 {% extends 'layout.html' %}
-
 {% block content %}
 
-<div class="container-fluid">
+<style>
+  /* ═══════════════════════════════════════════
+     VARIABLES — MODO CLARO / OSCURO
+  ═══════════════════════════════════════════ */
+  :root {
+    --bg-card:        #ffffff;
+    --bg-input:       #f8fafc;
+    --border:         #e2e8f0;
+    --border-light:   #f1f5f9;
+    --text-primary:   #0f172a;
+    --text-secondary: #475569;
+    --text-muted:     #94a3b8;
+    --blue:           #3b82f6;
+    --blue-dark:      #2563eb;
+    --blue-bg:        rgba(59,130,246,.08);
+    --green:          #10b981;
+    --green-dark:     #059669;
+    --green-bg:       rgba(16,185,129,.1);
+    --red:            #ef4444;
+    --red-dark:       #dc2626;
+    --red-bg:         rgba(239,68,68,.1);
+    --amber:          #f59e0b;
+    --amber-dark:     #d97706;
+    --amber-bg:       rgba(245,158,11,.1);
+    --purple:         #8b5cf6;
+    --purple-bg:      rgba(139,92,246,.1);
+    --indigo:         #6366f1;
+    --indigo-bg:      rgba(99,102,241,.1);
+    --row-hover:      rgba(59,130,246,.03);
+    --shadow-sm:      0 1px 2px rgba(0,0,0,.05);
+    --shadow-lg:      0 10px 28px rgba(0,0,0,.08);
+    --action-login-bg:   rgba(16,185,129,.1);
+    --action-login-c:    #059669;
+    --action-create-bg:  rgba(59,130,246,.1);
+    --action-create-c:   #2563eb;
+    --action-update-bg:  rgba(245,158,11,.1);
+    --action-update-c:   #d97706;
+    --action-delete-bg:  rgba(239,68,68,.1);
+    --action-delete-c:   #dc2626;
+    --action-export-bg:  rgba(139,92,246,.1);
+    --action-export-c:   #7c3aed;
+    --action-system-bg:  rgba(107,114,128,.1);
+    --action-system-c:   #4b5563;
+  }
 
-    <!-- HEADER -->
+  [data-theme="dark"], .dark, html.dark {
+    --bg-card:        #151d2e;
+    --bg-input:       #1a2332;
+    --border:         #1e293b;
+    --border-light:   #1a2332;
+    --text-primary:   #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted:     #64748b;
+    --blue:           #60a5fa;
+    --blue-dark:      #3b82f6;
+    --blue-bg:        rgba(96,165,250,.1);
+    --green:          #34d399;
+    --green-dark:     #10b981;
+    --green-bg:       rgba(52,211,153,.1);
+    --red:            #f87171;
+    --red-dark:       #ef4444;
+    --red-bg:         rgba(248,113,113,.1);
+    --amber:          #fbbf24;
+    --amber-dark:     #f59e0b;
+    --amber-bg:       rgba(251,191,36,.1);
+    --purple:         #a78bfa;
+    --purple-bg:      rgba(167,139,250,.1);
+    --indigo:         #818cf8;
+    --indigo-bg:      rgba(129,140,248,.1);
+    --row-hover:      rgba(96,165,250,.05);
+    --shadow-sm:      0 1px 2px rgba(0,0,0,.2);
+    --shadow-lg:      0 10px 28px rgba(0,0,0,.3);
+    --action-login-bg:   rgba(52,211,153,.12);
+    --action-login-c:    #34d399;
+    --action-create-bg:  rgba(96,165,250,.12);
+    --action-create-c:   #60a5fa;
+    --action-update-bg:  rgba(251,191,36,.12);
+    --action-update-c:   #fbbf24;
+    --action-delete-bg:  rgba(248,113,113,.12);
+    --action-delete-c:   #f87171;
+    --action-export-bg:  rgba(167,139,250,.12);
+    --action-export-c:   #a78bfa;
+    --action-system-bg:  rgba(148,163,184,.1);
+    --action-system-c:   #94a3b8;
+  }
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+  /* ─── Animaciones ─── */
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity:1; box-shadow:0 0 0 0 rgba(16,185,129,.4); }
+    50%      { opacity:.6; box-shadow:0 0 0 5px rgba(16,185,129,0); }
+  }
+  .anim-up   { animation:fadeUp .45s ease both; }
+  .anim-up-1 { animation-delay:.05s; }
+  .anim-up-2 { animation-delay:.12s; }
 
-        <div>
+  /* ─── Header ─── */
+  .page-header {
+    display:flex; flex-wrap:wrap; gap:1.25rem;
+    align-items:center; justify-content:space-between;
+    margin-bottom:1.5rem;
+  }
+  .page-title-group { flex:1; min-width:260px; }
+  .page-title {
+    font-size:1.55rem; font-weight:800;
+    color:var(--text-primary); margin:0;
+    letter-spacing:-0.03em;
+    display:flex; align-items:center; gap:.55rem;
+  }
+  .title-icon {
+    width:40px; height:40px; border-radius:11px;
+    background:linear-gradient(135deg, var(--indigo), var(--purple));
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#fff; font-size:.95rem; flex-shrink:0;
+    box-shadow:0 4px 14px rgba(99,102,241,.3);
+  }
+  .page-sub {
+    color:var(--text-muted); font-size:.88rem;
+    margin:.4rem 0 0 .05rem;
+    display:flex; align-items:center; gap:.5rem;
+  }
+  .page-count { color:var(--blue); font-weight:800; }
+  .live-dot {
+    width:8px; height:8px; border-radius:50%;
+    background:var(--green);
+    animation:pulseDot 1.8s ease-in-out infinite;
+  }
 
-            <h1 class="fw-bold">
+  /* ─── Tabla ─── */
+  .card-main {
+    border:1px solid var(--border); border-radius:14px;
+    background:var(--bg-card); overflow:hidden;
+    box-shadow:var(--shadow-sm);
+  }
+  .card-body-main { padding:0 !important; overflow:hidden; }
+  .table-responsive { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .tbl {
+    width:100%; margin:0; border-collapse:separate;
+    border-spacing:0; font-size:.88rem;
+  }
+  .tbl thead th {
+    background:var(--bg-input); color:var(--text-muted);
+    font-weight:700; font-size:.72rem;
+    text-transform:uppercase; letter-spacing:.06em;
+    padding:.8rem 1rem; border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  .tbl tbody tr { transition:background .12s ease; }
+  .tbl tbody tr:hover { background:var(--row-hover); }
+  .tbl tbody td {
+    padding:.8rem 1rem;
+    border-bottom:1px solid var(--border-light);
+    vertical-align:middle; color:var(--text-primary);
+  }
+  .tbl tbody tr:last-child td { border-bottom:none; }
 
-                📜 Logs del Sistema
+  /* ─── Celdas ─── */
+  .cell-id {
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem; color:var(--text-muted); font-weight:600;
+  }
+  .cell-id .id-hash { opacity:.4; }
 
-            </h1>
+  .user-cell {
+    display:flex; align-items:center; gap:.55rem;
+  }
+  .user-avatar-sm {
+    width:30px; height:30px; border-radius:8px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:.72rem; flex-shrink:0;
+    text-transform:uppercase;
+    background:var(--blue-bg); color:var(--blue);
+  }
+  .user-name {
+    font-weight:600; font-size:.86rem; color:var(--text-primary);
+    font-family:'JetBrains Mono', monospace;
+  }
 
-            <p class="text-muted">
+  /* Action badges */
+  .action-badge {
+    display:inline-flex; align-items:center; gap:.3rem;
+    padding:.25rem .65rem; border-radius:7px;
+    font-size:.73rem; font-weight:600;
+    border:1px solid transparent;
+  }
+  .action-badge.login   { background:var(--action-login-bg);   color:var(--action-login-c);   border-color:rgba(16,185,129,.1); }
+  .action-badge.create  { background:var(--action-create-bg);  color:var(--action-create-c);  border-color:rgba(59,130,246,.1); }
+  .action-badge.update  { background:var(--action-update-bg);  color:var(--action-update-c);  border-color:rgba(245,158,11,.1); }
+  .action-badge.delete  { background:var(--action-delete-bg);  color:var(--action-delete-c);  border-color:rgba(239,68,68,.1); }
+  .action-badge.export  { background:var(--action-export-bg);  color:var(--action-export-c);  border-color:rgba(139,92,246,.1); }
+  .action-badge.system  { background:var(--action-system-bg);  color:var(--action-system-c);  border-color:rgba(107,114,128,.1); }
 
-                Historial de actividades del sistema
+  .action-desc {
+    font-size:.84rem; color:var(--text-secondary);
+    margin-top:.15rem;
+  }
 
-            </p>
+  .cell-fecha {
+    font-family:'JetBrains Mono', monospace;
+    font-size:.82rem; color:var(--text-secondary);
+  }
+  .cell-fecha .hora {
+    font-size:.72rem; color:var(--text-muted); opacity:.7;
+    margin-left:.3rem;
+  }
 
-        </div>
+  /* ─── Empty state ─── */
+  .empty-state { text-align:center; padding:4rem 1rem; color:var(--text-muted); }
+  .empty-icon-wrap {
+    width:68px; height:68px; border-radius:50%;
+    background:var(--bg-input); border:1px solid var(--border);
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:1.5rem; margin-bottom:1rem; color:var(--text-muted); opacity:.4;
+  }
+  .empty-state h4 {
+    font-size:1.05rem; color:var(--text-primary);
+    margin:0 0 .3rem; font-weight:700;
+  }
+  .empty-state p { font-size:.86rem; margin:0; }
 
+  /* ─── Footer ─── */
+  .table-footer {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:.75rem 1.15rem; border-top:1px solid var(--border);
+    font-size:.8rem; color:var(--text-muted);
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width:768px) {
+    .page-header { flex-direction:column; align-items:flex-start; }
+    .tbl thead { display:none; }
+    .tbl tbody tr {
+      display:block; margin-bottom:.6rem;
+      border:1px solid var(--border); border-radius:12px;
+      padding:.85rem 1rem; background:var(--bg-card);
+    }
+    .tbl tbody td {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:.5rem 0; border-bottom:1px dashed var(--border-light);
+    }
+    .tbl tbody td:last-child { border-bottom:none; }
+    .tbl tbody td::before {
+      content:attr(data-label); font-weight:700;
+      color:var(--text-muted); font-size:.7rem;
+      text-transform:uppercase; letter-spacing:.04em; margin-right:auto;
+    }
+    .user-avatar-sm { display:none; }
+  }
+</style>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- HEADER                                         -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="page-header anim-up">
+  <div class="page-title-group">
+    <h1 class="page-title">
+      <span class="title-icon"><i class="fa fa-clock-rotate-left"></i></span>
+      Logs del Sistema
+    </h1>
+    <p class="page-sub">
+      Historial de actividades y auditoría
+      &nbsp;·&nbsp;
+      <span class="page-count">{{ logs|length }}</span> registros
+      <span class="live-dot"></span>
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TABLA                                          -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="card-main anim-up anim-up-2">
+  <div class="card-body-main">
+    <div class="table-responsive">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:60px">#</th>
+            <th style="width:160px">Usuario</th>
+            <th>Acción</th>
+            <th style="width:180px">Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+          {% set action_type = 'system' %}
+          {% if 'login' in log.accion|lower or 'inicio' in log.accion|lower or 'sesión' in log.accion|lower %}
+            {% set action_type = 'login' %}
+          {% elif 'agreg' in log.accion|lower or 'cre' in log.accion|lower or 'regist' in log.accion|lower or 'nuevo' in log.accion|lower %}
+            {% set action_type = 'create' %}
+          {% elif 'edit' in log.accion|lower or 'actualiz' in log.accion|lower or 'modific' in log.accion|lower %}
+            {% set action_type = 'update' %}
+          {% elif 'elimin' in log.accion|lower or 'delete' in log.accion|lower or 'borr' in log.accion|lower %}
+            {% set action_type = 'delete' %}
+          {% elif 'export' in log.accion|lower or 'pdf' in log.accion|lower or 'excel' in log.accion|lower %}
+            {% set action_type = 'export' %}
+          {% endif %}
+
+          {% set action_icon = {
+            'login':'fa-right-to-bracket',
+            'create':'fa-plus',
+            'update':'fa-pen',
+            'delete':'fa-trash',
+            'export':'fa-file-export',
+            'system':'fa-gear'
+          }.get(action_type, 'fa-gear') %}
+
+          <tr>
+            <td class="cell-id" data-label="ID">
+              <span class="id-hash">#</span>{{ log.id }}
+            </td>
+            <td data-label="Usuario">
+              <div class="user-cell">
+                <div class="user-avatar-sm">{{ log.usuario[0]|upper }}</div>
+                <span class="user-name">{{ log.usuario }}</span>
+              </div>
+            </td>
+            <td data-label="Acción">
+              <span class="action-badge {{ action_type }}">
+                <i class="fa {{ action_icon }}"></i>
+                {{ action_type|capitalize }}
+              </span>
+              <div class="action-desc">{{ log.accion }}</div>
+            </td>
+            <td class="cell-fecha" data-label="Fecha">
+              <i class="fa-regular fa-clock" style="margin-right:.25rem;opacity:.4;font-size:.7rem;"></i>
+              {{ log.fecha }}
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="4">
+              <div class="empty-state">
+                <div class="empty-icon-wrap"><i class="fa fa-clock-rotate-left"></i></div>
+                <h4>Sin registros de actividad</h4>
+                <p>Las acciones del sistema se registrarán aquí automáticamente.</p>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
 
-    <!-- TABLA -->
-
-    <div class="card shadow-lg border-0 rounded-4">
-
-        <div class="card-body">
-
-            <table class="table table-hover align-middle">
-
-                <thead class="table-dark">
-
-                    <tr>
-
-                        <th>ID</th>
-                        <th>Usuario</th>
-                        <th>Acción</th>
-                        <th>Fecha</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {% for log in logs %}
-
-                    <tr>
-
-                        <td>
-
-                            {{ log.id }}
-
-                        </td>
-
-                        <td>
-
-                            <span class="badge bg-primary">
-
-                                {{ log.usuario }}
-
-                            </span>
-
-                        </td>
-
-                        <td>
-
-                            {{ log.accion }}
-
-                        </td>
-
-                        <td>
-
-                            {{ log.fecha }}
-
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
+    {% if logs|length > 0 %}
+    <div class="table-footer">
+      <span>Mostrando <strong>{{ logs|length }}</strong> registros</span>
+      <span style="font-size:.75rem;opacity:.5">
+        <i class="fa fa-clock-rotate-left"></i> Auditoría en tiempo real
+      </span>
     </div>
-
+    {% endif %}
+  </div>
 </div>
 
 {% endblock %}

@@ -1,0 +1,471 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<style>
+
+.ticket-card{
+    max-width:900px;
+    margin:auto;
+
+    background:var(--bg-card,#ffffff);
+    color:var(--text-primary,#111827);
+
+    border:1px solid var(--border,#e5e7eb);
+
+    border-radius:18px;
+    overflow:hidden;
+
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+.ticket-header{
+
+    padding:1.5rem;
+
+    background:
+    linear-gradient(
+    135deg,
+    var(--blue,#2563eb),
+    var(--blue-dark,#1d4ed8)
+    );
+
+    color:white;
+}
+
+.ticket-sub{
+
+    opacity:.9;
+    font-size:.9rem;
+
+}
+
+.ticket-body{
+
+    padding:1.5rem;
+
+}
+
+.info-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(
+    auto-fit,
+    minmax(220px,1fr)
+    );
+
+    gap:1rem;
+
+    margin-bottom:1.5rem;
+}
+
+.info-box{
+
+    padding:1rem;
+
+    border-radius:12px;
+
+    background:
+    var(--bg-input,#f8fafc);
+
+    border:
+    1px solid
+    var(--border,#e5e7eb);
+
+}
+
+.info-title{
+
+    font-size:.75rem;
+
+    color:
+    var(--text-muted,#6b7280);
+
+    margin-bottom:.25rem;
+}
+
+.info-value{
+
+    font-weight:700;
+
+    color:
+    var(--text-primary,#111827);
+
+}
+
+/* TABLA */
+
+.table{
+
+    width:100%;
+    border-collapse:collapse;
+
+}
+
+.table th{
+
+    background:
+    var(--bg-input,#f9fafb);
+
+    color:
+    var(--text-muted,#6b7280);
+
+    padding:.9rem;
+
+    text-align:left;
+
+    border-bottom:
+    1px solid
+    var(--border,#e5e7eb);
+
+}
+
+.table td{
+
+    padding:.9rem;
+
+    color:
+    var(--text-primary,#111827);
+
+    border-bottom:
+    1px solid
+    var(--border,#f1f5f9);
+
+}
+
+.table tr{
+
+transition:.2s;
+
+}
+
+.table tr:hover{
+
+background:
+rgba(37,99,235,.06);
+
+}
+
+/* TOTAL */
+
+.total-box{
+
+text-align:right;
+
+margin-top:1.5rem;
+
+padding-top:1rem;
+
+border-top:
+1px solid
+var(--border);
+
+}
+
+.total-box div:first-child{
+
+color:
+var(--text-muted);
+
+font-size:.85rem;
+
+}
+
+.total-number{
+
+color:
+var(--green,#16a34a);
+
+font-size:2rem;
+
+font-weight:800;
+
+font-family:
+'JetBrains Mono',
+monospace;
+
+}
+
+/* BOTONES */
+
+.ticket-footer{
+
+display:flex;
+
+gap:.8rem;
+
+margin-top:1.5rem;
+
+flex-wrap:wrap;
+
+}
+
+.btn-ticket{
+
+border:none;
+
+padding:.75rem 1.2rem;
+
+border-radius:10px;
+
+font-weight:600;
+
+text-decoration:none;
+
+display:inline-flex;
+
+align-items:center;
+
+gap:.45rem;
+
+transition:.2s;
+
+cursor:pointer;
+
+}
+
+.btn-ticket:hover{
+
+transform:translateY(-2px);
+
+opacity:.92;
+
+}
+
+.btn-print{
+
+background:
+var(--green,#16a34a);
+
+color:white;
+
+}
+
+.btn-pdf{
+
+background:
+var(--red,#dc2626);
+
+color:white;
+
+}
+
+.btn-back{
+
+background:
+var(--bg-input,#e2e8f0);
+
+color:
+var(--text-primary,#111827);
+
+border:
+1px solid
+var(--border);
+
+}
+
+
+/* MODO OSCURO AUTOMATICO */
+
+@media (prefers-color-scheme: dark){
+
+.ticket-card{
+
+box-shadow:
+0 8px 25px rgba(0,0,0,.35);
+
+}
+
+.table tr:hover{
+
+background:
+rgba(255,255,255,.03);
+
+}
+
+}
+
+
+/* IMPRESION */
+
+@media print{
+
+body *{
+
+visibility:hidden;
+
+}
+
+.ticket-card,
+.ticket-card *{
+
+visibility:visible;
+
+}
+
+.ticket-card{
+
+position:absolute;
+
+left:0;
+top:0;
+
+width:100%;
+
+box-shadow:none;
+
+border:none;
+
+}
+
+.ticket-footer{
+
+display:none;
+
+}
+
+}
+
+</style>
+
+
+<div class="ticket-card">
+
+<div class="ticket-header">
+
+<h2 style="margin:0">
+<i class="fa fa-receipt"></i>
+Ticket Venta #{{venta.id}}
+</h2>
+
+<div class="ticket-sub">
+Bodega Verastegui
+</div>
+
+</div>
+
+
+<div class="ticket-body">
+
+<div class="info-grid">
+
+<div class="info-box">
+
+<div class="info-title">
+Fecha
+</div>
+
+<div class="info-value">
+{{venta.fecha}}
+</div>
+
+</div>
+
+<div class="info-box">
+
+<div class="info-title">
+Venta N°
+</div>
+
+<div class="info-value">
+#{{venta.id}}
+</div>
+
+</div>
+
+</div>
+
+
+<table class="table">
+
+<thead>
+
+<tr>
+
+<th>Producto</th>
+<th>Cantidad</th>
+<th>Subtotal</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for d in detalles %}
+
+<tr>
+
+<td>
+{{d.nombre}}
+</td>
+
+<td>
+{{d.cantidad}}
+</td>
+
+<td>
+S/. {{ "%.2f"|format(d.subtotal|float) }}
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+
+<div class="total-box">
+
+<div style="color:var(--text-muted)">
+TOTAL
+</div>
+
+<div class="total-number">
+S/. {{ "%.2f"|format(venta.total|float) }}
+</div>
+
+</div>
+
+
+<div class="ticket-footer">
+
+<button
+onclick="window.print()"
+class="btn-ticket btn-print">
+
+<i class="fa fa-print"></i>
+Imprimir
+
+</button>
+
+
+<a
+href="/ticket/{{venta.id}}"
+class="btn-ticket btn-pdf">
+
+<i class="fa fa-file-pdf"></i>
+Ver PDF
+
+</a>
+
+
+<a
+href="/historial"
+class="btn-ticket btn-back">
+
+<i class="fa fa-arrow-left"></i>
+Volver
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

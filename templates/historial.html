@@ -1,108 +1,810 @@
 {% extends 'layout.html' %}
-
 {% block content %}
 
-<div class="container mt-5">
-    <div class="container-fluid mt-4">
+<style>
+  /* ═══════════════════════════════════════════
+     VARIABLES — MODO CLARO / OSCURO
+  ═══════════════════════════════════════════ */
+  :root {
+    --bg-card:        #ffffff;
+    --bg-input:       #f8fafc;
+    --bg-elevated:    #f1f5f9;
+    --border:         #e2e8f0;
+    --border-light:   #f1f5f9;
+    --text-primary:   #0f172a;
+    --text-secondary: #475569;
+    --text-muted:     #94a3b8;
+    --blue:           #3b82f6;
+    --blue-dark:      #2563eb;
+    --blue-bg:        rgba(59,130,246,.08);
+    --green:          #10b981;
+    --green-dark:     #059669;
+    --green-bg:       rgba(16,185,129,.1);
+    --red:            #ef4444;
+    --red-dark:       #dc2626;
+    --red-bg:         rgba(239,68,68,.1);
+    --amber:          #f59e0b;
+    --amber-dark:     #d97706;
+    --amber-bg:       rgba(245,158,11,.1);
+    --purple:         #8b5cf6;
+    --purple-bg:      rgba(139,92,246,.1);
+    --indigo:         #6366f1;
+    --indigo-bg:      rgba(99,102,241,.1);
+    --cyan:           #06b6d4;
+    --cyan-bg:        rgba(6,182,212,.1);
+    --row-hover:      rgba(59,130,246,.03);
+    --shadow-sm:      0 1px 2px rgba(0,0,0,.05);
+    --shadow-md:      0 4px 12px rgba(0,0,0,.06);
+    --shadow-lg:      0 10px 28px rgba(0,0,0,.08);
+    --highlight-bg:   rgba(59,130,246,.15);
+    --highlight-c:    var(--blue-dark);
+    --kpi-blue-bg:    rgba(59,130,246,.08);
+    --kpi-green-bg:   rgba(16,185,129,.08);
+    --kpi-purple-bg:  rgba(139,92,246,.08);
+  }
 
-    <div class="mb-4">
+  [data-theme="dark"], .dark, html.dark {
+    --bg-card:        #151d2e;
+    --bg-input:       #1a2332;
+    --bg-elevated:    #1e293b;
+    --border:         #1e293b;
+    --border-light:   #1a2332;
+    --text-primary:   #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted:     #64748b;
+    --blue:           #60a5fa;
+    --blue-dark:      #3b82f6;
+    --blue-bg:        rgba(96,165,250,.1);
+    --green:          #34d399;
+    --green-dark:     #10b981;
+    --green-bg:       rgba(52,211,153,.1);
+    --red:            #f87171;
+    --red-dark:       #ef4444;
+    --red-bg:         rgba(248,113,113,.1);
+    --amber:          #fbbf24;
+    --amber-dark:     #f59e0b;
+    --amber-bg:       rgba(251,191,36,.1);
+    --purple:         #a78bfa;
+    --purple-bg:      rgba(167,139,250,.1);
+    --indigo:         #818cf8;
+    --indigo-bg:      rgba(129,140,248,.1);
+    --cyan:           #22d3ee;
+    --cyan-bg:        rgba(34,211,238,.1);
+    --row-hover:      rgba(96,165,250,.05);
+    --shadow-sm:      0 1px 2px rgba(0,0,0,.2);
+    --shadow-md:      0 4px 12px rgba(0,0,0,.25);
+    --shadow-lg:      0 10px 28px rgba(0,0,0,.3);
+    --highlight-bg:   rgba(96,165,250,.2);
+    --highlight-c:    #93bbfd;
+    --kpi-blue-bg:    rgba(96,165,250,.1);
+    --kpi-green-bg:   rgba(52,211,153,.1);
+    --kpi-purple-bg:  rgba(167,139,250,.1);
+  }
 
-        <a
-            href="/"
-            class="btn btn-outline-dark"
-        >
+  /* ─── Animaciones ─── */
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes countUp {
+    from { opacity:0; transform:translateY(6px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeRow {
+    from { opacity:0; transform:translateX(-6px); }
+    to   { opacity:1; transform:translateX(0); }
+  }
+  .anim-up   { animation:fadeUp .45s ease both; }
+  .anim-up-1 { animation-delay:.05s; }
+  .anim-up-2 { animation-delay:.1s; }
+  .anim-up-3 { animation-delay:.15s; }
+  .anim-up-4 { animation-delay:.2s; }
+  .anim-up-5 { animation-delay:.28s; }
+  .anim-up-6 { animation-delay:.35s; }
 
-            ← Menú Principal
+  /* ─── Header ─── */
+  .page-header {
+    display:flex; flex-wrap:wrap; gap:1.25rem;
+    align-items:center; justify-content:space-between;
+    margin-bottom:1.5rem;
+  }
+  .page-title-group { flex:1; min-width:260px; }
+  .page-title {
+    font-size:1.55rem; font-weight:800;
+    color:var(--text-primary); margin:0;
+    letter-spacing:-0.03em;
+    display:flex; align-items:center; gap:.55rem;
+  }
+  .title-icon {
+    width:40px; height:40px; border-radius:11px;
+    background:linear-gradient(135deg, var(--blue), var(--indigo));
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#fff; font-size:.95rem; flex-shrink:0;
+    box-shadow:0 4px 14px rgba(37,99,235,.25);
+  }
+  .page-sub {
+    color:var(--text-muted); font-size:.88rem;
+    margin:.4rem 0 0 .05rem;
+  }
+  .page-count { color:var(--blue); font-weight:800; }
 
-        </a>
+  /* ─── Stats Row ─── */
+  .stats-row {
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:1rem; margin-bottom:1.5rem;
+  }
+  .stat-card {
+    background:var(--bg-card); border:1px solid var(--border);
+    border-radius:14px; padding:1.2rem 1.3rem;
+    display:flex; align-items:center; gap:.9rem;
+    transition:transform .2s ease, box-shadow .2s ease;
+    position:relative; overflow:hidden;
+    box-shadow:var(--shadow-sm);
+  }
+  .stat-card::before {
+    content:''; position:absolute;
+    left:0; top:0; bottom:0; width:4px;
+    border-radius:14px 0 0 14px;
+  }
+  .stat-card::after {
+    content:''; position:absolute; top:-15px; right:-15px;
+    width:70px; height:70px; border-radius:50%;
+    opacity:.04; pointer-events:none;
+  }
+  .stat-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); }
+  .stat-card.green::before  { background:var(--green); }
+  .stat-card.green::after   { background:var(--green); }
+  .stat-card.blue::before   { background:var(--blue); }
+  .stat-card.blue::after    { background:var(--blue); }
+  .stat-card.purple::before { background:var(--purple); }
+  .stat-card.purple::after  { background:var(--purple); }
 
-    </div>
+  .stat-icon {
+    width:48px; height:48px; border-radius:13px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:1.1rem; flex-shrink:0;
+  }
+  .stat-icon.green  { background:var(--kpi-green-bg); color:var(--green); }
+  .stat-icon.blue   { background:var(--kpi-blue-bg);  color:var(--blue); }
+  .stat-icon.purple { background:var(--kpi-purple-bg);color:var(--purple); }
+  .stat-body { line-height:1.2; position:relative; z-index:1; }
+  .stat-value {
+    font-size:1.35rem; font-weight:800;
+    color:var(--text-primary);
+    font-family:'JetBrains Mono', monospace;
+    letter-spacing:-0.5px;
+    animation:countUp .5s ease both .3s;
+  }
+  .stat-label {
+    font-size:.78rem; color:var(--text-muted);
+    font-weight:500; margin-top:3px;
+  }
 
-    <div class="card shadow-lg border-0 rounded-4">
+  /* ─── Buscador ─── */
+  .toolbar-card {
+    background:var(--bg-card); border:1px solid var(--border);
+    border-radius:14px; margin-bottom:1.25rem;
+    box-shadow:var(--shadow-sm);
+  }
+  .toolbar-body { padding:1rem 1.25rem !important; }
+  .toolbar-row {
+    display:flex; gap:.65rem; align-items:center; flex-wrap:wrap;
+  }
+  .search-wrap {
+    flex:1; position:relative; min-width:200px;
+  }
+  .search-wrap .s-icon {
+    position:absolute; left:.85rem; top:50%;
+    transform:translateY(-50%); color:var(--text-muted); font-size:.78rem;
+    pointer-events:none;
+  }
+  .search-wrap input {
+    width:100%; padding:.58rem 2.5rem .58rem 2.2rem;
+    border:1px solid var(--border); border-radius:10px;
+    background:var(--bg-input); color:var(--text-primary);
+    font-size:.86rem; outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .search-wrap input:focus {
+    border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(59,130,246,.1);
+  }
+  .search-wrap input::placeholder { color:var(--text-muted); opacity:.7; }
+  .search-clear {
+    position:absolute; right:.7rem; top:50%;
+    transform:translateY(-50%);
+    width:24px; height:24px; border-radius:6px;
+    background:var(--border); color:var(--text-muted);
+    border:none; cursor:pointer;
+    display:none; align-items:center; justify-content:center;
+    font-size:.65rem; transition:all .12s;
+  }
+  .search-clear.visible { display:inline-flex; }
+  .search-clear:hover { background:var(--red-bg); color:var(--red); }
 
-        <div class="card-body p-5">
+  .toolbar-actions { display:flex; gap:.5rem; }
 
-            <div class="d-flex justify-content-between align-items-center mb-4">
+  /* Meta de búsqueda */
+  .search-meta {
+    display:flex; align-items:center; gap:.6rem;
+    margin-top:.6rem; font-size:.78rem; color:var(--text-muted);
+    min-height:20px; transition:opacity .2s;
+  }
+  .search-meta .count-num {
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700; color:var(--blue);
+  }
+  .search-meta .search-term {
+    font-family:'JetBrains Mono', monospace;
+    font-weight:600; color:var(--text-primary);
+    background:var(--highlight-bg);
+    padding:.1rem .35rem; border-radius:4px;
+    font-size:.75rem;
+  }
 
-                <h1 class="fw-bold">
+  /* ─── Tabla ─── */
+  .card-main {
+    border:1px solid var(--border); border-radius:14px;
+    background:var(--bg-card); overflow:hidden;
+    box-shadow:var(--shadow-sm);
+  }
+  .card-body-main { padding:0 !important; overflow:hidden; }
+  .table-responsive { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .tbl {
+    width:100%; margin:0; border-collapse:separate;
+    border-spacing:0; font-size:.88rem;
+  }
+  .tbl thead th {
+    background:var(--bg-input); color:var(--text-muted);
+    font-weight:700; font-size:.72rem;
+    text-transform:uppercase; letter-spacing:.06em;
+    padding:.8rem 1rem; border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  .tbl tbody tr { transition:background .12s ease, opacity .2s ease; }
+  .tbl tbody tr:hover { background:var(--row-hover); }
+  .tbl tbody tr.filtered-out { display:none; }
+  .tbl tbody tr.filtered-in { animation:fadeRow .25s ease both; }
+  .tbl tbody td {
+    padding:.85rem 1rem;
+    border-bottom:1px solid var(--border-light);
+    vertical-align:middle; color:var(--text-primary);
+  }
+  .tbl tbody tr:last-child td { border-bottom:none; }
 
-                    🧾 Historial de Ventas
+  /* ─── Highlight ─── */
+  .hl {
+    background:var(--highlight-bg);
+    color:var(--highlight-c);
+    border-radius:3px; padding:0 2px; font-weight:700;
+  }
 
-                </h1>
+  /* ─── No resultados ─── */
+  .no-results-row td { padding:0 !important; border:none !important; }
+  .no-results-box {
+    text-align:center; padding:3.5rem 1rem; color:var(--text-muted);
+  }
+  .no-results-box i { font-size:2.2rem; display:block; margin-bottom:.6rem; opacity:.15; }
+  .no-results-box .nr-title {
+    font-size:.95rem; font-weight:700; color:var(--text-primary); margin-bottom:.2rem;
+  }
+  .no-results-box .nr-term {
+    font-family:'JetBrains Mono', monospace;
+    font-weight:600; color:var(--blue);
+    background:var(--highlight-bg);
+    padding:.1rem .4rem; border-radius:4px;
+  }
+  .no-results-box .nr-desc { font-size:.84rem; }
 
-                <a
-                    href="/exportar_ventas"
-                    class="btn btn-success"
-                >
+  /* ─── Celdas ─── */
+  .cell-id {
+    font-family:'JetBrains Mono', monospace;
+    font-size:.8rem; color:var(--text-muted); font-weight:600;
+  }
+  .cell-id .id-hash { opacity:.4; }
+  .cell-total {
+    font-family:'JetBrains Mono', monospace;
+    font-size:.92rem; font-weight:700;
+    color:var(--green-dark); letter-spacing:-0.3px;
+  }
+  .cell-fecha {
+    font-family:'JetBrains Mono', monospace;
+    font-size:.82rem; color:var(--text-secondary);
+  }
+  .cell-fecha .hora {
+    font-size:.72rem; color:var(--text-muted); opacity:.7;
+    margin-left:.3rem;
+  }
+  .badge-items {
+    font-family:'JetBrains Mono', monospace;
+    font-size:.68rem; color:var(--text-muted);
+    background:var(--bg-input); border:1px solid var(--border);
+    border-radius:5px; padding:.12rem .45rem; font-weight:600;
+  }
+  .sale-icon {
+    width:38px; height:38px; border-radius:10px;
+    background:linear-gradient(135deg, var(--blue-bg), rgba(99,102,241,.06));
+    border:1px solid rgba(59,130,246,.1);
+    display:inline-flex; align-items:center; justify-content:center;
+    color:var(--blue); font-size:.85rem; flex-shrink:0;
+  }
+  .sale-name { font-weight:600; font-size:.9rem; color:var(--text-primary); }
+  .sale-meta { display:flex; align-items:center; gap:.5rem; margin-top:.2rem; }
 
-                    📥 Exportar Excel
+  /* ─── Método de pago badge ─── */
+  .pay-badge {
+    font-size:.68rem; font-weight:600;
+    padding:.15rem .5rem; border-radius:5px;
+    display:inline-flex; align-items:center; gap:.25rem;
+  }
+  .pay-cash     { background:var(--green-bg); color:var(--green-dark); }
+  .pay-card     { background:var(--blue-bg);  color:var(--blue-dark); }
+  .pay-transfer { background:var(--purple-bg); color:var(--purple); }
 
-                </a>
+  /* ─── Botón ver ─── */
+  .btn-view {
+    display:inline-flex; align-items:center; gap:.35rem;
+    padding:.38rem .75rem; border-radius:8px;
+    font-size:.78rem; font-weight:600;
+    color:var(--blue); background:var(--blue-bg);
+    border:1px solid rgba(59,130,246,.12);
+    text-decoration:none; cursor:pointer;
+    transition:all .15s ease;
+  }
+  .btn-view:hover {
+    background:rgba(59,130,246,.14); color:var(--blue-dark);
+    border-color:rgba(59,130,246,.22);
+  }
 
-            </div>
+  /* ─── Empty state ─── */
+  .empty-state { text-align:center; padding:4.5rem 1rem; color:var(--text-muted); }
+  .empty-icon-wrap {
+    width:72px; height:72px; border-radius:50%;
+    background:var(--bg-input); border:1px solid var(--border);
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:1.6rem; margin-bottom:1.1rem; color:var(--text-muted); opacity:.5;
+  }
+  .empty-state h4 {
+    font-size:1.05rem; color:var(--text-primary);
+    margin:0 0 .3rem; font-weight:700;
+  }
+  .empty-state p { font-size:.86rem; margin:0; }
 
-            <div class="table-responsive">
+  /* ─── Footer ─── */
+  .table-footer {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:.75rem 1.15rem; border-top:1px solid var(--border);
+    font-size:.8rem; color:var(--text-muted);
+  }
+  .table-footer .footer-total {
+    font-family:'JetBrains Mono', monospace;
+    font-size:.75rem; opacity:.6;
+  }
 
-                <table class="table align-middle table-hover">
+  /* ─── Responsive ─── */
+  @media (max-width:768px) {
+    .stats-row { grid-template-columns:1fr; }
+    .page-header { flex-direction:column; align-items:flex-start; gap:1rem; }
+    .toolbar-row { flex-direction:column; align-items:stretch; }
+    .search-wrap { width:100%; }
+    .toolbar-actions { width:100%; }
+    .toolbar-actions .btn { flex:1; justify-content:center; }
+    .tbl thead { display:none; }
+    .tbl tbody tr {
+      display:block; margin-bottom:.75rem;
+      border:1px solid var(--border); border-radius:12px;
+      padding:.85rem 1rem; background:var(--bg-card);
+    }
+    .tbl tbody tr.filtered-out { display:none; }
+    .tbl tbody tr.filtered-in { display:block; }
+    .tbl tbody td {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:.55rem 0; border-bottom:1px dashed var(--border-light);
+    }
+    .tbl tbody td:last-child { border-bottom:none; justify-content:flex-end; }
+    .tbl tbody td::before {
+      content:attr(data-label); font-weight:700;
+      color:var(--text-muted); font-size:.7rem;
+      text-transform:uppercase; letter-spacing:.04em; margin-right:auto;
+    }
+    .cell-total { font-size:1.05rem; }
+    .btn-view { font-size:.85rem; padding:.45rem .85rem; }
+    .sale-icon { display:none; }
+  }
+  @media (min-width:769px) and (max-width:1024px) {
+    .stats-row { grid-template-columns:repeat(2, 1fr); }
+  }
+</style>
 
-                    <thead class="table-dark">
-
-                        <tr>
-
-                            <th>ID</th>
-                            <th>Total</th>
-                            <th>Fecha</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        {% for venta in ventas %}
-
-                        <tr>
-
-                            <td>
-
-                                <strong>
-
-                                    #{{ venta.id }}
-
-                                </strong>
-
-                            </td>
-
-                            <td>
-
-                                <span class="text-success fw-bold">
-
-                                    S/. {{ venta.total }}
-
-                                </span>
-
-                            </td>
-
-                            <td>
-
-                                {{ venta.fecha }}
-
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
+<!-- ═══════════════════════════════════════════════ -->
+<!-- HEADER                                         -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="page-header anim-up">
+  <div class="page-title-group">
+    <h1 class="page-title">
+      <span class="title-icon"><i class="fa fa-receipt"></i></span>
+      Historial de Ventas
+    </h1>
+    <p class="page-sub">
+      {% if ventas|length > 0 %}
+        Se registraron <span class="page-count" id="totalCount">{{ ventas|length }}</span>
+        {{ 'venta' if ventas|length == 1 else 'ventas' }} en el sistema
+      {% else %}
+        Aún no hay ventas registradas
+      {% endif %}
+    </p>
+  </div>
+  <a href="/" class="btn btn-outline-secondary" style="white-space:nowrap; border-radius:10px;">
+    <i class="fa fa-arrow-left" style="margin-right:.3rem;"></i> Volver al Menú
+  </a>
 </div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- STATS                                          -->
+<!-- ═══════════════════════════════════════════════ -->
+{% if ventas|length > 0 %}
+{% set total_ingresos = ventas|sum(attribute='total') %}
+{% set avg_ticket = total_ingresos / ventas|length %}
+<div class="stats-row">
+  <div class="stat-card green anim-up anim-up-1">
+    <div class="stat-icon green"><i class="fa fa-sack-dollar"></i></div>
+    <div class="stat-body">
+      <div class="stat-value">S/. {{ "%.2f"|format(total_ingresos) }}</div>
+      <div class="stat-label">Ingresos totales</div>
+    </div>
+  </div>
+  <div class="stat-card blue anim-up anim-up-2">
+    <div class="stat-icon blue"><i class="fa fa-cart-shopping"></i></div>
+    <div class="stat-body">
+      <div class="stat-value" id="statVentas">{{ ventas|length }}</div>
+      <div class="stat-label">Ventas realizadas</div>
+    </div>
+  </div>
+  <div class="stat-card purple anim-up anim-up-3">
+    <div class="stat-icon purple"><i class="fa fa-calculator"></i></div>
+    <div class="stat-body">
+      <div class="stat-value" id="statTicket">S/. {{ "%.2f"|format(avg_ticket) }}</div>
+      <div class="stat-label">Ticket promedio</div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- BUSCADOR EN VIVO                               -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="toolbar-card anim-up anim-up-4">
+  <div class="toolbar-body">
+    <div class="toolbar-row">
+      <div class="search-wrap">
+        <i class="fa fa-magnifying-glass s-icon"></i>
+        <input type="text" id="searchInput"
+          placeholder="Buscar por ID, fecha, monto o método de pago..."
+          value="{{ request.args.get('buscar', '') }}"
+          autocomplete="off" spellcheck="false">
+        <button type="button" id="searchClear" class="search-clear" title="Limpiar búsqueda">
+          <i class="fa fa-xmark"></i>
+        </button>
+      </div>
+      <div class="toolbar-actions">
+        <a href="/exportar_ventas" class="btn btn-success" style="white-space:nowrap; border-radius:10px;">
+          <i class="fa fa-file-excel"></i> Exportar
+        </a>
+      </div>
+    </div>
+    <div class="search-meta" id="searchMeta" style="opacity:0">
+      <span id="searchMetaText"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TABLA                                          -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="card-main anim-up anim-up-5">
+  <div class="card-body-main">
+    <div class="table-responsive">
+      <table class="tbl" id="ventasTable">
+        <thead>
+          <tr>
+            <th style="width:72px;">ID</th>
+            <th>Detalle</th>
+            <th style="width:130px;">Total</th>
+            <th style="width:170px;">Fecha</th>
+            <th style="width:100px; text-align:right;">Acción</th>
+          </tr>
+        </thead>
+        <tbody id="ventasBody">
+          {% for venta in ventas %}
+          <tr data-id="{{ venta.id }}"
+              data-total="{{ venta.total|float }}"
+              data-fecha="{{ venta.fecha|lower }}"
+              data-hora="{{ venta.hora|lower|default('') }}"
+              data-metodo="{{ venta.metodo_pago|default('efectivo')|lower }}">
+
+            <td class="cell-id" data-label="ID">
+              <span class="id-hash">#</span><span class="search-target">{{ venta.id }}</span>
+            </td>
+
+            <td data-label="Detalle">
+              <div style="display:flex; align-items:center; gap:.7rem;">
+                <div class="sale-icon">
+                  <i class="fa fa-bag-shopping"></i>
+                </div>
+                <div>
+                  <div class="sale-name search-target">Venta #{{ venta.id }}</div>
+                  <div class="sale-meta">
+                    <span class="badge-items">
+                      {{ venta.items|default(1) }}
+                      {{ 'ítem' if venta.items|default(1) == 1 else 'ítems' }}
+                    </span>
+                    {% if venta.metodo_pago %}
+                      {% if venta.metodo_pago == 'efectivo' %}
+                        <span class="pay-badge pay-cash search-target">
+                          <i class="fa fa-money-bill-wave"></i> Efectivo
+                        </span>
+                      {% elif venta.metodo_pago == 'tarjeta' %}
+                        <span class="pay-badge pay-card search-target">
+                          <i class="fa fa-credit-card"></i> Tarjeta
+                        </span>
+                      {% elif venta.metodo_pago == 'transferencia' %}
+                        <span class="pay-badge pay-transfer search-target">
+                          <i class="fa fa-building-columns"></i> Transfer.
+                        </span>
+                      {% endif %}
+                    {% else %}
+                      <span class="pay-badge pay-cash search-target">
+                        <i class="fa fa-money-bill-wave"></i> Efectivo
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <td class="cell-total" data-label="Total">
+              S/. <span class="search-target">{{ "%.2f"|format(venta.total|float) }}</span>
+            </td>
+
+            <td class="cell-fecha" data-label="Fecha">
+              <i class="fa-regular fa-calendar" style="margin-right:.3rem; opacity:.4; font-size:.75rem;"></i>
+              <span class="search-target">{{ venta.fecha }}</span>
+              {% if venta.hora %}
+              <span class="hora">{{ venta.hora }}</span>
+              {% endif %}
+            </td>
+
+            <td data-label="Acción" style="text-align:right;">
+              <a href="/venta/{{ venta.id }}" class="btn-view">
+                <i class="fa fa-eye"></i> Ver
+              </a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5">
+              <div class="empty-state">
+                <div class="empty-icon-wrap">
+                  <i class="fa fa-receipt"></i>
+                </div>
+                <h4>Sin ventas registradas</h4>
+                <p>Las ventas que realices aparecerán aquí con todo su detalle.</p>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if ventas|length > 0 %}
+    <div class="table-footer" id="tableFooter">
+      <span id="footerCount">
+        Mostrando <strong>{{ ventas|length }}</strong>
+        {{ 'venta' if ventas|length == 1 else 'ventas' }}
+      </span>
+      <span class="footer-total" id="footerTotal">
+        Ingresos: S/. {{ "%.2f"|format(ventas|sum(attribute='total')) }}
+      </span>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+(function() {
+  var input    = document.getElementById('searchInput');
+  var clearBtn = document.getElementById('searchClear');
+  var meta     = document.getElementById('searchMeta');
+  var metaTxt  = document.getElementById('searchMetaText');
+  var tbody    = document.getElementById('ventasBody');
+  var rows     = tbody.querySelectorAll('tr[data-id]');
+  var totalCountEl = document.getElementById('totalCount');
+  var footerCount  = document.getElementById('footerCount');
+  var footerTotal  = document.getElementById('footerTotal');
+  var statVentas   = document.getElementById('statVentas');
+  var statTicket   = document.getElementById('statTicket');
+
+  var totalRows = rows.length;
+
+  /* Total original de ingresos */
+  var originalTotal = 0;
+  rows.forEach(function(row) {
+    originalTotal += parseFloat(row.dataset.total) || 0;
+  });
+
+  /* ─── Guardar texto original ─── */
+  rows.forEach(function(row) {
+    row.querySelectorAll('.search-target').forEach(function(el) {
+      el.dataset.original = el.textContent;
+    });
+  });
+
+  /* ─── Resaltar texto coincidente ─── */
+  function highlight(text, query) {
+    if (!query) return text;
+    var escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var regex = new RegExp('(' + escaped + ')', 'gi');
+    return text.replace(regex, '<span class="hl">$1</span>');
+  }
+
+  /* ─── Restaurar texto original ─── */
+  function restoreText() {
+    rows.forEach(function(row) {
+      row.querySelectorAll('.search-target').forEach(function(el) {
+        if (el.dataset.original) el.textContent = el.dataset.original;
+      });
+    });
+  }
+
+  /* ─── Escape HTML ─── */
+  function escapeHtml(text) {
+    var div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  /* ─── Filtrar filas ─── */
+  function filterRows() {
+    var query = input.value.trim().toLowerCase();
+
+    /* Botón limpiar */
+    if (query.length > 0) {
+      clearBtn.classList.add('visible');
+    } else {
+      clearBtn.classList.remove('visible');
+    }
+
+    var visibleCount = 0;
+    var visibleTotal = 0;
+
+    /* Eliminar fila "sin resultados" previa */
+    var noResultsRow = tbody.querySelector('.no-results-row');
+
+    rows.forEach(function(row) {
+      var id     = row.dataset.id;
+      var total  = row.dataset.total;
+      var fecha  = row.dataset.fecha;
+      var hora   = row.dataset.hora;
+      var metodo = row.dataset.metodo;
+
+      /* Buscar en ID, total, fecha, hora, método de pago */
+      var match = !query
+        || id.indexOf(query) !== -1
+        || total.indexOf(query) !== -1
+        || fecha.indexOf(query) !== -1
+        || hora.indexOf(query) !== -1
+        || metodo.indexOf(query) !== -1;
+
+      if (match) {
+        row.classList.remove('filtered-out');
+        row.classList.add('filtered-in');
+        visibleCount++;
+        visibleTotal += parseFloat(total) || 0;
+
+        /* Highlight en campos buscables */
+        row.querySelectorAll('.search-target').forEach(function(el) {
+          var original = el.dataset.original;
+          if (query) {
+            el.innerHTML = highlight(original, query);
+          } else {
+            el.textContent = original;
+          }
+        });
+      } else {
+        row.classList.add('filtered-out');
+        row.classList.remove('filtered-in');
+        row.querySelectorAll('.search-target').forEach(function(el) {
+          el.textContent = el.dataset.original;
+        });
+      }
+    });
+
+    /* ─── Meta info ─── */
+    if (query) {
+      meta.style.opacity = '1';
+      if (visibleCount > 0) {
+        metaTxt.innerHTML =
+          '<span class="count-num">' + visibleCount + '</span> resultado' +
+          (visibleCount !== 1 ? 's' : '') +
+          ' para <span class="search-term">' + escapeHtml(input.value.trim()) + '</span>';
+      } else {
+        metaTxt.innerHTML =
+          'Sin resultados para <span class="search-term">' + escapeHtml(input.value.trim()) + '</span>';
+      }
+    } else {
+      meta.style.opacity = '0';
+      restoreText();
+    }
+
+    /* ─── Actualizar contadores ─── */
+    if (totalCountEl) {
+      totalCountEl.textContent = query ? visibleCount : totalRows;
+    }
+
+    if (footerCount) {
+      var word = (query ? visibleCount : totalRows) === 1 ? 'venta' : 'ventas';
+      footerCount.innerHTML =
+        'Mostrando <strong>' + (query ? visibleCount : totalRows) + '</strong> ' + word;
+    }
+
+    if (footerTotal) {
+      var t = query ? visibleTotal : originalTotal;
+      footerTotal.textContent = 'Ingresos: S/. ' + t.toFixed(2);
+    }
+
+    if (statVentas) {
+      statVentas.textContent = query ? visibleCount : totalRows;
+    }
+
+    if (statTicket) {
+      var count = query ? visibleCount : totalRows;
+      var ticketVal = count > 0 ? (query ? visibleTotal : originalTotal) / count : 0;
+      statTicket.textContent = 'S/. ' + ticketVal.toFixed(2);
+    }
+
+    /* ─── Fila "sin resultados" ─── */
+    if (noResultsRow) noResultsRow.remove();
+
+    if (query && visibleCount === 0 && totalRows > 0) {
+      var tr = document.createElement('tr');
+      tr.className = 'no-results-row filtered-in';
+      var colCount = document.querySelectorAll('.tbl thead th').length;
+      tr.innerHTML = '<td colspan="' + colCount + '">' +
+        '<div class="no-results-box">' +
+          '<i class="fa fa-magnifying-glass"></i>' +
+          '<div class="nr-title">No se encontraron ventas</div>' +
+          '<div class="nr-desc">Intenta con otro ID, fecha, monto o método de pago</div>' +
+        '</div>' +
+      '</td>';
+      tbody.appendChild(tr);
+    }
+  }
+
+  /* ─── Eventos ─── */
+  input.addEventListener('input', filterRows);
+
+  clearBtn.addEventListener('click', function() {
+    input.value = '';
+    filterRows();
+    input.focus();
+  });
+
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      input.value = '';
+      filterRows();
+      input.blur();
+    }
+  });
+
+  /* ─── Búsqueda inicial si hay valor en URL ─── */
+  if (input.value.trim()) {
+    filterRows();
+  }
+})();
+</script>
 
 {% endblock %}

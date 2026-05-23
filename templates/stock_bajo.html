@@ -1,101 +1,252 @@
 {% extends 'layout.html' %}
-
 {% block content %}
 
-<div class="container-fluid">
+<style>
+  .alert-pulse {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ef4444;
+    display: inline-block;
+    animation: pulse 1.5s infinite;
+  }
 
-    <div class="d-flex justify-content-between mb-4">
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, .6);
+    }
+    50% {
+      opacity: .7;
+      box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+  }
 
-        <div>
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 25px;
+  }
 
-            <h1 class="fw-bold">
+  .summary-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: .3s;
+  }
 
-                ⚠ Alertas de Inventario
+  .summary-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
 
-            </h1>
+  .summary-top {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
 
-            <p class="text-muted">
+  .summary-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
 
-                Productos que llegaron al punto de reorden
+  .icon-red {
+    background: rgba(239, 68, 68, .1);
+    color: #ef4444;
+  }
 
-            </p>
+  .icon-orange {
+    background: rgba(245, 158, 11, .1);
+    color: #f59e0b;
+  }
 
-        </div>
+  .icon-blue {
+    background: rgba(79, 135, 255, .1);
+    color: #4f87ff;
+  }
 
+  .summary-label {
+    font-size: .75rem;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+
+  .summary-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-primary);
+  }
+
+  .prod-name {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .stock-danger {
+    color: #ef4444;
+    font-weight: 700;
+    font-family: monospace;
+    font-size: 15px;
+  }
+
+  .stock-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, .08);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .stock-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ef4444, #f59e0b);
+  }
+
+  .estado {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .sin-stock {
+    background: rgba(239, 68, 68, .15);
+    color: #ef4444;
+  }
+
+  .reabastecer {
+    background: rgba(245, 158, 11, .15);
+    color: #f59e0b;
+  }
+
+  .empty {
+    padding: 60px;
+    text-align: center;
+    color: var(--text-muted);
+  }
+
+  .empty i {
+    font-size: 45px;
+    opacity: .2;
+    margin-bottom: 10px;
+  }
+</style>
+
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <span class="alert-pulse"></span>
+      Alertas de Inventario
+    </h1>
+    <p class="page-sub">
+      Productos por debajo del punto de reorden
+    </p>
+  </div>
+</div>
+
+<div class="summary-grid">
+  <div class="summary-card">
+    <div class="summary-top">
+      <div class="summary-icon icon-red">
+        <i class="fa fa-triangle-exclamation"></i>
+      </div>
+      <div>
+        <div class="summary-label">Total Alertas</div>
+        <div class="summary-value">{{ productos|length }}</div>
+      </div>
     </div>
+  </div>
 
-    <div class="card shadow-lg border-0">
-
-        <div class="card-body">
-
-            <table class="table table-hover">
-
-                <thead class="table-danger">
-
-                    <tr>
-
-                        <th>ID</th>
-                        <th>Producto</th>
-                        <th>Stock Actual</th>
-                        <th>Punto Reorden</th>
-                        <th>Estado</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                {% for p in productos %}
-
-                    <tr>
-
-                        <td>
-
-                            {{p.id}}
-
-                        </td>
-
-                        <td>
-
-                            {{p.nombre}}
-
-                        </td>
-
-                        <td>
-
-                            {{p.stock}}
-
-                        </td>
-
-                        <td>
-
-                            {{p.reorden}}
-
-                        </td>
-
-                        <td>
-
-                            <span class="badge bg-danger">
-
-                                Reabastecer
-
-                            </span>
-
-                        </td>
-
-                    </tr>
-
-                {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
+  <div class="summary-card">
+    <div class="summary-top">
+      <div class="summary-icon icon-orange">
+        <i class="fa fa-box-open"></i>
+      </div>
+      <div>
+        <div class="summary-label">Productos Vigilados</div>
+        <div class="summary-value">{{ productos|length }}</div>
+      </div>
     </div>
+  </div>
 
+  <div class="summary-card">
+    <div class="summary-top">
+      <div class="summary-icon icon-blue">
+        <i class="fa fa-arrow-trend-down"></i>
+      </div>
+      <div>
+        <div class="summary-label">Necesitan Compra</div>
+        <div class="summary-value">{{ productos|length }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body" style="padding: 0 !important">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Producto</th>
+            <th>Stock</th>
+            <th>Reorden</th>
+           
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in productos %}
+            <tr>
+              <td>{{ p.id }}</td>
+              <td>
+                <div class="prod-name">{{ p.nombre }}</div>
+              </td>
+              <td>
+                <span class="stock-danger">{{ p.stock }}</span>
+              </td>
+              <td>{{ p.reorden }}</td>
+              
+              <td>
+                {% if p.stock <= 0 %}
+                  <span class="estado sin-stock">
+                    <i class="fa fa-circle-xmark"></i> Sin Stock
+                  </span>
+                {% else %}
+                  <span class="estado reabastecer">
+                    <i class="fa fa-triangle-exclamation"></i> Reabastecer
+                  </span>
+                {% endif %}
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="6">
+                <div class="empty">
+                  <i class="fa fa-circle-check"></i>
+                  <h5 style="color: var(--green)">Todo está correcto</h5>
+                  No existen productos con bajo stock
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

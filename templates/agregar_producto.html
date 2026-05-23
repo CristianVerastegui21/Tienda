@@ -1,269 +1,101 @@
 {% extends 'layout.html' %}
-
 {% block content %}
 
-<div class="container mt-5">
-
-    <div class="row justify-content-center">
-
-        <div class="col-md-8">
-
-            <div class="card shadow-lg border-0 rounded-4">
-
-                <div class="card-body p-5">
-
-                    <h1 class="text-center fw-bold mb-4">
-
-                        📦 Agregar Producto
-
-                    </h1>
-
-                    <form
-                        method="POST"
-                        enctype="multipart/form-data"
-                    >
-
-                        <!-- NOMBRE -->
-
-                        <div class="mb-4">
-
-                            <label class="form-label fw-bold">
-
-                                Nombre del Producto
-
-                            </label>
-
-                            <input
-                                type="text"
-                                name="nombre"
-                                class="form-control form-control-lg"
-                                placeholder="Ejemplo: Arroz Costeño"
-                                required
-                            >
-
-                        </div>
-
-                        <!-- PRECIO -->
-
-                        <div class="mb-4">
-
-                            <label class="form-label fw-bold">
-
-                                Precio
-
-                            </label>
-
-                            <input
-                                type="number"
-                                step="0.01"
-                                name="precio"
-                                class="form-control form-control-lg"
-                                placeholder="0.00"
-                                required
-                            >
-
-                        </div>
-
-                        <!-- STOCK -->
-
-                        <div class="mb-4">
-
-                            <label class="form-label fw-bold">
-
-                                Stock
-
-                            </label>
-
-                            <input
-                                type="number"
-                                name="stock"
-                                class="form-control form-control-lg"
-                                placeholder="Cantidad disponible"
-                                required
-                            >
-
-                        </div>
-                    
-                        <div class="mb-3">
-
-                            
-                            <label class="form-label fw-bold">
-
-                                Punto de Reorden
-
-                            </label>
-
-                            <input
-                                type="number"
-                                name="reorden"
-                                class="form-control"
-                                value="5"
-                                min="1"
-                                required
-                            >
-
-                            <small class="text-muted">
-
-                                Cuando el stock llegue a este valor se mostrará alerta.
-
-                            </small>
-
-                        </div>
-
-                        <!-- CODIGO -->
-
-                        <div class="mb-4">
-
-                            <label class="form-label fw-bold">
-
-                                Código de Barras / QR
-
-                            </label>
-
-                            <div class="input-group">
-
-                                <input
-                                    type="text"
-                                    name="codigo"
-                                    id="codigo"
-                                    class="form-control form-control-lg"
-                                    placeholder="Escanear o escribir código"
-                                >
-
-                                <button
-                                    type="button"
-                                    class="btn btn-success"
-                                    onclick="abrirScanner()"
-                                >
-
-                                    📷 Escanear
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                        <!-- IMAGEN -->
-
-                        <div class="mb-4">
-
-                            <label class="form-label fw-bold">
-
-                                Imagen del Producto
-
-                            </label>
-
-                            <input
-                                type="file"
-                                name="imagen"
-                                class="form-control form-control-lg"
-                                accept="image/*"
-                                onchange="previewImagen(event)"
-                            >
-
-                        </div>
-
-                        <!-- PREVIEW -->
-
-                        <div class="text-center mb-4">
-
-                            <img
-                                id="preview"
-                                src=""
-                                style="
-                                    max-width:250px;
-                                    display:none;
-                                    border-radius:20px;
-                                    box-shadow:0 0 15px rgba(0,0,0,0.2);
-                                "
-                            >
-
-                        </div>
-
-                        <!-- BOTONES -->
-
-                        <div class="d-grid gap-3">
-
-                            <button
-                                type="submit"
-                                class="btn btn-primary btn-lg"
-                            >
-
-                                💾 Guardar Producto
-
-                            </button>
-
-                            <a
-                                href="/productos"
-                                class="btn btn-outline-secondary"
-                            >
-
-                                ← Volver
-
-                            </a>
-
-                        </div>
-
-                    </form>
-
-                </div>
-
+<style>
+  .form-card { max-width:620px; margin:0 auto; }
+  .form-section { margin-bottom:1.5rem; }
+  .form-section-title { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:.85rem; padding-bottom:.5rem; border-bottom:1px solid var(--border); }
+  .preview-img { width:100%; max-width:200px; height:140px; object-fit:cover; border-radius:10px; border:1px solid var(--border); display:none; }
+  .file-drop { background:var(--bg-input); border:2px dashed var(--border); border-radius:10px; padding:1.5rem; text-align:center; color:var(--text-muted); font-size:.82rem; cursor:pointer; transition:all .2s; }
+  .file-drop:hover { border-color:var(--blue); color:var(--text-secondary); }
+  .file-drop i { font-size:1.5rem; display:block; margin-bottom:.5rem; opacity:.4; }
+  .field-hint { font-size:.72rem; color:var(--text-muted); margin-top:.3rem; }
+  .back-link { display:inline-flex; align-items:center; gap:.4rem; color:var(--text-muted); font-size:.82rem; text-decoration:none; margin-bottom:1.25rem; transition:color .2s; }
+  .back-link:hover { color:var(--text-primary); }
+</style>
+
+<a href="/productos" class="back-link"><i class="fa fa-arrow-left"></i> Volver a Productos</a>
+
+<div class="form-card">
+  <div class="page-header" style="margin-bottom:1.25rem">
+    <div>
+      <h1 class="page-title">📦 Agregar Producto</h1>
+      <p class="page-sub">Registra un nuevo producto en el inventario</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <form method="POST" enctype="multipart/form-data">
+
+        <div class="form-section">
+          <div class="form-section-title">Información básica</div>
+          <div class="mb-3">
+            <label class="form-label">Nombre del Producto</label>
+            <input type="text" name="nombre" class="form-control" placeholder="Ej: Arroz Costeño 1kg" required>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+            <div>
+              <label class="form-label">Precio (S/.)</label>
+              <input type="number" step="0.01" name="precio" class="form-control" placeholder="0.00" required>
             </div>
-
+            <div>
+              <label class="form-label">Stock Inicial</label>
+              <input type="number" name="stock" class="form-control" placeholder="0" required>
+            </div>
+          </div>
         </div>
 
-    </div>
+        <div class="form-section">
+          <div class="form-section-title">Configuración de stock</div>
+          <div>
+            <label class="form-label">Punto de Reorden</label>
+            <input type="number" name="reorden" class="form-control" value="5" min="1" required>
+            <div class="field-hint">Alerta cuando el stock llegue a este valor</div>
+          </div>
+        </div>
 
+        <div class="form-section">
+          <div class="form-section-title">Código de barras</div>
+          <div style="display:flex;gap:.6rem">
+            <input type="text" name="codigo" id="codigo" class="form-control" placeholder="Escanear o ingresar código">
+            <button type="button" class="btn btn-success" onclick="abrirScanner()" style="white-space:nowrap;"><i class="fa fa-camera"></i> Escanear</button>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">Imagen</div>
+          <div class="file-drop" onclick="document.getElementById('imgInput').click()">
+            <i class="fa fa-cloud-arrow-up"></i>
+            Haz clic para subir una imagen
+          </div>
+          <input type="file" name="imagen" id="imgInput" accept="image/*" style="display:none" onchange="previewImg(event)">
+          <div style="margin-top:.75rem;text-align:center">
+            <img id="preview" class="preview-img" src="" alt="Preview">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:.75rem;margin-top:.5rem">
+          <button type="submit" class="btn btn-primary" style="flex:1"><i class="fa fa-floppy-disk"></i> Guardar Producto</button>
+          <a href="/productos" class="btn btn-outline-secondary">Cancelar</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </div>
 
-<!-- SCRIPT SCANNER -->
-
 <script>
-
-function abrirScanner() {
-
-    fetch('/scanner_codigo')
-
-    .then(response => response.text())
-
-    .then(data => {
-
-        document.getElementById(
-            'codigo'
-        ).value = data
-
-    })
-
-}
-
-</script>
-
-<!-- PREVIEW IMAGEN -->
-
-<script>
-
-function previewImagen(event) {
-
-    const input = event.target
-
-    const preview = document.getElementById(
-        'preview'
-    )
-
-    const file = input.files[0]
-
-    if(file) {
-
-        preview.src =
-            URL.createObjectURL(file)
-
-        preview.style.display = 'block'
-
+  function abrirScanner(){
+    fetch('/scanner_codigo').then(r=>r.text()).then(d=>{ document.getElementById('codigo').value=d; });
+  }
+  function previewImg(e){
+    const file=e.target.files[0];
+    if(file){
+      const img=document.getElementById('preview');
+      img.src=URL.createObjectURL(file); img.style.display='block';
     }
-
-}
-
+  }
 </script>
 
 {% endblock %}

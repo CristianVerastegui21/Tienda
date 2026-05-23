@@ -1,482 +1,237 @@
 {% extends 'layout.html' %}
-
 {% block content %}
 
-<div class="container-fluid mt-4">
+<style>
+.welcome-banner {
+  background: linear-gradient(135deg, rgba(79,135,255,0.1), rgba(168,85,247,0.08));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.8rem 2rem;
+  margin-bottom: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  animation: fadeUp 0.5s ease both;
+}
+.welcome-text h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+.welcome-text p { color: var(--text-muted); font-size: 0.85rem; margin: 4px 0 0; }
+.welcome-badge {
+  background: linear-gradient(135deg, var(--blue), var(--purple));
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
 
-    <!-- BIENVENIDA -->
+/* KPI mini row */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.8rem;
+}
+@media (max-width: 992px) { .kpi-row { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 576px) { .kpi-row { grid-template-columns: 1fr; } }
 
-    <div class="row mb-4">
+.kpi-mini {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.1rem 1.3rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.kpi-mini:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+.kpi-mini-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.kpi-mini-val { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); line-height: 1; }
+.kpi-mini-lbl { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
 
-        <div class="col-md-12">
+/* Module grid */
+.modules-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+.modules-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.8rem;
+}
+@media (max-width: 992px) { .modules-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 576px) { .modules-grid { grid-template-columns: 1fr; } }
 
-            <div class="card border-0 shadow-lg rounded-4">
+.mod-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem 1.2rem;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.6rem;
+  transition: all 0.28s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.mod-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.mod-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); text-decoration: none; }
+.mod-card:hover::before { opacity: 1; }
+.mod-card.c-blue::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
+.mod-card.c-green::before { background: var(--green); }
+.mod-card.c-amber::before { background: var(--amber); }
+.mod-card.c-red::before { background: var(--red); }
+.mod-card.c-purple::before { background: var(--purple); }
+.mod-card.c-dark::before { background: var(--text-muted); }
 
-                <div class="card-body p-5 text-center">
+.mod-icon {
+  font-size: 2rem;
+  margin-bottom: 0.2rem;
+}
+.mod-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.mod-desc {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+</style>
 
-                    <h1 class="display-5 fw-bold">
+<!-- BIENVENIDA -->
+<div class="welcome-banner fade-up">
+  <div class="welcome-text">
+    <h2>Bienvenido, {{ session.usuario }} 👋</h2>
+    <p>Panel principal · Bodega Verastegui</p>
+  </div>
+  <span class="welcome-badge">{{ (session.rol or '')|title }}</span>
+</div>
 
-                        🏪 Bodega 
-
-                    </h1>
-
-                    <p class="lead text-muted">
-
-                        Sistema profesional de gestión e inventario
-
-                    </p>
-
-                    <p class="text-secondary">
-
-                        Bienvenido {{ session.usuario }}
-
-                    </p>
-
-                </div>
-
-            </div>
-
-        </div>
-
+<!-- KPIs -->
+<div class="kpi-row">
+  <div class="kpi-mini fade-up delay-1">
+    <div class="kpi-mini-icon" style="background:rgba(79,135,255,0.12); color:var(--blue);">📦</div>
+    <div>
+      <div class="kpi-mini-val">{{ total_productos }}</div>
+      <div class="kpi-mini-lbl">Productos</div>
     </div>
-
-
-    <!-- KPIs -->
-
-    <div class="row g-4 mb-5">
-
-        <div class="col-md-3">
-
-            <div class="card bg-primary text-white shadow rounded-4 border-0">
-
-                <div class="card-body">
-
-                    <h5>📦 Productos</h5>
-
-                    <h1 class="fw-bold">
-
-                        {{ total_productos }}
-
-                    </h1>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card bg-success text-white shadow rounded-4 border-0">
-
-                <div class="card-body">
-
-                    <h5>🛒 Ventas</h5>
-
-                    <h1 class="fw-bold">
-
-                        {{ total_ventas }}
-
-                    </h1>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card bg-warning text-dark shadow rounded-4 border-0">
-
-                <div class="card-body">
-
-                    <h5>💰 Ingresos</h5>
-
-                    <h2 class="fw-bold">
-
-                        S/. {{ ingresos }}
-
-                    </h2>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card bg-danger text-white shadow rounded-4 border-0">
-
-                <div class="card-body">
-
-                    <h5>⚠ Stock Bajo</h5>
-
-                    <h1 class="fw-bold">
-
-                        {{ stock_bajo }}
-
-                    </h1>
-
-                </div>
-
-            </div>
-
-        </div>
-
+  </div>
+  <div class="kpi-mini fade-up delay-2">
+    <div class="kpi-mini-icon" style="background:rgba(34,201,138,0.12); color:var(--green);">🛒</div>
+    <div>
+      <div class="kpi-mini-val">{{ total_ventas }}</div>
+      <div class="kpi-mini-lbl">Ventas</div>
     </div>
-
-
-
-    <!-- MODULOS -->
-
-    <div class="row g-4">
-
-        <!-- PRODUCTOS -->
-
-        <div class="col-md-3">
-
-            <div class="card shadow rounded-4 border-0 h-100">
-
-                <div class="card-body text-center p-4">
-
-                    <h1>📦</h1>
-
-                    <h4 class="fw-bold">
-
-                        Productos
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        Gestionar inventario
-
-                    </p>
-
-                    <a href="/productos"
-
-                    class="btn btn-primary w-100">
-
-                    Abrir
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- VENTAS -->
-
-        <div class="col-md-3">
-
-            <div class="card shadow rounded-4 border-0 h-100">
-
-                <div class="card-body text-center p-4">
-
-                    <h1>🛒</h1>
-
-                    <h4 class="fw-bold">
-
-                        Ventas
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        Realizar ventas
-
-                    </p>
-
-                    <a href="/ventas"
-
-                    class="btn btn-success w-100">
-
-                    Abrir
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- DASHBOARD -->
-
-        <div class="col-md-3">
-
-            <div class="card shadow rounded-4 border-0 h-100">
-
-                <div class="card-body text-center p-4">
-
-                    <h1>📊</h1>
-
-                    <h4 class="fw-bold">
-
-                        Dashboard
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        Estadísticas completas
-
-                    </p>
-
-                    <a href="/dashboard"
-
-                    class="btn btn-warning w-100">
-
-                    Abrir
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- REPORTES -->
-
-        <div class="col-md-3">
-
-            <div class="card shadow rounded-4 border-0 h-100">
-
-                <div class="card-body text-center p-4">
-
-                    <h1>📈</h1>
-
-                    <h4 class="fw-bold">
-
-                        Reportes
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        Ver estadísticas
-
-                    </p>
-
-                    <a href="/reportes"
-
-                    class="btn btn-info w-100">
-
-                    Abrir
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- HISTORIAL -->
-
-        <div class="col-md-3">
-
-            <div class="card shadow rounded-4 border-0 h-100">
-
-                <div class="card-body text-center p-4">
-
-                    <h1>🧾</h1>
-
-                    <h4 class="fw-bold">
-
-                        Historial
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        Historial de ventas
-
-                    </p>
-
-                    <a href="/historial"
-
-                    class="btn btn-dark w-100">
-
-                    Abrir
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- USUARIOS -->
-
-        {% if session.rol=="admin" %}
-
-        <div class="col-md-3">
-
-            <div class="card shadow rounded-4 border-0 h-100">
-
-                <div class="card-body text-center p-4">
-
-                    <h1>👥</h1>
-
-                    <h4 class="fw-bold">
-
-                        Usuarios
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        Gestión de usuarios
-
-                    </p>
-
-                    <a href="/usuarios"
-
-                    class="btn btn-secondary w-100">
-
-                    Abrir
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {% endif %}
-
-
-        <!-- LOGS -->
-
-        {% if session.rol=="admin" %}
-
-        <div class="col-md-3">
-
-            <div class="card shadow rounded-4 border-0 h-100">
-
-                <div class="card-body text-center p-4">
-
-                    <h1>📄</h1>
-
-                    <h4 class="fw-bold">
-
-                        Logs
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        Actividad sistema
-
-                    </p>
-
-                    <a href="/logs"
-
-                    class="btn btn-danger w-100">
-
-                    Abrir
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {% endif %}
-
-
-        <!-- BACKUP -->
-
-        {% if session.rol=="admin" %}
-
-        <div class="col-md-3">
-
-            <div class="card shadow rounded-4 border-0 h-100">
-
-                <div class="card-body text-center p-4">
-
-                    <h1>💾</h1>
-
-                    <h4 class="fw-bold">
-
-                        Backup
-
-                    </h4>
-
-                    <p class="text-muted">
-
-                        Copia seguridad
-
-                    </p>
-
-                    <a href="/backup"
-
-                    class="btn btn-secondary w-100">
-
-                    Crear
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        {% endif %}
-
-
+  </div>
+  <div class="kpi-mini fade-up delay-3">
+    <div class="kpi-mini-icon" style="background:rgba(245,166,35,0.12); color:var(--amber);">💰</div>
+    <div>
+      <div class="kpi-mini-val" style="font-size:1.1rem;">S/. {{ ingresos }}</div>
+      <div class="kpi-mini-lbl">Ingresos</div>
     </div>
-
-
-
-    <!-- CERRAR -->
-
-    <div class="row mt-5">
-
-        <div class="col-md-12">
-
-            <div class="card bg-danger border-0 shadow rounded-4">
-
-                <div class="card-body text-center p-4">
-
-                    <h4 class="text-white">
-
-                        🔒 Cerrar Sesión
-
-                    </h4>
-
-                    <a href="/logout"
-
-                    class="btn btn-light btn-lg">
-
-                    Salir
-
-                    </a>
-
-                </div>
-
-            </div>
-
-        </div>
-
+  </div>
+  <div class="kpi-mini fade-up delay-4">
+    <div class="kpi-mini-icon" style="background:rgba(255,79,106,0.12); color:var(--red);">⚠</div>
+    <div>
+      <div class="kpi-mini-val">{{ stock_bajo }}</div>
+      <div class="kpi-mini-lbl">Bajo Stock</div>
     </div>
+  </div>
+</div>
 
+<!-- MÓDULOS -->
+<div class="modules-title">Módulos del sistema</div>
+<div class="modules-grid">
+
+  <a href="/ventas" class="mod-card c-green fade-up">
+    <div class="mod-icon">🛒</div>
+    <div class="mod-name">Ventas</div>
+    <div class="mod-desc">Punto de venta y carrito</div>
+  </a>
+
+  <a href="/historial" class="mod-card c-blue fade-up delay-1">
+    <div class="mod-icon">🧾</div>
+    <div class="mod-name">Historial</div>
+    <div class="mod-desc">Registro de ventas</div>
+  </a>
+
+  {% if session.rol in ['admin','supervisor'] %}
+  <a href="/productos" class="mod-card c-amber fade-up delay-2">
+    <div class="mod-icon">📦</div>
+    <div class="mod-name">Productos</div>
+    <div class="mod-desc">Gestionar inventario</div>
+  </a>
+
+  <a href="/stock_bajo" class="mod-card c-red fade-up delay-3">
+    <div class="mod-icon">⚠️</div>
+    <div class="mod-name">Alertas Stock</div>
+    <div class="mod-desc">Productos por reabastecer</div>
+  </a>
+
+  <a href="/dashboard" class="mod-card c-purple fade-up">
+    <div class="mod-icon">📊</div>
+    <div class="mod-name">Dashboard</div>
+    <div class="mod-desc">Panel de control visual</div>
+  </a>
+
+  <a href="/reportes" class="mod-card c-blue fade-up delay-1">
+    <div class="mod-icon">📈</div>
+    <div class="mod-name">Reportes</div>
+    <div class="mod-desc">Estadísticas y exportación</div>
+  </a>
+  {% endif %}
+
+  {% if session.rol == 'admin' %}
+  <a href="/usuarios" class="mod-card c-dark fade-up delay-2">
+    <div class="mod-icon">👥</div>
+    <div class="mod-name">Usuarios</div>
+    <div class="mod-desc">Gestión de accesos</div>
+  </a>
+
+  <a href="/logs" class="mod-card c-dark fade-up delay-3">
+    <div class="mod-icon">📄</div>
+    <div class="mod-name">Logs</div>
+    <div class="mod-desc">Actividad del sistema</div>
+  </a>
+
+  <a href="/backup" class="mod-card c-dark fade-up">
+    <div class="mod-icon">💾</div>
+    <div class="mod-name">Backup</div>
+    <div class="mod-desc">Copia de seguridad</div>
+  </a>
+  {% endif %}
 
 </div>
 

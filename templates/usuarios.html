@@ -1,145 +1,801 @@
 {% extends 'layout.html' %}
-
 {% block content %}
 
-<div class="container-fluid">
+<style>
+  /* ═══════════════════════════════════════════
+     VARIABLES — MODO CLARO / OSCURO
+  ═══════════════════════════════════════════ */
+  :root {
+    --bg-card:        #ffffff;
+    --bg-input:       #f8fafc;
+    --bg-elevated:    #f1f5f9;
+    --border:         #e2e8f0;
+    --border-light:   #f1f5f9;
+    --text-primary:   #0f172a;
+    --text-secondary: #475569;
+    --text-muted:     #94a3b8;
+    --blue:           #3b82f6;
+    --blue-dark:      #2563eb;
+    --blue-bg:        rgba(59,130,246,.08);
+    --green:          #10b981;
+    --green-dark:     #059669;
+    --green-bg:       rgba(16,185,129,.1);
+    --red:            #ef4444;
+    --red-dark:       #dc2626;
+    --red-bg:         rgba(239,68,68,.1);
+    --amber:          #f59e0b;
+    --amber-dark:     #d97706;
+    --amber-bg:       rgba(245,158,11,.1);
+    --purple:         #8b5cf6;
+    --purple-bg:      rgba(139,92,246,.1);
+    --indigo:         #6366f1;
+    --indigo-bg:      rgba(99,102,241,.1);
+    --row-hover:      rgba(59,130,246,.03);
+    --shadow-sm:      0 1px 2px rgba(0,0,0,.05);
+    --shadow-lg:      0 10px 28px rgba(0,0,0,.08);
+    --kpi-blue-bg:    rgba(59,130,246,.08);
+    --kpi-green-bg:   rgba(16,185,129,.08);
+    --kpi-red-bg:     rgba(239,68,68,.08);
+    --kpi-amber-bg:   rgba(245,158,11,.08);
+    --admin-bg:       rgba(239,68,68,.1);
+    --admin-c:        #dc2626;
+    --supervisor-bg:  rgba(245,158,11,.1);
+    --supervisor-c:   #d97706;
+    --cajero-bg:      rgba(16,185,129,.1);
+    --cajero-c:       #059669;
+    --status-active-bg:  rgba(16,185,129,.1);
+    --status-active-c:   #059669;
+    --status-inactive-bg:rgba(148,163,184,.1);
+    --status-inactive-c: #64748b;
+    --highlight-bg:   rgba(59,130,246,.15);
+    --highlight-c:    var(--blue-dark);
+    --no-results-bg:  var(--bg-input);
+  }
 
-    <!-- HEADER -->
+  [data-theme="dark"], .dark, html.dark {
+    --bg-card:        #151d2e;
+    --bg-input:       #1a2332;
+    --bg-elevated:    #1e293b;
+    --border:         #1e293b;
+    --border-light:   #1a2332;
+    --text-primary:   #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-muted:     #64748b;
+    --blue:           #60a5fa;
+    --blue-dark:      #3b82f6;
+    --blue-bg:        rgba(96,165,250,.1);
+    --green:          #34d399;
+    --green-dark:     #10b981;
+    --green-bg:       rgba(52,211,153,.1);
+    --red:            #f87171;
+    --red-dark:       #ef4444;
+    --red-bg:         rgba(248,113,113,.1);
+    --amber:          #fbbf24;
+    --amber-dark:     #f59e0b;
+    --amber-bg:       rgba(251,191,36,.1);
+    --purple:         #a78bfa;
+    --purple-bg:      rgba(167,139,250,.1);
+    --indigo:         #818cf8;
+    --indigo-bg:      rgba(129,140,248,.1);
+    --row-hover:      rgba(96,165,250,.05);
+    --shadow-sm:      0 1px 2px rgba(0,0,0,.2);
+    --shadow-lg:      0 10px 28px rgba(0,0,0,.3);
+    --kpi-blue-bg:    rgba(96,165,250,.1);
+    --kpi-green-bg:   rgba(52,211,153,.1);
+    --kpi-red-bg:     rgba(248,113,113,.1);
+    --kpi-amber-bg:   rgba(251,191,36,.1);
+    --admin-bg:       rgba(248,113,113,.12);
+    --admin-c:        #f87171;
+    --supervisor-bg:  rgba(251,191,36,.12);
+    --supervisor-c:   #fbbf24;
+    --cajero-bg:      rgba(52,211,153,.12);
+    --cajero-c:       #34d399;
+    --status-active-bg:  rgba(52,211,153,.12);
+    --status-active-c:   #34d399;
+    --status-inactive-bg:rgba(148,163,184,.08);
+    --status-inactive-c: #64748b;
+    --highlight-bg:   rgba(96,165,250,.2);
+    --highlight-c:    #93bbfd;
+    --no-results-bg:  var(--bg-input);
+  }
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+  /* ─── Animaciones ─── */
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(14px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  @keyframes countIn {
+    from { opacity:0; transform:scale(.85); }
+    to   { opacity:1; transform:scale(1); }
+  }
+  @keyframes fadeRow {
+    from { opacity:0; transform:translateX(-6px); }
+    to   { opacity:1; transform:translateX(0); }
+  }
+  .anim-up   { animation:fadeUp .45s ease both; }
+  .anim-up-1 { animation-delay:.05s; }
+  .anim-up-2 { animation-delay:.1s; }
+  .anim-up-3 { animation-delay:.15s; }
+  .anim-up-4 { animation-delay:.2s; }
+  .anim-up-5 { animation-delay:.28s; }
+  .anim-up-6 { animation-delay:.35s; }
 
-        <div>
+  /* ─── Header ─── */
+  .page-header {
+    display:flex; flex-wrap:wrap; gap:1.25rem;
+    align-items:center; justify-content:space-between;
+    margin-bottom:1.5rem;
+  }
+  .page-title-group { flex:1; min-width:260px; }
+  .page-title {
+    font-size:1.55rem; font-weight:800;
+    color:var(--text-primary); margin:0;
+    letter-spacing:-0.03em;
+    display:flex; align-items:center; gap:.55rem;
+  }
+  .title-icon {
+    width:40px; height:40px; border-radius:11px;
+    background:linear-gradient(135deg, var(--indigo), var(--purple));
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#fff; font-size:.95rem; flex-shrink:0;
+    box-shadow:0 4px 14px rgba(99,102,241,.3);
+  }
+  .page-sub {
+    color:var(--text-muted); font-size:.88rem;
+    margin:.4rem 0 0 .05rem;
+  }
+  .page-count { color:var(--blue); font-weight:800; }
 
-            <h1 class="fw-bold">
+  /* ─── KPI Cards ─── */
+  .kpi-row {
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+    gap:1rem; margin-bottom:1.5rem;
+  }
+  .kpi-card {
+    background:var(--bg-card); border:1px solid var(--border);
+    border-radius:14px; padding:1.15rem 1.25rem;
+    display:flex; align-items:center; gap:.9rem;
+    position:relative; overflow:hidden;
+    transition:transform .2s ease, box-shadow .2s ease;
+    box-shadow:var(--shadow-sm);
+  }
+  .kpi-card::before {
+    content:''; position:absolute;
+    left:0; top:0; bottom:0; width:4px;
+    border-radius:14px 0 0 14px;
+  }
+  .kpi-card::after {
+    content:''; position:absolute; top:-15px; right:-15px;
+    width:70px; height:70px; border-radius:50%;
+    opacity:.04; pointer-events:none;
+  }
+  .kpi-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); }
+  .kpi-card.blue::before  { background:var(--blue); }
+  .kpi-card.blue::after   { background:var(--blue); }
+  .kpi-card.green::before { background:var(--green); }
+  .kpi-card.green::after  { background:var(--green); }
+  .kpi-card.red::before   { background:var(--red); }
+  .kpi-card.red::after    { background:var(--red); }
+  .kpi-card.amber::before { background:var(--amber); }
+  .kpi-card.amber::after  { background:var(--amber); }
 
-                👥 Gestión de Usuarios
+  .kpi-icon {
+    width:46px; height:46px; border-radius:12px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:1.05rem; flex-shrink:0;
+  }
+  .kpi-icon.blue  { background:var(--kpi-blue-bg);  color:var(--blue); }
+  .kpi-icon.green { background:var(--kpi-green-bg); color:var(--green); }
+  .kpi-icon.red   { background:var(--kpi-red-bg);   color:var(--red); }
+  .kpi-icon.amber { background:var(--kpi-amber-bg); color:var(--amber); }
 
-            </h1>
+  .kpi-body { flex:1; position:relative; z-index:1; }
+  .kpi-label {
+    font-size:.75rem; color:var(--text-muted);
+    font-weight:600; text-transform:uppercase;
+    letter-spacing:.03em; margin-bottom:.15rem;
+  }
+  .kpi-value {
+    font-size:1.4rem; font-weight:800;
+    color:var(--text-primary);
+    font-family:'JetBrains Mono', monospace;
+    letter-spacing:-0.5px; line-height:1.2;
+    animation:countIn .5s ease both .4s;
+  }
 
-            <p class="text-muted">
+  /* ─── Buscador ─── */
+  .search-card {
+    background:var(--bg-card); border:1px solid var(--border);
+    border-radius:14px; margin-bottom:1.25rem;
+    box-shadow:var(--shadow-sm);
+  }
+  .search-body { padding:1rem 1.25rem !important; }
+  .search-form {
+    display:flex; gap:.65rem; align-items:center; flex-wrap:wrap;
+  }
+  .search-wrap {
+    flex:1; position:relative; min-width:200px;
+  }
+  .search-wrap .s-icon {
+    position:absolute; left:.85rem; top:50%;
+    transform:translateY(-50%); color:var(--text-muted); font-size:.78rem;
+  }
+  .search-wrap input {
+    width:100%; padding:.58rem 2.5rem .58rem 2.2rem;
+    border:1px solid var(--border); border-radius:10px;
+    background:var(--bg-input); color:var(--text-primary);
+    font-size:.86rem; outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .search-wrap input:focus {
+    border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(59,130,246,.1);
+  }
+  .search-wrap input::placeholder { color:var(--text-muted); opacity:.7; }
+  .search-clear {
+    position:absolute; right:.7rem; top:50%;
+    transform:translateY(-50%);
+    width:24px; height:24px; border-radius:6px;
+    background:var(--border); color:var(--text-muted);
+    border:none; cursor:pointer;
+    display:none; align-items:center; justify-content:center;
+    font-size:.65rem; transition:all .12s;
+  }
+  .search-clear.visible { display:inline-flex; }
+  .search-clear:hover { background:var(--red-bg); color:var(--red); }
 
-                Administración de accesos del sistema
+  /* Contador de resultados */
+  .search-meta {
+    display:flex; align-items:center; gap:.6rem;
+    margin-top:.6rem; font-size:.78rem; color:var(--text-muted);
+    min-height:20px;
+    transition:opacity .2s;
+  }
+  .search-meta .count-num {
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700; color:var(--blue);
+  }
+  .search-meta .search-term {
+    font-family:'JetBrains Mono', monospace;
+    font-weight:600; color:var(--text-primary);
+    background:var(--highlight-bg);
+    padding:.1rem .35rem; border-radius:4px;
+    font-size:.75rem;
+  }
 
-            </p>
+  /* ─── Tabla ─── */
+  .card-main {
+    border:1px solid var(--border); border-radius:14px;
+    background:var(--bg-card); overflow:hidden;
+    box-shadow:var(--shadow-sm);
+  }
+  .card-body-main { padding:0 !important; overflow:hidden; }
+  .table-responsive { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  .tbl {
+    width:100%; margin:0; border-collapse:separate;
+    border-spacing:0; font-size:.88rem;
+  }
+  .tbl thead th {
+    background:var(--bg-input); color:var(--text-muted);
+    font-weight:700; font-size:.72rem;
+    text-transform:uppercase; letter-spacing:.06em;
+    padding:.8rem 1rem; border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  .tbl tbody tr {
+    transition:background .12s ease, opacity .2s ease;
+  }
+  .tbl tbody tr:hover { background:var(--row-hover); }
+  .tbl tbody tr.filtered-out {
+    display:none;
+  }
+  .tbl tbody tr.filtered-in {
+    animation:fadeRow .25s ease both;
+  }
+  .tbl tbody td {
+    padding:.8rem 1rem;
+    border-bottom:1px solid var(--border-light);
+    vertical-align:middle; color:var(--text-primary);
+  }
+  .tbl tbody tr:last-child td { border-bottom:none; }
 
-        </div>
+  /* ─── Highlight de texto coincidente ─── */
+  .hl {
+    background:var(--highlight-bg);
+    color:var(--highlight-c);
+    border-radius:3px;
+    padding:0 2px;
+    font-weight:700;
+  }
 
-        <a
-            href="/agregar_usuario"
-            class="btn btn-primary"
-        >
+  /* ─── No resultados inline ─── */
+  .no-results-row td {
+    padding:0 !important; border:none !important;
+  }
+  .no-results-box {
+    text-align:center; padding:3rem 1rem;
+    color:var(--text-muted);
+  }
+  .no-results-box i {
+    font-size:2rem; display:block; margin-bottom:.6rem; opacity:.15;
+  }
+  .no-results-box .nr-title {
+    font-size:.95rem; font-weight:700; color:var(--text-primary);
+    margin-bottom:.2rem;
+  }
+  .no-results-box .nr-term {
+    font-family:'JetBrains Mono', monospace;
+    font-weight:600; color:var(--blue);
+    background:var(--highlight-bg);
+    padding:.1rem .4rem; border-radius:4px;
+  }
+  .no-results-box .nr-desc {
+    font-size:.84rem;
+  }
 
-            ➕ Nuevo Usuario
+  /* ─── Celdas ─── */
+  .cell-id {
+    font-family:'JetBrains Mono', monospace;
+    font-size:.78rem; color:var(--text-muted); font-weight:600;
+  }
+  .cell-id .id-hash { opacity:.4; }
+  .cell-username {
+    font-weight:700; color:var(--text-primary); font-size:.9rem;
+    font-family:'JetBrains Mono', monospace;
+  }
+  .cell-name { font-weight:600; color:var(--text-primary); font-size:.88rem; }
 
-        </a>
+  /* ─── Avatar ─── */
+  .user-avatar {
+    width:36px; height:36px; border-radius:10px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:.82rem; flex-shrink:0;
+    text-transform:uppercase;
+  }
+  .user-avatar.admin     { background:var(--admin-bg);     color:var(--admin-c); }
+  .user-avatar.supervisor{ background:var(--supervisor-bg); color:var(--supervisor-c); }
+  .user-avatar.cajero    { background:var(--cajero-bg);    color:var(--cajero-c); }
 
-    </div>
+  /* ─── Rol badges ─── */
+  .rol-badge {
+    display:inline-flex; align-items:center; gap:.3rem;
+    padding:.28rem .7rem; border-radius:8px;
+    font-size:.72rem; font-weight:700;
+    text-transform:uppercase; letter-spacing:.04em;
+  }
+  .rol-badge.admin {
+    background:var(--admin-bg); color:var(--admin-c);
+    border:1px solid rgba(239,68,68,.12);
+  }
+  .rol-badge.supervisor {
+    background:var(--supervisor-bg); color:var(--supervisor-c);
+    border:1px solid rgba(245,158,11,.12);
+  }
+  .rol-badge.cajero {
+    background:var(--cajero-bg); color:var(--cajero-c);
+    border:1px solid rgba(16,185,129,.12);
+  }
 
-    <!-- TABLA -->
+  /* ─── Estado badges ─── */
+  .status-badge {
+    display:inline-flex; align-items:center; gap:.3rem;
+    padding:.25rem .65rem; border-radius:7px;
+    font-size:.73rem; font-weight:600;
+  }
+  .status-badge .status-dot { width:7px; height:7px; border-radius:50%; }
+  .status-badge.active  { background:var(--status-active-bg);   color:var(--status-active-c); }
+  .status-badge.active .status-dot { background:var(--green); }
+  .status-badge.inactive { background:var(--status-inactive-bg); color:var(--status-inactive-c); }
+  .status-badge.inactive .status-dot { background:var(--text-muted); }
 
-    <div class="card shadow-lg border-0 rounded-4">
+  /* ─── Botones de acción ─── */
+  .action-group { display:flex; gap:.35rem; }
+  .btn-action {
+    display:inline-flex; align-items:center; gap:.3rem;
+    padding:.32rem .65rem; border-radius:7px;
+    font-size:.76rem; font-weight:600;
+    text-decoration:none; cursor:pointer;
+    border:1px solid transparent;
+    transition:all .15s ease;
+  }
+  .btn-action.edit {
+    color:var(--blue); background:var(--blue-bg);
+    border-color:rgba(59,130,246,.1);
+  }
+  .btn-action.edit:hover {
+    background:rgba(59,130,246,.15);
+    border-color:rgba(59,130,246,.2);
+  }
+  .btn-action.delete {
+    color:var(--red); background:var(--red-bg);
+    border-color:rgba(239,68,68,.1);
+  }
+  .btn-action.delete:hover {
+    background:rgba(239,68,68,.15);
+    border-color:rgba(239,68,68,.2);
+  }
 
-        <div class="card-body">
+  /* ─── Empty state ─── */
+  .empty-state {
+    text-align:center; padding:4rem 1rem; color:var(--text-muted);
+  }
+  .empty-icon-wrap {
+    width:68px; height:68px; border-radius:50%;
+    background:var(--bg-input); border:1px solid var(--border);
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:1.5rem; margin-bottom:1rem; color:var(--text-muted); opacity:.4;
+  }
+  .empty-state h4 {
+    font-size:1.05rem; color:var(--text-primary);
+    margin:0 0 .3rem; font-weight:700;
+  }
+  .empty-state p { font-size:.86rem; margin:0; }
 
-            <table class="table table-hover align-middle">
+  /* ─── Responsive ─── */
+  @media (max-width:768px) {
+    .kpi-row { grid-template-columns:1fr 1fr; }
+    .page-header { flex-direction:column; align-items:flex-start; }
+    .search-form { flex-direction:column; align-items:stretch; }
+    .search-wrap { width:100%; }
+    .tbl thead { display:none; }
+    .tbl tbody tr {
+      display:block; margin-bottom:.6rem;
+      border:1px solid var(--border); border-radius:12px;
+      padding:.85rem 1rem; background:var(--bg-card);
+    }
+    .tbl tbody tr.filtered-out { display:none; }
+    .tbl tbody tr.filtered-in { display:block; }
+    .tbl tbody td {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:.5rem 0; border-bottom:1px dashed var(--border-light);
+    }
+    .tbl tbody td:last-child { border-bottom:none; }
+    .tbl tbody td::before {
+      content:attr(data-label); font-weight:700;
+      color:var(--text-muted); font-size:.7rem;
+      text-transform:uppercase; letter-spacing:.04em;
+      margin-right:auto;
+    }
+    .user-avatar { display:none; }
+    .action-group { justify-content:flex-end; }
+  }
+  @media (max-width:480px) {
+    .kpi-row { grid-template-columns:1fr; }
+  }
+</style>
 
-                <thead class="table-dark">
-
-                    <tr>
-
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Usuario</th>
-                        <th>Rol</th>
-                        <th>Acciones</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {% for usuario in usuarios %}
-
-                    <tr>
-
-                        <td>
-
-                            {{ usuario.id }}
-
-                        </td>
-
-                        <td>
-
-                            {{ usuario.nombre }}
-
-                        </td>
-
-                        <td>
-
-                            {{ usuario.usuario }}
-
-                        </td>
-
-                        <td>
-
-                            {% if usuario.rol == 'admin' %}
-
-                            <span class="badge bg-danger">
-                                Admin
-                            </span>
-
-                            {% elif usuario.rol == 'supervisor' %}
-
-                            <span class="badge bg-warning text-dark">
-                                Supervisor
-                            </span>
-
-                            {% else %}
-
-                            <span class="badge bg-success">
-                                Cajero
-                            </span>
-
-                            {% endif %}
-
-                        </td>
-
-                        <td>
-
-                            <a
-                                href="/editar_usuario/{{ usuario.id }}"
-                                class="btn btn-warning btn-sm"
-                            >
-
-                                ✏ Editar
-
-                            </a>
-
-                            <a
-                                href="/eliminar_usuario/{{ usuario.id }}"
-                                class="btn btn-danger btn-sm"
-                                onclick="return confirm('¿Eliminar usuario?')"
-                            >
-
-                                🗑 Eliminar
-
-                            </a>
-
-                        </td>
-
-                    </tr>
-
-                    {% endfor %}
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
+<!-- ═══════════════════════════════════════════════ -->
+<!-- HEADER                                         -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="page-header anim-up">
+  <div class="page-title-group">
+    <h1 class="page-title">
+      <span class="title-icon"><i class="fa fa-users-gear"></i></span>
+      Gestión de Usuarios
+    </h1>
+    <p class="page-sub">
+      Administración de accesos y permisos del sistema
+      &nbsp;·&nbsp;
+      <span class="page-count">{{ usuarios|length }}</span> usuarios registrados
+    </p>
+  </div>
+  {% if session.rol in ['admin'] %}
+  <a href="/agregar_usuario" class="btn btn-primary" style="border-radius:10px;white-space:nowrap">
+    <i class="fa fa-user-plus"></i> Nuevo Usuario
+  </a>
+  {% endif %}
 </div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- KPIs                                           -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="kpi-row">
+  <div class="kpi-card blue anim-up anim-up-1">
+    <div class="kpi-icon blue"><i class="fa fa-users"></i></div>
+    <div class="kpi-body">
+      <div class="kpi-label">Total Usuarios</div>
+      <div class="kpi-value" id="kpiTotal">{{ usuarios|length }}</div>
+    </div>
+  </div>
+  <div class="kpi-card red anim-up anim-up-2">
+    <div class="kpi-icon red"><i class="fa fa-shield-halved"></i></div>
+    <div class="kpi-body">
+      <div class="kpi-label">Administradores</div>
+      <div class="kpi-value">{{ admins|default(0) }}</div>
+    </div>
+  </div>
+  <div class="kpi-card amber anim-up anim-up-3">
+    <div class="kpi-icon amber"><i class="fa fa-user-shield"></i></div>
+    <div class="kpi-body">
+      <div class="kpi-label">Supervisores</div>
+      <div class="kpi-value">{{ supervisores|default(0) }}</div>
+    </div>
+  </div>
+  <div class="kpi-card green anim-up anim-up-4">
+    <div class="kpi-icon green"><i class="fa fa-cash-register"></i></div>
+    <div class="kpi-body">
+      <div class="kpi-label">Cajeros</div>
+      <div class="kpi-value">{{ cajeros|default(0) }}</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- BUSCADOR EN VIVO                               -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="search-card anim-up anim-up-5">
+  <div class="search-body">
+    <div class="search-form">
+      <div class="search-wrap">
+        <i class="fa fa-magnifying-glass s-icon"></i>
+        <input type="text" id="searchInput"
+          placeholder="Buscar por usuario o nombre..."
+          value="{{ request.args.get('buscar', '') }}"
+          autocomplete="off" spellcheck="false">
+        <button type="button" id="searchClear" class="search-clear" title="Limpiar búsqueda">
+          <i class="fa fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+    <div class="search-meta" id="searchMeta" style="opacity:0">
+      <span id="searchMetaText"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- TABLA                                          -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="card-main anim-up anim-up-6">
+  <div class="card-body-main">
+    <div class="table-responsive">
+      <table class="tbl" id="usersTable">
+        <thead>
+          <tr>
+            <th style="width:60px">ID</th>
+            <th>Usuario</th>
+            <th>Nombre Completo</th>
+            <th style="width:120px">Rol</th>
+            <th style="width:110px">Estado</th>
+            {% if session.rol in ['admin'] %}
+            <th style="width:140px;text-align:right">Acciones</th>
+            {% endif %}
+          </tr>
+        </thead>
+        <tbody id="usersBody">
+          {% for usuario in usuarios %}
+          {% set rol_class = usuario.rol %}
+          <tr data-username="{{ usuario.usuario|lower }}"
+              data-name="{{ usuario.nombre|lower }}"
+              data-id="{{ usuario.id }}">
+            <td class="cell-id" data-label="ID">
+              <span class="id-hash">#</span>{{ usuario.id }}
+            </td>
+            <td data-label="Usuario">
+              <div style="display:flex;align-items:center;gap:.65rem">
+                <div class="user-avatar {{ rol_class }}">
+                  {{ usuario.usuario[0]|upper }}
+                </div>
+                <div>
+                  <div class="cell-username search-target">{{ usuario.usuario }}</div>
+                </div>
+              </div>
+            </td>
+            <td data-label="Nombre">
+              <span class="cell-name search-target">{{ usuario.nombre }}</span>
+            </td>
+            <td data-label="Rol">
+              {% if usuario.rol == 'admin' %}
+                <span class="rol-badge admin">
+                  <i class="fa fa-shield-halved"></i> Admin
+                </span>
+              {% elif usuario.rol == 'supervisor' %}
+                <span class="rol-badge supervisor">
+                  <i class="fa fa-user-shield"></i> Supervisor
+                </span>
+              {% else %}
+                <span class="rol-badge cajero">
+                  <i class="fa fa-cash-register"></i> Cajero
+                </span>
+              {% endif %}
+            </td>
+            <td data-label="Estado">
+              {% if usuario.activo|default(true) %}
+                <span class="status-badge active">
+                  <span class="status-dot"></span> Activo
+                </span>
+              {% else %}
+                <span class="status-badge inactive">
+                  <span class="status-dot"></span> Inactivo
+                </span>
+              {% endif %}
+            </td>
+            {% if session.rol in ['admin'] %}
+            <td data-label="Acciones" style="text-align:right">
+              <div class="action-group" style="justify-content:flex-end">
+                <a href="/editar_usuario/{{ usuario.id }}" class="btn-action edit">
+                  <i class="fa fa-pen"></i> Editar
+                </a>
+                {% if usuario.rol != 'admin' or usuarios|selectattr('rol','eq','admin')|list|length > 1 %}
+                <a href="/eliminar_usuario/{{ usuario.id }}"
+                   class="btn-action delete"
+                   onclick="return confirm('¿Eliminar al usuario {{ usuario.usuario }}? Esta acción no se puede deshacer.')">
+                  <i class="fa fa-trash"></i>
+                </a>
+                {% endif %}
+              </div>
+            </td>
+            {% endif %}
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6">
+              <div class="empty-state">
+                <div class="empty-icon-wrap"><i class="fa fa-users"></i></div>
+                <h4>Sin usuarios registrados</h4>
+                <p>Agrega el primer usuario para comenzar a gestionar accesos al sistema.</p>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const input   = document.getElementById('searchInput');
+  const clearBtn= document.getElementById('searchClear');
+  const meta    = document.getElementById('searchMeta');
+  const metaTxt = document.getElementById('searchMetaText');
+  const tbody   = document.getElementById('usersBody');
+  const rows    = tbody.querySelectorAll('tr[data-username]');
+
+  // Total de filas reales (sin empty state)
+  const totalRows = rows.length;
+
+  // ─── Resaltar texto coincidente ───
+  function highlight(text, query) {
+    if (!query) return text;
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp('(' + escaped + ')', 'gi');
+    return text.replace(regex, '<span class="hl">$1</span>');
+  }
+
+  // ─── Restaurar texto original (sin highlight) ───
+  function restoreText() {
+    rows.forEach(function(row) {
+      row.querySelectorAll('.search-target').forEach(function(el) {
+        if (el.dataset.original) {
+          el.textContent = el.dataset.original;
+        }
+      });
+    });
+  }
+
+  // ─── Guardar texto original ───
+  rows.forEach(function(row) {
+    row.querySelectorAll('.search-target').forEach(function(el) {
+      el.dataset.original = el.textContent;
+    });
+  });
+
+  // ─── Filtrar ───
+  function filterRows() {
+    const query = input.value.trim().toLowerCase();
+
+    // Mostrar/ocultar botón limpiar
+    if (query.length > 0) {
+      clearBtn.classList.add('visible');
+    } else {
+      clearBtn.classList.remove('visible');
+    }
+
+    let visibleCount = 0;
+
+    // Verificar si ya existe fila de "sin resultados"
+    let noResultsRow = tbody.querySelector('.no-results-row');
+
+    rows.forEach(function(row) {
+      const username = row.dataset.username;
+      const name     = row.dataset.name;
+      const match    = !query
+        || username.includes(query)
+        || name.includes(query);
+
+      if (match) {
+        row.classList.remove('filtered-out');
+        row.classList.add('filtered-in');
+        visibleCount++;
+
+        // Aplicar highlight
+        row.querySelectorAll('.search-target').forEach(function(el) {
+          const original = el.dataset.original;
+          if (query) {
+            el.innerHTML = highlight(original, query);
+          } else {
+            el.textContent = original;
+          }
+        });
+      } else {
+        row.classList.add('filtered-out');
+        row.classList.remove('filtered-in');
+
+        // Restaurar texto
+        row.querySelectorAll('.search-target').forEach(function(el) {
+          el.textContent = el.dataset.original;
+        });
+      }
+    });
+
+    // ─── Meta info ───
+    if (query) {
+      meta.style.opacity = '1';
+      if (visibleCount > 0) {
+        metaTxt.innerHTML =
+          '<span class="count-num">' + visibleCount + '</span> resultado' +
+          (visibleCount !== 1 ? 's' : '') +
+          ' para <span class="search-term">' + escapeHtml(input.value.trim()) + '</span>';
+      } else {
+        metaTxt.innerHTML =
+          'Sin resultados para <span class="search-term">' + escapeHtml(input.value.trim()) + '</span>';
+      }
+    } else {
+      meta.style.opacity = '0';
+      restoreText();
+    }
+
+    // ─── Fila "sin resultados" ───
+    if (noResultsRow) noResultsRow.remove();
+
+    if (query && visibleCount === 0 && totalRows > 0) {
+      const tr = document.createElement('tr');
+      tr.className = 'no-results-row filtered-in';
+      const colCount = document.querySelectorAll('.tbl thead th').length;
+      tr.innerHTML = '<td colspan="' + colCount + '">' +
+        '<div class="no-results-box">' +
+          '<i class="fa fa-magnifying-glass"></i>' +
+          '<div class="nr-title">No se encontraron usuarios</div>' +
+          '<div class="nr-desc">Intenta con otro término de búsqueda</div>' +
+        '</div>' +
+      '</td>';
+      tbody.appendChild(tr);
+    }
+  }
+
+  // ─── Escape HTML ───
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  // ─── Eventos ───
+  input.addEventListener('input', filterRows);
+
+  clearBtn.addEventListener('click', function() {
+    input.value = '';
+    filterRows();
+    input.focus();
+  });
+
+  // Tecla Escape limpia
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      input.value = '';
+      filterRows();
+      input.blur();
+    }
+  });
+
+  // ─── Búsqueda inicial si hay valor en URL ───
+  if (input.value.trim()) {
+    filterRows();
+  }
+})();
+</script>
 
 {% endblock %}
