@@ -16,7 +16,7 @@ from reportlab.platypus import (
     HRFlowable
 )
 
-from database import conectar
+from db import conectar
 from utils.auth import rol_requerido
 from utils.logs import registrar_log
 from utils.scanner import SCANNER, cv2, decode

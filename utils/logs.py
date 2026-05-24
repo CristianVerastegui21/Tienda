@@ -1,4 +1,4 @@
-from database import conectar
+from db import conectar
 
 
 def registrar_log(usuario, accion):

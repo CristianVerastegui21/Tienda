@@ -14,7 +14,7 @@ from reportlab.platypus import (
     TableStyle
 )
 
-from database import conectar
+from db import conectar
 from utils.auth import rol_requerido
 
 bp = Blueprint('reportes', __name__)

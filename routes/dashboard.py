@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-from database import conectar
+from db import conectar
 from utils.auth import rol_requerido
 
 bp = Blueprint('dashboard', __name__)
@@ -142,25 +142,22 @@ def dashboard():
 def registrar_alertas_globales(app):
     @app.context_processor
     def alertas_globales():
-        conexion = conectar()
+        try:
+            conexion = conectar()
 
-        alertas = conexion.execute('''
+            alertas = conexion.execute('''
+                SELECT *
+                FROM productos
+                WHERE stock <= reorden
+                ORDER BY stock ASC
+                LIMIT 5
+            ''').fetchall()
 
-        SELECT *
+            conexion.close()
 
-        FROM productos
-
-        WHERE stock<=reorden
-
-        ORDER BY stock ASC
-
-        LIMIT 5
-
-        ''').fetchall()
-
-        conexion.close()
-
-        return dict(
-            alertas=alertas,
-            total_alertas=len(alertas)
-        )
+            return dict(
+                alertas=alertas,
+                total_alertas=len(alertas)
+            )
+        except Exception:
+            return dict(alertas=[], total_alertas=0)

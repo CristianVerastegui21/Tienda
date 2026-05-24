@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, session
 from werkzeug.security import check_password_hash
 
-from database import conectar
+from db import conectar
 from utils.logs import registrar_log
 
 bp = Blueprint('auth', __name__)

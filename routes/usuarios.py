@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect
 from werkzeug.security import generate_password_hash
 
-from database import conectar
+from db import conectar
 from utils.auth import rol_requerido
 
 bp = Blueprint('usuarios', __name__)

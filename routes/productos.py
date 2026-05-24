@@ -3,7 +3,7 @@ import os
 from flask import Blueprint, render_template, request, redirect, session
 from werkzeug.utils import secure_filename
 
-from database import conectar
+from db import conectar
 from utils.auth import rol_requerido
 from utils.logs import registrar_log
 from utils.scanner import SCANNER, cv2, decode
