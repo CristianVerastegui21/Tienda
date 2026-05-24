@@ -58,9 +58,11 @@
         <div class="form-section">
           <div class="form-section-title">Código de barras</div>
           <div style="display:flex;gap:.6rem">
-            <input type="text" name="codigo" id="codigo" class="form-control" placeholder="Escanear o ingresar código">
-            <button type="button" class="btn btn-success" onclick="abrirScanner()" style="white-space:nowrap;"><i class="fa fa-camera"></i> Escanear</button>
+            <input type="text" name="codigo" id="codigo" class="form-control" placeholder="Lector USB, camara o escribir codigo" autocomplete="off">
+            <button type="button" class="btn btn-success" id="btnAbrirScanner" style="white-space:nowrap;"><i class="fa fa-camera"></i> Camara</button>
           </div>
+          <div class="field-hint">Lector fisico: enfoca este campo y escanea (envia Enter). Camara: boton Camara.</div>
+          <div id="codigoAviso" style="display:none;margin-top:.5rem;font-size:.82rem;color:var(--green);font-weight:600;"></div>
         </div>
 
         <div class="form-section">
@@ -85,10 +87,37 @@
   </div>
 </div>
 
+{% include 'includes/scanner_assets.html' %}
+
 <script>
-  function abrirScanner(){
-    fetch('/scanner_codigo').then(r=>r.text()).then(d=>{ document.getElementById('codigo').value=d; });
+  const inputCodigo = document.getElementById('codigo');
+
+  function mostrarCodigoOk(codigo) {
+    inputCodigo.value = codigo;
+    inputCodigo.focus();
+    inputCodigo.style.borderColor = 'var(--green, #22c98a)';
+    inputCodigo.style.boxShadow = '0 0 0 3px rgba(34,201,138,.25)';
+    const aviso = document.getElementById('codigoAviso');
+    if (aviso) {
+      aviso.textContent = 'Codigo registrado: ' + codigo;
+      aviso.style.display = 'block';
+    }
+    setTimeout(function () {
+      inputCodigo.style.borderColor = '';
+      inputCodigo.style.boxShadow = '';
+    }, 2500);
   }
+
+  document.getElementById('btnAbrirScanner').addEventListener('click', function () {
+    BodegaScanner.abrir({ onScan: mostrarCodigoOk });
+  });
+
+  BodegaScanner.setupLector(inputCodigo, mostrarCodigoOk, { limpiarDespues: false });
+
+  if (new URLSearchParams(window.location.search).get('scanner') === '1') {
+    BodegaScanner.abrir({ onScan: mostrarCodigoOk });
+  }
+
   function previewImg(e){
     const file=e.target.files[0];
     if(file){

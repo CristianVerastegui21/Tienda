@@ -6,8 +6,6 @@ from werkzeug.utils import secure_filename
 from db import conectar
 from utils.auth import rol_requerido
 from utils.logs import registrar_log
-from utils.scanner import SCANNER, cv2, decode
-
 bp = Blueprint('productos', __name__)
 
 
@@ -102,43 +100,8 @@ def agregar_producto():
 @bp.route('/scanner_codigo')
 @rol_requerido(['admin', 'supervisor'])
 def scanner_codigo():
-    if not SCANNER:
-        return "Scanner no disponible en servidor"
+    return redirect('/agregar?scanner=1')
 
-    cap = cv2.VideoCapture(0)
-
-    if not cap.isOpened():
-        return 'No se pudo abrir la camara'
-
-    codigo_detectado = ''
-
-    while True:
-        success, frame = cap.read()
-
-        if not success:
-            continue
-
-        codigos = decode(frame)
-
-        for codigo in codigos:
-            codigo_detectado = codigo.data.decode('utf-8')
-            break
-
-        cv2.imshow(
-            'Escanear Codigo',
-            frame
-        )
-
-        tecla = cv2.waitKey(1)
-
-        if tecla == 27 or codigo_detectado:
-            break
-
-    cap.release()
-
-    cv2.destroyAllWindows()
-
-    return codigo_detectado
 
 @bp.route('/editar/<int:id>', methods=['GET', 'POST'])
 @rol_requerido(['admin', 'supervisor'])

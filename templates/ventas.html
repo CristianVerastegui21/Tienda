@@ -81,17 +81,27 @@
     <h1 class="page-title">Punto de Venta</h1>
     <p class="page-sub">Registra ventas rápidamente</p>
   </div>
-  <a href="/scanner_ventas" class="btn-scanner"><i class="fa fa-camera"></i>Escanear</a>
+  <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
+    <button type="button" class="btn-scanner" id="btnAbrirScanner">
+      <i class="fa fa-camera"></i> Escanear
+    </button>
+  </div>
 </div>
 
 <div class="pos-grid">
 
   <!-- ======= IZQUIERDA: PRODUCTOS ======= -->
   <div>
-    <div class="pos-search">
+    <div class="pos-search" style="flex-wrap:wrap;">
       <i class="fa fa-magnifying-glass" style="color:var(--text-muted);font-size:.85rem;"></i>
-      <input type="text" id="buscador" class="pos-search-input" placeholder="Buscar producto por nombre..." autofocus>
+      <input type="text" id="buscador" class="pos-search-input" placeholder="Buscar producto por nombre...">
+      <input type="text" id="lectorBarcode" class="pos-search-input"
+        placeholder="Lector USB / codigo + Enter" autocomplete="off"
+        style="max-width:240px;border-color:rgba(52,211,153,.35);">
     </div>
+    <p style="font-size:.7rem;color:var(--text-muted);margin:-.5rem 0 .75rem .25rem;">
+      <i class="fa fa-barcode"></i> Con lector fisico: haz clic en el campo verde y escanea. Con camara: boton Escanear.
+    </p>
 
     <div class="products-grid" id="productosGrid">
       {% for producto in productos %}
@@ -171,6 +181,8 @@
 
 </div>
 
+{% include 'includes/scanner_assets.html' %}
+
 <script>
   document.getElementById('buscador').addEventListener('input', function(){
     const q = this.value.toLowerCase().trim();
@@ -178,6 +190,62 @@
       el.style.display = el.dataset.nombre.includes(q) ? '' : 'none';
     });
   });
+
+  function mostrarAviso(msg, esError) {
+    const aviso = document.getElementById('scanAviso');
+    if (!aviso) return;
+    aviso.textContent = msg;
+    aviso.style.display = 'block';
+    aviso.style.color = esError ? 'var(--red)' : 'var(--green)';
+    clearTimeout(window._scanAvisoTimer);
+    window._scanAvisoTimer = setTimeout(() => { aviso.style.display = 'none'; }, 3500);
+  }
+
+  function escanearVenta(codigo) {
+    const limpio = String(codigo || '').trim();
+    if (!limpio) return;
+
+    mostrarAviso('Buscando: ' + limpio + '...', false);
+
+    fetch('/api/escanear_venta', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ codigo: limpio })
+    })
+      .then(async function (r) {
+        let data = {};
+        try {
+          data = await r.json();
+        } catch (e) {
+          data = { ok: false, error: 'Respuesta invalida del servidor' };
+        }
+        return { status: r.status, data: data };
+      })
+      .then(function ({ data }) {
+        if (data.ok) {
+          mostrarAviso(data.mensaje || 'Producto agregado', false);
+          setTimeout(function () { window.location.reload(); }, 500);
+        } else {
+          mostrarAviso(data.error || 'No se pudo agregar', true);
+        }
+      })
+      .catch(function () {
+        mostrarAviso('Error de conexion con el servidor', true);
+      });
+  }
+
+  document.getElementById('btnAbrirScanner').addEventListener('click', function () {
+    BodegaScanner.abrir({ onScan: escanearVenta });
+  });
+
+  BodegaScanner.setupLector(document.getElementById('lectorBarcode'), escanearVenta);
+
+  if (new URLSearchParams(window.location.search).get('scanner') === '1') {
+    BodegaScanner.abrir({ onScan: escanearVenta });
+  }
 </script>
+
+<div id="scanAviso" style="display:none;position:fixed;bottom:1.25rem;right:1.25rem;z-index:2000;background:var(--bg-card);border:1px solid var(--border);padding:.65rem 1rem;border-radius:10px;font-size:.85rem;box-shadow:var(--shadow);max-width:320px;"></div>
 
 {% endblock %}

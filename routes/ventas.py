@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from flask import Blueprint, render_template, request, redirect, session, send_file
+from flask import Blueprint, render_template, request, redirect, session, send_file, jsonify
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import letter
@@ -18,9 +18,8 @@ from reportlab.platypus import (
 
 from db import conectar
 from utils.auth import rol_requerido
+from utils.codigos import buscar_producto_por_codigo, normalizar_codigo
 from utils.logs import registrar_log
-from utils.scanner import SCANNER, cv2, decode
-
 bp = Blueprint('ventas', __name__)
 
 
@@ -76,56 +75,49 @@ def ventas():
 @bp.route('/scanner_ventas')
 @rol_requerido(['admin', 'supervisor', 'cajero'])
 def scanner_ventas():
-    if not SCANNER:
-        return "Scanner no disponible en servidor"
+    return redirect('/ventas?scanner=1')
 
-    cap = cv2.VideoCapture(0)
 
-    if not cap.isOpened():
-        return redirect('/ventas')
+@bp.route('/api/escanear_venta', methods=['POST'])
+@rol_requerido(['admin', 'supervisor', 'cajero'])
+def api_escanear_venta():
+    data = request.get_json(silent=True) or {}
+    codigo = normalizar_codigo(
+        data.get('codigo') or request.form.get('codigo', '')
+    )
 
-    codigo_detectado = ''
+    if not codigo:
+        return jsonify(ok=False, error='Codigo vacio'), 400
 
-    while True:
-        success, frame = cap.read()
+    conexion = conectar()
 
-        if not success:
-            continue
+    producto = buscar_producto_por_codigo(conexion, codigo)
 
-        codigos = decode(frame)
+    conexion.close()
 
-        for codigo in codigos:
-            codigo_detectado = codigo.data.decode('utf-8')
-            break
+    if not producto:
+        return jsonify(
+            ok=False,
+            error=f'No hay producto con codigo "{codigo}". Registralo en Productos primero.'
+        ), 404
 
-        cv2.imshow(
-            'Scanner Ventas',
-            frame
-        )
+    carrito = session.get('carrito', [])
+    cantidad_en_carrito = sum(
+        item['cantidad'] for item in carrito if item['id'] == producto['id']
+    )
 
-        tecla = cv2.waitKey(1)
+    if cantidad_en_carrito + 1 > producto['stock']:
+        return jsonify(ok=False, error='Stock insuficiente'), 400
 
-        if tecla == 27 or codigo_detectado:
-            break
+    agregar_al_carrito(producto, 1)
+    session.modified = True
 
-    cap.release()
-
-    cv2.destroyAllWindows()
-
-    if codigo_detectado:
-        conexion = conectar()
-
-        producto = conexion.execute('''
-            SELECT * FROM productos
-            WHERE codigo_barra = ?
-        ''', (codigo_detectado,)).fetchone()
-
-        conexion.close()
-
-        if producto:
-            agregar_al_carrito(producto, 1)
-
-    return redirect('/ventas')
+    return jsonify(
+        ok=True,
+        nombre=producto['nombre'],
+        codigo=codigo,
+        mensaje=f"Agregado: {producto['nombre']}"
+    )
 
 
 def agregar_al_carrito(producto, cantidad=1):

@@ -62,7 +62,10 @@
 
         <div class="form-section">
           <div class="form-section-title">Código de barras</div>
-          <input type="text" name="codigo" class="form-control" value="{{ producto.codigo_barra }}">
+          <div style="display:flex;gap:.6rem;">
+            <input type="text" name="codigo" id="codigo" class="form-control" value="{{ producto.codigo_barra }}" autocomplete="off">
+            <button type="button" class="btn btn-success" id="btnAbrirScanner" style="white-space:nowrap;"><i class="fa fa-camera"></i> Camara</button>
+          </div>
         </div>
 
         <div style="display:flex;gap:.75rem;margin-top:.5rem">
@@ -74,5 +77,23 @@
     </div>
   </div>
 </div>
+
+{% include 'includes/scanner_assets.html' %}
+
+<script>
+  const inputCodigo = document.getElementById('codigo');
+
+  function mostrarCodigoOk(codigo) {
+    inputCodigo.value = codigo;
+    inputCodigo.focus();
+    inputCodigo.style.borderColor = 'var(--green, #22c98a)';
+  }
+
+  document.getElementById('btnAbrirScanner').addEventListener('click', function () {
+    BodegaScanner.abrir({ onScan: mostrarCodigoOk });
+  });
+
+  BodegaScanner.setupLector(inputCodigo, mostrarCodigoOk, { limpiarDespues: false });
+</script>
 
 {% endblock %}
