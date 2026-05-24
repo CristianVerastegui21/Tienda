@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, session
+from flask import Blueprint, render_template, request, redirect, session, flash
 from werkzeug.security import check_password_hash
 
 from db import conectar
@@ -33,7 +33,11 @@ def login():
 
             return redirect('/')
 
-        return 'Usuario o contrasena incorrectos'
+        flash(
+            'Usuario o contraseña incorrectos',
+            'danger'
+        )
+
 
     return render_template('login.html')
 

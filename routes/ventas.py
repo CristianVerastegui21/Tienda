@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
-
-from flask import Blueprint, render_template, request, redirect, session, send_file, jsonify
+from flask import flash
+from flask import Blueprint, render_template, request, redirect, session, send_file
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.pagesizes import letter
@@ -18,8 +18,9 @@ from reportlab.platypus import (
 
 from db import conectar
 from utils.auth import rol_requerido
-from utils.codigos import buscar_producto_por_codigo, normalizar_codigo
 from utils.logs import registrar_log
+from utils.scanner import SCANNER, cv2, decode
+
 bp = Blueprint('ventas', __name__)
 
 
@@ -71,53 +72,44 @@ def ventas():
         total=total
     )
 
-
-@bp.route('/scanner_ventas')
-@rol_requerido(['admin', 'supervisor', 'cajero'])
-def scanner_ventas():
-    return redirect('/ventas?scanner=1')
-
-
-@bp.route('/api/escanear_venta', methods=['POST'])
-@rol_requerido(['admin', 'supervisor', 'cajero'])
-def api_escanear_venta():
-    data = request.get_json(silent=True) or {}
-    codigo = normalizar_codigo(
-        data.get('codigo') or request.form.get('codigo', '')
-    )
-
-    if not codigo:
-        return jsonify(ok=False, error='Codigo vacio'), 400
+@bp.route('/buscar_producto_scanner/<codigo>')
+@rol_requerido([
+    'admin',
+    'supervisor',
+    'cajero'
+])
+def buscar_producto_scanner(codigo):
 
     conexion = conectar()
 
-    producto = buscar_producto_por_codigo(conexion, codigo)
+    producto = conexion.execute('''
+        SELECT *
+        FROM productos
+        WHERE codigo_barra = ?
+    ''', (codigo,)).fetchone()
 
     conexion.close()
 
-    if not producto:
-        return jsonify(
-            ok=False,
-            error=f'No hay producto con codigo "{codigo}". Registralo en Productos primero.'
-        ), 404
+    if producto:
 
-    carrito = session.get('carrito', [])
-    cantidad_en_carrito = sum(
-        item['cantidad'] for item in carrito if item['id'] == producto['id']
-    )
+        agregar_al_carrito(
+            producto,
+            1
+        )
 
-    if cantidad_en_carrito + 1 > producto['stock']:
-        return jsonify(ok=False, error='Stock insuficiente'), 400
+        flash(
+            f'{producto["nombre"]} agregado al carrito',
+            'success'
+        )
 
-    agregar_al_carrito(producto, 1)
-    session.modified = True
+    else:
 
-    return jsonify(
-        ok=True,
-        nombre=producto['nombre'],
-        codigo=codigo,
-        mensaje=f"Agregado: {producto['nombre']}"
-    )
+        flash(
+            'Producto no encontrado',
+            'warning'
+        )
+
+    return redirect('/ventas')
 
 
 def agregar_al_carrito(producto, cantidad=1):

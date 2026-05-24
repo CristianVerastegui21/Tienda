@@ -2,16 +2,48 @@
 {% block content %}
 
 <style>
-  .form-card { max-width:620px; margin:0 auto; }
-  .form-section { margin-bottom:1.5rem; }
-  .form-section-title { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:var(--text-muted); margin-bottom:.85rem; padding-bottom:.5rem; border-bottom:1px solid var(--border); }
-  .preview-img { width:100%; max-width:200px; height:140px; object-fit:cover; border-radius:10px; border:1px solid var(--border); display:none; }
-  .file-drop { background:var(--bg-input); border:2px dashed var(--border); border-radius:10px; padding:1.5rem; text-align:center; color:var(--text-muted); font-size:.82rem; cursor:pointer; transition:all .2s; }
-  .file-drop:hover { border-color:var(--blue); color:var(--text-secondary); }
-  .file-drop i { font-size:1.5rem; display:block; margin-bottom:.5rem; opacity:.4; }
-  .field-hint { font-size:.72rem; color:var(--text-muted); margin-top:.3rem; }
-  .back-link { display:inline-flex; align-items:center; gap:.4rem; color:var(--text-muted); font-size:.82rem; text-decoration:none; margin-bottom:1.25rem; transition:color .2s; }
-  .back-link:hover { color:var(--text-primary); }
+  .form-card          { max-width:680px; margin:0 auto; }
+  .form-section       { margin-bottom:1.5rem; }
+  .section-divider    { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:1.8px; color:var(--text-muted); margin-bottom:.85rem; padding-bottom:.5rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:.5rem; }
+  .back-link          { display:inline-flex; align-items:center; gap:.4rem; color:var(--text-muted); font-size:.82rem; text-decoration:none; margin-bottom:1.25rem; transition:color .2s; }
+  .back-link:hover    { color:var(--text-primary); }
+  .field-hint         { font-size:.72rem; color:var(--text-muted); margin-top:.35rem; line-height:1.6; }
+  .file-drop          { background:var(--bg-input); border:2px dashed var(--border); border-radius:10px; padding:1.5rem; text-align:center; color:var(--text-muted); font-size:.82rem; cursor:pointer; transition:all .25s; }
+  .file-drop:hover    { border-color:var(--blue); color:var(--text-secondary); background:rgba(79,135,255,.04); }
+  .file-drop i        { font-size:1.6rem; display:block; margin-bottom:.5rem; opacity:.35; }
+  .preview-img        { width:100%; max-width:200px; height:150px; object-fit:cover; border-radius:10px; border:1px solid var(--border); display:none; }
+  .two-col            { display:grid; grid-template-columns:1fr 1fr; gap:.9rem; }
+  @media(max-width:480px){ .two-col{grid-template-columns:1fr} }
+
+  /* Scanner */
+  .scanner-row        { display:flex; gap:.5rem; }
+  .btn-scan-cam       { display:inline-flex; align-items:center; gap:.45rem; background:rgba(56,189,248,.1); border:1px solid rgba(56,189,248,.25); border-radius:9px; color:#38bdf8; font-size:.82rem; font-weight:600; padding:.6rem 1rem; cursor:pointer; transition:all .22s; white-space:nowrap; font-family:'Space Grotesk',sans-serif; flex-shrink:0; }
+  .btn-scan-cam:hover { background:#38bdf8; color:#0a0e1a; }
+  .btn-scan-cam.active{ background:#38bdf8; color:#0a0e1a; }
+  .method-tags        { display:flex; flex-wrap:wrap; gap:.4rem; margin-bottom:.75rem; }
+  .method-tag         { font-size:.68rem; font-weight:600; border-radius:6px; padding:.2rem .55rem; display:inline-flex; align-items:center; gap:.3rem; }
+  .tag-usb  { background:rgba(34,201,138,.1); border:1px solid rgba(34,201,138,.2); color:var(--green); }
+  .tag-cam  { background:rgba(56,189,248,.1); border:1px solid rgba(56,189,248,.2); color:#38bdf8; }
+  .tag-hand { background:rgba(122,134,168,.1); border:1px solid rgba(122,134,168,.2); color:var(--text-muted); }
+
+  /* Overlay modal */
+  .scan-overlay       { display:none; position:fixed; inset:0; z-index:3000; background:rgba(0,0,0,.88); backdrop-filter:blur(8px); align-items:center; justify-content:center; }
+  .scan-overlay.show  { display:flex; }
+  .scan-box           { background:var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:1.75rem; width:100%; max-width:450px; margin:1rem; animation:slideUp .3s ease both; }
+  @keyframes slideUp  { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .scan-topbar        { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; }
+  .scan-topbar h5     { font-size:1rem; font-weight:700; margin:0; }
+  .scan-close         { background:rgba(255,79,106,.1); border:1px solid rgba(255,79,106,.2); border-radius:7px; color:var(--red); width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.8rem; transition:all .2s; flex-shrink:0; }
+  .scan-close:hover   { background:var(--red); color:#fff; }
+  #reader-container   { border-radius:12px; overflow:hidden; background:#000; min-height:260px; position:relative; }
+  #reader             { width:100%; }
+  .scan-flash         { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; border-radius:12px; transition:opacity .05s; }
+  .scan-flash.on      { opacity:.4; }
+  .scan-status        { margin-top:.85rem; padding:.6rem .9rem; border-radius:8px; font-size:.8rem; font-weight:600; text-align:center; }
+  .scan-searching     { background:rgba(56,189,248,.1); border:1px solid rgba(56,189,248,.2); color:#38bdf8; }
+  .scan-found         { background:rgba(34,201,138,.1); border:1px solid rgba(34,201,138,.2); color:var(--green); }
+  .scan-error         { background:rgba(255,79,106,.1); border:1px solid rgba(255,79,106,.2); color:var(--red); }
+  .scan-tips          { margin-top:.75rem; font-size:.72rem; color:var(--text-muted); line-height:1.7; }
 </style>
 
 <a href="/productos" class="back-link"><i class="fa fa-arrow-left"></i> Volver a Productos</a>
@@ -28,13 +60,14 @@
     <div class="card-body">
       <form method="POST" enctype="multipart/form-data">
 
+        <!-- INFO BÁSICA -->
         <div class="form-section">
-          <div class="form-section-title">Información básica</div>
+          <div class="section-divider"><i class="fa fa-tag"></i>Información básica</div>
           <div class="mb-3">
             <label class="form-label">Nombre del Producto</label>
             <input type="text" name="nombre" class="form-control" placeholder="Ej: Arroz Costeño 1kg" required>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:.9rem">
+          <div class="two-col">
             <div>
               <label class="form-label">Precio (S/.)</label>
               <input type="number" step="0.01" name="precio" class="form-control" placeholder="0.00" required>
@@ -46,39 +79,55 @@
           </div>
         </div>
 
+        <!-- REORDEN -->
         <div class="form-section">
-          <div class="form-section-title">Configuración de stock</div>
-          <div>
-            <label class="form-label">Punto de Reorden</label>
-            <input type="number" name="reorden" class="form-control" value="5" min="1" required>
-            <div class="field-hint">Alerta cuando el stock llegue a este valor</div>
+          <div class="section-divider"><i class="fa fa-boxes-stacked"></i>Control de stock</div>
+          <label class="form-label">Punto de Reorden</label>
+          <input type="number" name="reorden" class="form-control" value="5" min="1" required>
+          <div class="field-hint">Alerta cuando el stock llegue a este valor</div>
+        </div>
+
+        <!-- CÓDIGO DE BARRAS -->
+        <div class="form-section">
+          <div class="section-divider"><i class="fa fa-barcode"></i>Código de barras</div>
+          <div class="method-tags">
+            <span class="method-tag tag-usb"><i class="fa fa-usb" style="font-size:.6rem"></i> Lector USB</span>
+            <span class="method-tag tag-cam"><i class="fa fa-camera" style="font-size:.6rem"></i> Cámara</span>
+            <span class="method-tag tag-hand"><i class="fa fa-keyboard" style="font-size:.6rem"></i> Manual</span>
+          </div>
+          <div class="scanner-row">
+            <input type="text" name="codigo" id="codigoInput" class="form-control"
+              placeholder="Apunta el lector o haz clic en Cámara..." autocomplete="off">
+            <button type="button" class="btn-scan-cam" id="btnCamera" onclick="toggleCamera()">
+              <i class="fa fa-camera" id="camIcon"></i>
+              <span id="camLabel">Cámara</span>
+            </button>
+          </div>
+          <div class="field-hint">
+            <strong style="color:var(--text-secondary)">Lector USB/Bluetooth:</strong> enfoca el campo, escanea y el código se ingresa solo. &nbsp;|&nbsp;
+            <strong style="color:var(--text-secondary)">Cámara:</strong> haz clic en el botón azul.
           </div>
         </div>
 
+        <!-- IMAGEN -->
         <div class="form-section">
-          <div class="form-section-title">Código de barras</div>
-          <div style="display:flex;gap:.6rem">
-            <input type="text" name="codigo" id="codigo" class="form-control" placeholder="Lector USB, camara o escribir codigo" autocomplete="off">
-            <button type="button" class="btn btn-success" id="btnAbrirScanner" style="white-space:nowrap;"><i class="fa fa-camera"></i> Camara</button>
-          </div>
-          <div class="field-hint">Lector fisico: enfoca este campo y escanea (envia Enter). Camara: boton Camara.</div>
-          <div id="codigoAviso" style="display:none;margin-top:.5rem;font-size:.82rem;color:var(--green);font-weight:600;"></div>
-        </div>
-
-        <div class="form-section">
-          <div class="form-section-title">Imagen</div>
+          <div class="section-divider"><i class="fa fa-image"></i>Imagen del producto</div>
           <div class="file-drop" onclick="document.getElementById('imgInput').click()">
             <i class="fa fa-cloud-arrow-up"></i>
-            Haz clic para subir una imagen
+            Haz clic para seleccionar imagen
+            <div style="font-size:.68rem;margin-top:.3rem;opacity:.7">JPG · PNG · WEBP</div>
           </div>
           <input type="file" name="imagen" id="imgInput" accept="image/*" style="display:none" onchange="previewImg(event)">
-          <div style="margin-top:.75rem;text-align:center">
+          <div style="text-align:center;margin-top:.85rem;">
             <img id="preview" class="preview-img" src="" alt="Preview">
           </div>
         </div>
 
-        <div style="display:flex;gap:.75rem;margin-top:.5rem">
-          <button type="submit" class="btn btn-primary" style="flex:1"><i class="fa fa-floppy-disk"></i> Guardar Producto</button>
+        <!-- BOTONES -->
+        <div style="display:flex;gap:.75rem;margin-top:.25rem;">
+          <button type="submit" class="btn btn-primary" style="flex:1">
+            <i class="fa fa-floppy-disk"></i> Guardar Producto
+          </button>
           <a href="/productos" class="btn btn-outline-secondary">Cancelar</a>
         </div>
 
@@ -87,44 +136,199 @@
   </div>
 </div>
 
-{% include 'includes/scanner_assets.html' %}
 
+<!-- MODAL CÁMARA -->
+<div class="scan-overlay" id="scanOverlay">
+  <div class="scan-box">
+    <div class="scan-topbar">
+      <h5><i class="fa fa-camera" style="color:#38bdf8;margin-right:.4rem;"></i>Escanear con Cámara</h5>
+      <div class="scan-close" onclick="closeCamera()"><i class="fa fa-xmark"></i></div>
+    </div>
+    <div id="reader-container">
+      <div id="reader"></div>
+      <div class="scan-flash" id="scanFlash"></div>
+    </div>
+    <div class="scan-status scan-searching" id="scanStatus">
+      <i class="fa fa-circle-notch fa-spin"></i> Iniciando cámara...
+    </div>
+    <div class="scan-tips">
+      • Apunta el código de barras al centro de la cámara<br>
+      • Distancia recomendada: 10–25 cm<br>
+      • Compatible con QR, EAN-13, EAN-8, CODE-128, UPC
+    </div>
+  </div>
+</div>
+
+
+<!-- html5-qrcode v2.3.8 — funciona local + Render + móvil -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
-  const inputCodigo = document.getElementById('codigo');
 
-  function mostrarCodigoOk(codigo) {
-    inputCodigo.value = codigo;
-    inputCodigo.focus();
-    inputCodigo.style.borderColor = 'var(--green, #22c98a)';
-    inputCodigo.style.boxShadow = '0 0 0 3px rgba(34,201,138,.25)';
-    const aviso = document.getElementById('codigoAviso');
-    if (aviso) {
-      aviso.textContent = 'Codigo registrado: ' + codigo;
-      aviso.style.display = 'block';
+// ──────────────────────────────────────────────
+// ELEMENTOS
+// ──────────────────────────────────────────────
+const codigoInput = document.getElementById('codigoInput');
+const btnCamera   = document.getElementById('btnCamera');
+const camIcon     = document.getElementById('camIcon');
+const camLabel    = document.getElementById('camLabel');
+const scanStatus  = document.getElementById('scanStatus');
+const scanFlash   = document.getElementById('scanFlash');
+const scanOverlay = document.getElementById('scanOverlay');
+
+let html5QrCode  = null;
+let cameraActive = false;
+
+// ──────────────────────────────────────────────
+// LECTOR USB / BLUETOOTH (keyboard-wedge)
+// Los lectores envían caracteres rápidos + Enter
+// Cuando el input del código tiene foco y se
+// presiona Enter, validamos el código ingresado.
+// ──────────────────────────────────────────────
+codigoInput.addEventListener('keydown', function(e){
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    const val = this.value.trim();
+    if(val.length > 0){
+      highlightInput(true);
+      // pequeño feedback visual
+      setTimeout(() => highlightInput(false), 1500);
     }
-    setTimeout(function () {
-      inputCodigo.style.borderColor = '';
-      inputCodigo.style.boxShadow = '';
-    }, 2500);
   }
+});
 
-  document.getElementById('btnAbrirScanner').addEventListener('click', function () {
-    BodegaScanner.abrir({ onScan: mostrarCodigoOk });
+// Detección de entrada rápida (lector USB fuera del foco)
+let usbBuf = '', usbTimer = null;
+document.addEventListener('keydown', function(e){
+  const active = document.activeElement;
+  const isFormField = active && (active.tagName==='INPUT'||active.tagName==='TEXTAREA'||active.tagName==='SELECT');
+  if(isFormField) return; // no interferir con otros campos
+
+  if(e.key === 'Enter'){
+    if(usbBuf.length > 2){
+      setCode(usbBuf);
+    }
+    usbBuf = '';
+    return;
+  }
+  if(e.key.length === 1){
+    usbBuf += e.key;
+    clearTimeout(usbTimer);
+    usbTimer = setTimeout(() => { usbBuf = ''; }, 150);
+  }
+});
+
+// ──────────────────────────────────────────────
+// SET CODE — escribe código y cierra cámara
+// ──────────────────────────────────────────────
+function setCode(codigo){
+  codigo = codigo.trim();
+  codigoInput.value = codigo;
+  highlightInput(true);
+  setTimeout(() => highlightInput(false), 1500);
+  // feedback en modal
+  scanStatus.className = 'scan-status scan-found';
+  scanStatus.innerHTML = `<i class="fa fa-circle-check"></i> ¡Código detectado! <strong>${codigo}</strong>`;
+  scanFlash.classList.add('on');
+  setTimeout(() => { scanFlash.classList.remove('on'); }, 120);
+  setTimeout(() => closeCamera(), 800);
+}
+
+function highlightInput(on){
+  codigoInput.style.borderColor = on ? 'var(--green)' : '';
+  codigoInput.style.boxShadow   = on ? '0 0 0 3px rgba(34,201,138,.2)' : '';
+}
+
+// ──────────────────────────────────────────────
+// CÁMARA
+// ──────────────────────────────────────────────
+function toggleCamera(){
+  cameraActive ? closeCamera() : openCamera();
+}
+
+function openCamera(){
+  scanOverlay.classList.add('show');
+  setStatus('searching', '<i class="fa fa-circle-notch fa-spin"></i> Iniciando cámara...');
+
+  html5QrCode = new Html5Qrcode("reader");
+
+  const qrConfig = {
+    fps: 15,
+    qrbox: { width: 270, height: 160 },
+    aspectRatio: 1.5,
+  };
+
+  // Intenta cámara trasera (móvil) → si falla, cualquier cámara disponible
+  html5QrCode.start(
+    { facingMode: "environment" },
+    qrConfig,
+    onScanSuccess,
+    onScanFrame
+  )
+  .then(() => onCameraStarted())
+  .catch(() => {
+    // Fallback: primera cámara disponible (laptop)
+    html5QrCode.start(
+      { facingMode: "user" },
+      qrConfig,
+      onScanSuccess,
+      onScanFrame
+    )
+    .then(() => onCameraStarted())
+    .catch(err => {
+      setStatus('error', `<i class="fa fa-circle-xmark"></i> Sin acceso a cámara. Usa el lector USB o escribe el código manualmente.`);
+    });
   });
+}
 
-  BodegaScanner.setupLector(inputCodigo, mostrarCodigoOk, { limpiarDespues: false });
+function onCameraStarted(){
+  cameraActive = true;
+  btnCamera.classList.add('active');
+  camIcon.className    = 'fa fa-stop';
+  camLabel.textContent = 'Detener';
+  setStatus('searching', '<i class="fa fa-circle-notch fa-spin"></i> Apunta al código de barras...');
+}
 
-  if (new URLSearchParams(window.location.search).get('scanner') === '1') {
-    BodegaScanner.abrir({ onScan: mostrarCodigoOk });
-  }
+function onScanSuccess(decodedText){
+  setCode(decodedText);
+}
 
-  function previewImg(e){
-    const file=e.target.files[0];
-    if(file){
-      const img=document.getElementById('preview');
-      img.src=URL.createObjectURL(file); img.style.display='block';
+function onScanFrame(){ /* frames sin código — normal */ }
+
+function closeCamera(){
+  if(html5QrCode){
+    if(cameraActive){
+      html5QrCode.stop().catch(() => {});
     }
+    html5QrCode = null;
   }
+  cameraActive = false;
+  scanOverlay.classList.remove('show');
+  btnCamera.classList.remove('active');
+  camIcon.className    = 'fa fa-camera';
+  camLabel.textContent = 'Cámara';
+}
+
+function setStatus(type, html){
+  const map = { searching:'scan-searching', found:'scan-found', error:'scan-error' };
+  scanStatus.className = 'scan-status ' + (map[type] || 'scan-searching');
+  scanStatus.innerHTML = html;
+}
+
+// Cerrar modal con clic fuera o Escape
+scanOverlay.addEventListener('click', e => { if(e.target === scanOverlay) closeCamera(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && cameraActive) closeCamera(); });
+
+// ──────────────────────────────────────────────
+// PREVIEW IMAGEN
+// ──────────────────────────────────────────────
+function previewImg(e){
+  const file = e.target.files[0];
+  if(file){
+    const img = document.getElementById('preview');
+    img.src = URL.createObjectURL(file);
+    img.style.display = 'block';
+  }
+}
 </script>
 
 {% endblock %}
