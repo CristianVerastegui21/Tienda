@@ -87,11 +87,7 @@
 
 <script>
   function abrirScanner(){
-    window.open(
-      '/scanner_codigo',
-      'Scanner',
-      'width=500,height=700'
-      )
+    fetch('/scanner_codigo').then(r=>r.text()).then(d=>{ document.getElementById('codigo').value=d; });
   }
   function previewImg(e){
     const file=e.target.files[0];

@@ -102,95 +102,26 @@ def agregar_producto():
 @bp.route('/scanner_codigo')
 @rol_requerido(['admin', 'supervisor'])
 def scanner_codigo():
-
-    # Si está desplegado en Render
-    if os.environ.get("RENDER"):
-
-        return '''
-        <!DOCTYPE html>
-        <html>
-        <head>
-
-        <script src="https://unpkg.com/html5-qrcode"></script>
-
-        <style>
-
-        body{
-        margin:0;
-        padding:20px;
-        font-family:Arial;
-        text-align:center;
-        }
-
-        #reader{
-        width:100%;
-        max-width:400px;
-        margin:auto;
-        }
-
-        </style>
-
-        </head>
-
-        <body>
-
-        <h2>Escanear Código</h2>
-
-        <div id="reader"></div>
-
-        <script>
-
-        function exito(codigo){
-
-            window.opener.document
-            .getElementById("codigo")
-            .value=codigo;
-
-            window.close();
-
-        }
-
-        new Html5QrcodeScanner(
-            "reader",
-            {
-                fps:10,
-                qrbox:250
-            }
-        ).render(exito);
-
-        </script>
-
-        </body>
-        </html>
-        '''
-
-    # Local (tu código actual)
     if not SCANNER:
-        return "Scanner no disponible"
+        return "Scanner no disponible en servidor"
 
     cap = cv2.VideoCapture(0)
 
     if not cap.isOpened():
-        return "No se pudo abrir cámara"
+        return 'No se pudo abrir la camara'
 
-    codigo_detectado=''
+    codigo_detectado = ''
 
     while True:
-
-        success,frame=cap.read()
+        success, frame = cap.read()
 
         if not success:
             continue
 
-        codigos=decode(frame)
+        codigos = decode(frame)
 
         for codigo in codigos:
-
-            codigo_detectado=(
-                codigo.data
-                .decode('utf-8')
-            )
-
+            codigo_detectado = codigo.data.decode('utf-8')
             break
 
         cv2.imshow(
@@ -198,9 +129,9 @@ def scanner_codigo():
             frame
         )
 
-        tecla=cv2.waitKey(1)
+        tecla = cv2.waitKey(1)
 
-        if tecla==27 or codigo_detectado:
+        if tecla == 27 or codigo_detectado:
             break
 
     cap.release()
