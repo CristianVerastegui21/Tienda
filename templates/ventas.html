@@ -2,523 +2,435 @@
 {% block content %}
 
 <style>
-  .pos-grid { display:grid; grid-template-columns:1fr 400px; gap:1.25rem; }
-  @media(max-width:1024px){ .pos-grid{grid-template-columns:1fr} }
+  /* ── Layout ─────────────────────────────── */
+  .pos-grid { display:grid; grid-template-columns:1fr 390px; gap:1.25rem; }
+  @media(max-width:1100px){ .pos-grid{grid-template-columns:1fr} }
 
-  .pos-search {
-    background:var(--bg-card);
-    border:1px solid var(--border);
-    border-radius:14px;
-    padding:1.25rem;
-    margin-bottom:1rem;
-    display:flex;
-    align-items:center;
-    gap:.75rem;
-  }
+  /* ── Buscador ───────────────────────────── */
+  .pos-search { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:1rem 1.25rem; margin-bottom:1rem; display:flex; align-items:center; gap:.75rem; }
+  .pos-search-input { flex:1; background:var(--bg-input); border:1px solid var(--border); border-radius:9px; color:var(--text-primary); padding:.65rem 1rem; font-family:'Space Grotesk',sans-serif; font-size:.9rem; outline:none; transition:border-color .2s,box-shadow .2s; }
+  .pos-search-input:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(79,135,255,.18); }
+  .pos-search-input::placeholder { color:var(--text-muted); }
 
-  .pos-search-input{
-    flex:1;
-    background:var(--bg-input);
-    border:1px solid var(--border);
-    border-radius:9px;
-    color:var(--text-primary);
-    padding:.65rem 1rem;
-  }
+  /* ── Grid de productos ──────────────────── */
+  .products-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(165px,1fr)); gap:.9rem; max-height:calc(100vh - 220px); overflow-y:auto; padding:.25rem; }
+  .prod-card { background:var(--bg-card); border:1px solid var(--border); border-radius:13px; overflow:hidden; transition:all .3s; cursor:pointer; }
+  .prod-card:hover { border-color:var(--border-hover); transform:translateY(-2px); box-shadow:0 8px 22px rgba(79,135,255,.1); }
+  /* highlight al escanear */
+  .prod-card.scanned { border-color:var(--green); box-shadow:0 0 0 3px rgba(34,201,138,.22); animation:scanPulse .5s ease; }
+  @keyframes scanPulse { 0%{transform:scale(1)} 40%{transform:scale(1.04)} 100%{transform:scale(1)} }
+  .prod-img { width:100%; height:115px; object-fit:cover; background:var(--bg-input); display:block; }
+  .prod-body { padding:.75rem; }
+  .prod-name  { font-size:.82rem; font-weight:600; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:.3rem; }
+  .prod-price { font-size:.92rem; font-weight:700; color:var(--green); font-family:'JetBrains Mono',monospace; }
+  .prod-stock { font-size:.68rem; color:var(--text-muted); margin-top:.15rem; }
+  .btn-agregar { width:100%; background:rgba(79,135,255,.1); border:1px solid rgba(79,135,255,.2); border-radius:7px; color:var(--blue); font-size:.78rem; font-weight:600; padding:.45rem; margin-top:.65rem; cursor:pointer; transition:all .2s; font-family:'Space Grotesk',sans-serif; }
+  .btn-agregar:hover { background:var(--blue); color:#fff; }
 
-  .products-grid{
-    display:grid;
-    grid-template-columns:
-    repeat(auto-fill,minmax(170px,1fr));
-    gap:.9rem;
-    max-height:calc(100vh - 210px);
-    overflow-y:auto;
-  }
+  /* ── Carrito ────────────────────────────── */
+  .cart-panel { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; display:flex; flex-direction:column; max-height:calc(100vh - 90px); position:sticky; top:1.5rem; }
+  .cart-header { padding:1rem 1.25rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .cart-header h3 { font-size:1rem; font-weight:700; margin:0; }
+  .cart-body   { flex:1; overflow-y:auto; padding:.25rem .5rem; }
+  .cart-footer { padding:1rem 1.25rem; border-top:1px solid var(--border); }
 
-  .prod-card{
-    background:var(--bg-card);
-    border:1px solid var(--border);
-    border-radius:13px;
-    overflow:hidden;
-  }
+  .cart-row { display:flex; align-items:center; gap:.6rem; padding:.65rem .75rem; border-radius:9px; transition:background .2s; }
+  .cart-row:hover { background:var(--td-hover); }
+  /* highlight al escanear ítem */
+  .cart-row.flash-add { background:rgba(34,201,138,.12); }
 
-  .prod-img{
-    width:100%;
-    height:120px;
-    object-fit:cover;
-  }
+  .cart-name { flex:1; font-size:.82rem; font-weight:600; color:var(--text-primary); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cart-sub  { font-size:.7rem; color:var(--text-muted); font-family:'JetBrains Mono',monospace; }
+  .qty-ctrl  { display:flex; align-items:center; gap:.3rem; }
+  .qty-btn   { width:24px; height:24px; border-radius:6px; border:none; cursor:pointer; font-size:.78rem; font-weight:700; transition:all .2s; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
+  .qty-btn.minus { background:rgba(245,166,35,.12); color:var(--amber); }
+  .qty-btn.minus:hover { background:var(--amber); color:#1a1d2e; }
+  .qty-btn.plus  { background:rgba(34,201,138,.12); color:var(--green); }
+  .qty-btn.plus:hover  { background:var(--green); color:#fff; }
+  .qty-num { font-family:'JetBrains Mono',monospace; font-size:.85rem; font-weight:700; width:24px; text-align:center; color:var(--text-primary); }
+  .btn-rm  { width:22px; height:22px; background:rgba(255,79,106,.1); border:none; border-radius:5px; color:var(--red); font-size:.62rem; cursor:pointer; transition:all .2s; display:inline-flex; align-items:center; justify-content:center; text-decoration:none; }
+  .btn-rm:hover { background:var(--red); color:#fff; }
 
-  .prod-body{
-    padding:.8rem;
-  }
+  .cart-total-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:.9rem; }
+  .cart-total-lbl { font-size:.78rem; color:var(--text-muted); font-weight:600; }
+  .cart-total-val { font-size:1.5rem; font-weight:700; color:var(--green); font-family:'JetBrains Mono',monospace; }
 
-  .prod-name{
-    font-size:.82rem;
-    font-weight:600;
-  }
+  .btn-finalizar { width:100%; background:linear-gradient(135deg,var(--green),#0fa36a); border:none; border-radius:10px; color:#fff; font-size:.92rem; font-weight:700; padding:.8rem; font-family:'Space Grotesk',sans-serif; cursor:pointer; transition:all .25s; box-shadow:0 4px 16px rgba(34,201,138,.25); text-decoration:none; display:block; text-align:center; }
+  .btn-finalizar:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(34,201,138,.38); color:#fff; }
+  .btn-vaciar { width:100%; background:transparent; border:1px solid rgba(255,79,106,.3); border-radius:9px; color:var(--red); font-size:.82rem; font-weight:600; padding:.55rem; font-family:'Space Grotesk',sans-serif; cursor:pointer; transition:all .2s; margin-top:.5rem; text-decoration:none; display:block; text-align:center; }
+  .btn-vaciar:hover { background:rgba(255,79,106,.1); color:var(--red); }
 
-  .prod-price{
-    color:var(--green);
-    font-weight:700;
-  }
+  .empty-cart { text-align:center; padding:2.5rem 1rem; color:var(--text-muted); }
+  .empty-cart i { font-size:2rem; display:block; margin-bottom:.5rem; opacity:.2; }
+  .empty-cart p { font-size:.82rem; }
 
-  .prod-stock{
-    font-size:.7rem;
-    color:var(--text-muted);
-  }
+  /* ── Botón scanner header ──────────────── */
+  .btn-scan-pos { display:inline-flex; align-items:center; gap:.45rem; background:rgba(56,189,248,.1); border:1px solid rgba(56,189,248,.25); border-radius:9px; color:#38bdf8; font-size:.82rem; font-weight:600; padding:.55rem 1rem; cursor:pointer; transition:all .22s; font-family:'Space Grotesk',sans-serif; }
+  .btn-scan-pos:hover { background:#38bdf8; color:#0a0e1a; }
+  .btn-scan-pos.active { background:#38bdf8; color:#0a0e1a; animation:scanRing .8s ease-in-out infinite alternate; }
+  @keyframes scanRing { from{box-shadow:0 0 0 0 rgba(56,189,248,.4)} to{box-shadow:0 0 0 8px rgba(56,189,248,0)} }
 
-  .btn-agregar{
-    width:100%;
-    margin-top:.6rem;
-  }
+  /* ── Indicador de código escaneado ─────── */
+  .scan-toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%) translateY(80px); background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:.75rem 1.25rem; font-size:.85rem; font-weight:600; box-shadow:0 8px 30px rgba(0,0,0,.35); z-index:4000; transition:transform .3s cubic-bezier(.175,.885,.32,1.275), opacity .3s; opacity:0; display:flex; align-items:center; gap:.6rem; max-width:340px; }
+  .scan-toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+  .scan-toast.ok   { border-color:rgba(34,201,138,.4); color:var(--green); }
+  .scan-toast.warn { border-color:rgba(255,79,106,.35); color:var(--red); }
 
-  .cart-panel{
-    background:var(--bg-card);
-    border:1px solid var(--border);
-    border-radius:14px;
-    display:flex;
-    flex-direction:column;
-    max-height:calc(100vh - 90px);
-    position:sticky;
-    top:1rem;
-  }
+  /* ── Modal cámara ───────────────────────── */
+  .scan-overlay { display:none; position:fixed; inset:0; z-index:3000; background:rgba(0,0,0,.88); backdrop-filter:blur(8px); align-items:center; justify-content:center; }
+  .scan-overlay.show { display:flex; }
+  .scan-box { background:var(--bg-card); border:1px solid var(--border); border-radius:20px; padding:1.75rem; width:100%; max-width:450px; margin:1rem; animation:slideUp .3s ease both; }
+  @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .scan-topbar { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; }
+  .scan-topbar h5 { font-size:1rem; font-weight:700; margin:0; }
+  .scan-close { background:rgba(255,79,106,.1); border:1px solid rgba(255,79,106,.2); border-radius:7px; color:var(--red); width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:.8rem; transition:all .2s; flex-shrink:0; }
+  .scan-close:hover { background:var(--red); color:#fff; }
+  #reader-container { border-radius:12px; overflow:hidden; background:#000; min-height:260px; position:relative; }
+  #reader { width:100%; }
+  .scan-flash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; border-radius:12px; transition:opacity .05s; }
+  .scan-flash.on { opacity:.4; }
+  .scan-status { margin-top:.85rem; padding:.6rem .9rem; border-radius:8px; font-size:.8rem; font-weight:600; text-align:center; }
+  .scan-searching { background:rgba(56,189,248,.1); border:1px solid rgba(56,189,248,.2); color:#38bdf8; }
+  .scan-found     { background:rgba(34,201,138,.1); border:1px solid rgba(34,201,138,.2); color:var(--green); }
+  .scan-error     { background:rgba(255,79,106,.1); border:1px solid rgba(255,79,106,.2); color:var(--red); }
+  .scan-tips { margin-top:.75rem; font-size:.72rem; color:var(--text-muted); line-height:1.7; }
 
-  .cart-header{
-    padding:1rem;
-    border-bottom:1px solid var(--border);
-  }
-
-  .cart-body{
-    flex:1;
-    overflow-y:auto;
-  }
-
-  .cart-footer{
-    padding:1rem;
-    border-top:1px solid var(--border);
-  }
-
-  .btn-scanner{
-    background:rgba(52,211,153,.1);
-    border:1px solid rgba(52,211,153,.2);
-    border-radius:9px;
-    color:#34d399;
-    font-size:.8rem;
-    font-weight:600;
-    padding:.6rem .9rem;
-    cursor:pointer;
-  }
-
-  .btn-scanner:hover{
-    background:#34d399;
-    color:#111;
-  }
+  /* ── Métodos activos ─────────────────────── */
+  .method-tags { display:flex; gap:.4rem; flex-wrap:wrap; }
+  .method-tag  { font-size:.68rem; font-weight:600; border-radius:6px; padding:.2rem .55rem; display:inline-flex; align-items:center; gap:.3rem; }
+  .tag-usb { background:rgba(34,201,138,.1); border:1px solid rgba(34,201,138,.2); color:var(--green); }
+  .tag-cam { background:rgba(56,189,248,.1); border:1px solid rgba(56,189,248,.2); color:#38bdf8; }
 </style>
 
-
+<!-- ── Header ──────────────────────────── -->
 <div class="page-header">
-
-<div>
-
-<h1 class="page-title">
-
-Punto de Venta
-
-</h1>
-
-<p class="page-sub">
-
-Registra ventas rápidamente
-
-</p>
-
+  <div>
+    <h1 class="page-title">Punto de Venta</h1>
+    <p class="page-sub">Registra ventas rápidamente</p>
+  </div>
+  <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;">
+    <div class="method-tags">
+      <span class="method-tag tag-usb"><i class="fa fa-usb" style="font-size:.6rem"></i>USB</span>
+      <span class="method-tag tag-cam"><i class="fa fa-camera" style="font-size:.6rem"></i>Cámara</span>
+    </div>
+    <button class="btn-scan-pos" id="btnScanPos" onclick="toggleCamera()">
+      <i class="fa fa-camera" id="camIcon"></i>
+      <span id="camLabel">Escanear</span>
+    </button>
+  </div>
 </div>
 
-
-<button
-class="btn-scanner"
-onclick="abrirScanner()">
-
-<i class="fa fa-camera"></i>
-
-Escanear
-
-</button>
-
-</div>
-
-
-
+<!-- ── POS Grid ──────────────────────────── -->
 <div class="pos-grid">
 
+  <!-- IZQUIERDA: Productos -->
+  <div>
+    <div class="pos-search">
+      <i class="fa fa-magnifying-glass" style="color:var(--text-muted);font-size:.85rem;flex-shrink:0;"></i>
+      <input type="text" id="buscador" class="pos-search-input" placeholder="Buscar producto..." autofocus>
+    </div>
 
-<div>
+    <div class="products-grid" id="productosGrid">
+      {% for producto in productos %}
+      <div class="prod-card producto-item"
+           id="prod-{{ producto.id }}"
+           data-nombre="{{ producto.nombre|lower }}"
+           data-id="{{ producto.id }}"
+           data-codigo="{{ producto.codigo_barra or '' }}">
 
-<div class="pos-search">
+        {% if producto.imagen %}
+          <img src="{{ url_for('static', filename='productos/' + producto.imagen) }}" class="prod-img" alt="{{ producto.nombre }}">
+        {% else %}
+          <div class="prod-img" style="display:flex;align-items:center;justify-content:center;">
+            <i class="fa fa-box" style="font-size:2rem;color:var(--text-muted);opacity:.25;"></i>
+          </div>
+        {% endif %}
 
-<i class="fa fa-magnifying-glass"></i>
+        <div class="prod-body">
+          <div class="prod-name">{{ producto.nombre }}</div>
+          <div class="prod-price">S/. {{ producto.precio }}</div>
+          <div class="prod-stock"><i class="fa fa-cubes" style="font-size:.6rem"></i> Stock: {{ producto.stock }}</div>
+          <form method="POST">
+            <input type="hidden" name="producto_id" value="{{ producto.id }}">
+            <input type="hidden" name="cantidad" value="1">
+            <button type="submit" class="btn-agregar"><i class="fa fa-plus"></i> Agregar</button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
 
-<input
-type="text"
-id="buscador"
-class="pos-search-input"
-placeholder="Buscar producto..."
-autofocus>
+  <!-- DERECHA: Carrito -->
+  <div class="cart-panel">
 
+    <div class="cart-header">
+      <h3>
+        <i class="fa fa-basket-shopping" style="color:var(--green);font-size:.88rem;margin-right:.35rem;"></i>
+        Carrito
+        {% if carrito|length %}
+          <span style="font-size:.7rem;background:rgba(34,201,138,.12);border:1px solid rgba(34,201,138,.2);color:var(--green);border-radius:6px;padding:.1rem .5rem;margin-left:.35rem;">{{ carrito|length }}</span>
+        {% endif %}
+      </h3>
+    </div>
+
+    <div class="cart-body" id="cartBody">
+      {% if carrito %}
+        {% for item in carrito %}
+        {% set idx = loop.index0 %}
+        <div class="cart-row" id="cart-item-{{ idx }}">
+          <div style="min-width:0;flex:1">
+            <div class="cart-name">{{ item.nombre }}</div>
+            <div class="cart-sub">S/. {{ item.precio }} c/u · Total: S/. {{ "%.2f"|format(item.subtotal) }}</div>
+          </div>
+          <div class="qty-ctrl">
+            <a href="/disminuir/{{ idx }}" class="qty-btn minus"><i class="fa fa-minus"></i></a>
+            <span class="qty-num">{{ item.cantidad }}</span>
+            <a href="/aumentar/{{ idx }}" class="qty-btn plus"><i class="fa fa-plus"></i></a>
+          </div>
+          <a href="/eliminar_carrito/{{ idx }}" class="btn-rm"><i class="fa fa-xmark"></i></a>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-cart">
+          <i class="fa fa-cart-shopping"></i>
+          <p>Carrito vacío.<br>Agrega productos o escanea un código.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span class="cart-total-lbl">TOTAL</span>
+        <span class="cart-total-val">S/. {{ "%.2f"|format(total) }}</span>
+      </div>
+      {% if carrito %}
+        <a href="/finalizar_venta" class="btn-finalizar"><i class="fa fa-check"></i> &nbsp;Finalizar Venta</a>
+        <a href="/vaciar_carrito"  class="btn-vaciar"><i class="fa fa-trash"></i> Vaciar Carrito</a>
+      {% else %}
+        <button class="btn-finalizar" disabled style="opacity:.38;cursor:not-allowed;"><i class="fa fa-check"></i> &nbsp;Finalizar Venta</button>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Toast ──────────────────────────────── -->
+<div class="scan-toast" id="toast"></div>
+
+<!-- ── Modal Cámara ──────────────────────── -->
+<div class="scan-overlay" id="scanOverlay">
+  <div class="scan-box">
+    <div class="scan-topbar">
+      <h5><i class="fa fa-camera" style="color:#38bdf8;margin-right:.4rem;"></i>Escanear Producto</h5>
+      <div class="scan-close" onclick="closeCamera()"><i class="fa fa-xmark"></i></div>
+    </div>
+    <div id="reader-container">
+      <div id="reader"></div>
+      <div class="scan-flash" id="scanFlash"></div>
+    </div>
+    <div class="scan-status scan-searching" id="scanStatus">
+      <i class="fa fa-circle-notch fa-spin"></i> Iniciando cámara...
+    </div>
+    <div class="scan-tips">
+      • Apunta el código al centro de la imagen<br>
+      • Compatible con QR, EAN-13, EAN-8, CODE-128, UPC<br>
+      • El producto se agrega al carrito automáticamente
+    </div>
+  </div>
 </div>
 
 
-<div
-class="products-grid"
-id="productosGrid">
-
-{% for producto in productos %}
-
-<div
-class="prod-card producto-item"
-data-nombre="{{ producto.nombre|lower }}">
-
-{% if producto.imagen %}
-
-<img
-src="{{ url_for('static',filename='productos/' + producto.imagen) }}"
-class="prod-img">
-
-{% else %}
-
-<div
-class="prod-img"
-style="
-display:flex;
-justify-content:center;
-align-items:center">
-
-<i
-class="fa fa-box"
-style="font-size:2rem">
-</i>
-
-</div>
-
-{% endif %}
-
-
-<div class="prod-body">
-
-<div class="prod-name">
-
-{{ producto.nombre }}
-
-</div>
-
-<div class="prod-price">
-
-S/. {{ producto.precio }}
-
-</div>
-
-<div class="prod-stock">
-
-Stock:
-{{ producto.stock }}
-
-</div>
-
-
-<form method="POST">
-
-<input
-type="hidden"
-name="producto_id"
-value="{{ producto.id }}">
-
-<input
-type="hidden"
-name="cantidad"
-value="1">
-
-<button
-type="submit"
-class="btn btn-primary btn-agregar">
-
-Agregar
-
-</button>
-
-</form>
-
-</div>
-
-</div>
-
-{% endfor %}
-
-</div>
-
-</div>
-
-
-
-<div class="cart-panel">
-
-<div class="cart-header">
-
-<h3>
-
-🛒 Carrito
-
-{% if carrito|length %}
-({{ carrito|length }})
-{% endif %}
-
-</h3>
-
-</div>
-
-
-<div class="cart-body">
-
-{% if carrito %}
-
-{% for item in carrito %}
-
-{% set idx=loop.index0 %}
-
-<div style="
-padding:1rem;
-border-bottom:1px solid var(--border)">
-
-<b>
-
-{{ item.nombre }}
-
-</b>
-
-<br>
-
-Cantidad:
-{{ item.cantidad }}
-
-<br>
-
-S/. {{ item.subtotal }}
-
-<div style="margin-top:.5rem">
-
-<a
-href="/disminuir/{{idx}}"
-class="btn btn-warning btn-sm">
-
--
-
-</a>
-
-<a
-href="/aumentar/{{idx}}"
-class="btn btn-success btn-sm">
-
-+
-
-</a>
-
-<a
-href="/eliminar_carrito/{{idx}}"
-class="btn btn-danger btn-sm">
-
-X
-
-</a>
-
-</div>
-
-</div>
-
-{% endfor %}
-
-{% else %}
-
-<div
-style="
-padding:2rem;
-text-align:center">
-
-Carrito vacío
-
-</div>
-
-{% endif %}
-
-</div>
-
-
-<div class="cart-footer">
-
-<h4>
-
-Total:
-S/. {{ "%.2f"|format(total) }}
-
-</h4>
-
-{% if carrito %}
-
-<a
-href="/finalizar_venta"
-class="btn btn-success w-100">
-
-Finalizar Venta
-
-</a>
-
-<a
-href="/vaciar_carrito"
-class="btn btn-danger w-100 mt-2">
-
-Vaciar
-
-</a>
-
-{% endif %}
-
-</div>
-
-</div>
-
-</div>
-
-
-
-<div class="modal fade"
-id="scannerModal">
-
-<div class="modal-dialog">
-
-<div class="modal-content">
-
-<div class="modal-header">
-
-<h5>
-
-Escanear Producto
-
-</h5>
-
-<button
-class="btn-close"
-data-bs-dismiss="modal">
-</button>
-
-</div>
-
-<div class="modal-body">
-
-<div id="reader"></div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-
-
-<script src="https://unpkg.com/html5-qrcode"></script>
-
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
 
-document
-.getElementById(
-'buscador'
-)
-.addEventListener(
-'input',
-function(){
-
-const q=
-this.value
-.toLowerCase();
-
-document
-.querySelectorAll(
-'.producto-item'
-)
-.forEach(el=>{
-
-el.style.display=
-el.dataset.nombre
-.includes(q)
-? ''
-:'none';
-
+// ─────────────────────────────────────────────────
+// MAPA de productos: código_barra → id
+// (construido desde los data-attributes del HTML)
+// ─────────────────────────────────────────────────
+const productosPorCodigo = {};
+document.querySelectorAll('.producto-item').forEach(el => {
+  const cod = el.dataset.codigo.trim();
+  if(cod) productosPorCodigo[cod] = el.dataset.id;
 });
 
+// ─────────────────────────────────────────────────
+// TOAST
+// ─────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, tipo = 'ok'){
+  const t = document.getElementById('toast');
+  t.className  = 'scan-toast show ' + tipo;
+  t.innerHTML  = `<i class="fa fa-${tipo==='ok'?'circle-check':'circle-xmark'}"></i> ${msg}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    t.classList.remove('show');
+  }, 2800);
+}
+
+// ─────────────────────────────────────────────────
+// AGREGAR AL CARRITO vía fetch → POST /agregar_scan
+// Evita recargar toda la página; recarga solo ventas
+// ─────────────────────────────────────────────────
+function agregarPorCodigo(codigo){
+  codigo = codigo.trim();
+  if(!codigo) return;
+
+  const id = productosPorCodigo[codigo];
+
+  if(!id){
+    showToast(`Código no encontrado: ${codigo}`, 'warn');
+    return;
+  }
+
+  // Highlight del producto en la grilla
+  const card = document.getElementById('prod-' + id);
+  if(card){
+    card.classList.add('scanned');
+    setTimeout(() => card.classList.remove('scanned'), 900);
+    // Scroll suave al producto
+    card.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }
+
+  // POST silencioso → luego redirige a /ventas para refrescar carrito
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '/ventas';
+  form.innerHTML = `
+    <input name="producto_id" value="${id}">
+    <input name="cantidad" value="1">
+  `;
+  document.body.appendChild(form);
+
+  // Flash visual en el modal
+  const flash = document.getElementById('scanFlash');
+  if(flash){ flash.classList.add('on'); setTimeout(()=>flash.classList.remove('on'),120); }
+
+  showToast('Producto agregado al carrito', 'ok');
+
+  // Pequeño delay para mostrar feedback antes de recargar
+  setTimeout(() => form.submit(), 500);
+}
+
+// ─────────────────────────────────────────────────
+// LECTOR USB / BLUETOOTH (keyboard-wedge)
+// Captura entrada rápida de teclado (sin foco en input)
+// ─────────────────────────────────────────────────
+let usbBuf = '', usbTimer = null;
+const USB_TIMEOUT = 150; // ms — los lectores rápidos terminan en < 100ms
+
+document.addEventListener('keydown', function(e){
+  // No interceptar si el foco está en buscador u otro input
+  const tag = document.activeElement ? document.activeElement.tagName : '';
+  if(tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+  if(e.key === 'Enter'){
+    if(usbBuf.length > 2){
+      const codigo = usbBuf;
+      usbBuf = '';
+      agregarPorCodigo(codigo);
+    }
+    return;
+  }
+
+  if(e.key.length === 1){
+    usbBuf += e.key;
+    clearTimeout(usbTimer);
+    usbTimer = setTimeout(() => { usbBuf = ''; }, USB_TIMEOUT);
+  }
 });
 
+// ─────────────────────────────────────────────────
+// BUSCADOR DE PRODUCTOS
+// ─────────────────────────────────────────────────
+document.getElementById('buscador').addEventListener('input', function(){
+  const q = this.value.toLowerCase().trim();
+  document.querySelectorAll('.producto-item').forEach(el => {
+    el.style.display = el.dataset.nombre.includes(q) ? '' : 'none';
+  });
+});
 
+// ─────────────────────────────────────────────────
+// CÁMARA — html5-qrcode
+// ─────────────────────────────────────────────────
+let html5QrCode  = null;
+let cameraActive = false;
 
-let scanner;
+const btnScan   = document.getElementById('btnScanPos');
+const camIcon   = document.getElementById('camIcon');
+const camLabel  = document.getElementById('camLabel');
+const scanStatus  = document.getElementById('scanStatus');
+const scanOverlay = document.getElementById('scanOverlay');
 
-
-function abrirScanner(){
-
-const modal=
-
-new bootstrap.Modal(
-
-document.getElementById(
-"scannerModal"
-)
-
-);
-
-modal.show();
-
-setTimeout(()=>{
-
-scanner=
-new Html5Qrcode(
-"reader"
-);
-
-scanner.start(
-
-{
-facingMode:
-"environment"
-},
-
-{
-fps:10,
-qrbox:250
-},
-
-codigoDetectado
-
-);
-
-},500)
-
+function toggleCamera(){
+  cameraActive ? closeCamera() : openCamera();
 }
 
+function openCamera(){
+  scanOverlay.classList.add('show');
+  setStatus('searching', '<i class="fa fa-circle-notch fa-spin"></i> Iniciando cámara...');
 
-function codigoDetectado(codigo){
+  html5QrCode = new Html5Qrcode("reader");
 
-scanner.stop();
+  const cfg = {
+    fps: 15,
+    qrbox: { width: 270, height: 160 },
+    aspectRatio: 1.5
+  };
 
-bootstrap
-.Modal
-.getInstance(
-document.getElementById(
-"scannerModal"
-))
-.hide();
-
-window.location=
-"/buscar_producto_scanner/"
-+codigo;
-
+  // Cámara trasera primero (móvil), luego fallback a frontal (laptop)
+  html5QrCode.start({ facingMode:"environment" }, cfg, onScanSuccess, ()=>{})
+    .then(onCameraReady)
+    .catch(() => {
+      html5QrCode.start({ facingMode:"user" }, cfg, onScanSuccess, ()=>{})
+        .then(onCameraReady)
+        .catch(err => setStatus('error',
+          '<i class="fa fa-circle-xmark"></i> Sin acceso a cámara. Usa el lector USB.'));
+    });
 }
+
+function onCameraReady(){
+  cameraActive = true;
+  btnScan.classList.add('active');
+  camIcon.className   = 'fa fa-stop';
+  camLabel.textContent = 'Detener';
+  setStatus('searching', '<i class="fa fa-circle-notch fa-spin"></i> Apunta al código...');
+}
+
+function onScanSuccess(codigo){
+  // Flash visual
+  const flash = document.getElementById('scanFlash');
+  flash.classList.add('on');
+  setTimeout(() => flash.classList.remove('on'), 120);
+
+  setStatus('found', `<i class="fa fa-circle-check"></i> Detectado: <strong>${codigo}</strong>`);
+
+  // Cerrar cámara y agregar producto
+  closeCamera();
+  setTimeout(() => agregarPorCodigo(codigo), 300);
+}
+
+function closeCamera(){
+  if(html5QrCode){
+    if(cameraActive) html5QrCode.stop().catch(()=>{});
+    html5QrCode = null;
+  }
+  cameraActive = false;
+  scanOverlay.classList.remove('show');
+  btnScan.classList.remove('active');
+  camIcon.className    = 'fa fa-camera';
+  camLabel.textContent = 'Escanear';
+}
+
+function setStatus(tipo, html){
+  const map = { searching:'scan-searching', found:'scan-found', error:'scan-error' };
+  scanStatus.className = 'scan-status ' + (map[tipo] || 'scan-searching');
+  scanStatus.innerHTML = html;
+}
+
+// Cerrar modal con clic fuera o Escape
+scanOverlay.addEventListener('click', e => { if(e.target===scanOverlay) closeCamera(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape' && cameraActive) closeCamera(); });
 
 </script>
 
