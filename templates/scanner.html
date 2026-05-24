@@ -1,0 +1,63 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div class="card p-4">
+
+<h3>Escanear Código de Producto</h3>
+
+<div id="reader"></div>
+
+<div class="mt-3">
+<input
+id="manual"
+class="form-control"
+placeholder="Escanear con lector o escribir código"
+autofocus
+>
+</div>
+
+</div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<script>
+
+function buscar(codigo){
+
+window.location=
+"/scanner_busqueda/"+codigo;
+
+}
+
+function onScanSuccess(codigo){
+
+buscar(codigo);
+
+}
+
+new Html5QrcodeScanner(
+"reader",
+{
+fps:10,
+qrbox:250
+})
+.render(onScanSuccess);
+
+
+document
+.getElementById("manual")
+.addEventListener(
+'keypress',
+function(e){
+
+if(e.key=="Enter"){
+
+buscar(this.value);
+
+}
+
+});
+
+</script>
+
+{% endblock %}
