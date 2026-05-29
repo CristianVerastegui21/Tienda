@@ -125,9 +125,10 @@
 
   <!-- IZQUIERDA: Productos -->
   <div>
+    <!-- Buscador SIN autofocus -->
     <div class="pos-search">
       <i class="fa fa-magnifying-glass" style="color:var(--text-muted);font-size:.85rem;flex-shrink:0;"></i>
-      <input type="text" id="buscador" class="pos-search-input" placeholder="Buscar producto..." autofocus>
+      <input type="text" id="buscador" class="pos-search-input" placeholder="Buscar producto...">
     </div>
 
     <div class="products-grid" id="productosGrid">
@@ -246,7 +247,6 @@
 
 // ─────────────────────────────────────────────────
 // MAPA de productos: código_barra → id
-// (construido desde los data-attributes del HTML)
 // ─────────────────────────────────────────────────
 const productosPorCodigo = {};
 document.querySelectorAll('.producto-item').forEach(el => {
@@ -263,14 +263,11 @@ function showToast(msg, tipo = 'ok'){
   t.className  = 'scan-toast show ' + tipo;
   t.innerHTML  = `<i class="fa fa-${tipo==='ok'?'circle-check':'circle-xmark'}"></i> ${msg}`;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => {
-    t.classList.remove('show');
-  }, 2800);
+  toastTimer = setTimeout(() => { t.classList.remove('show'); }, 2800);
 }
 
 // ─────────────────────────────────────────────────
-// AGREGAR AL CARRITO vía fetch → POST /agregar_scan
-// Evita recargar toda la página; recarga solo ventas
+// AGREGAR AL CARRITO
 // ─────────────────────────────────────────────────
 function agregarPorCodigo(codigo){
   codigo = codigo.trim();
@@ -288,11 +285,10 @@ function agregarPorCodigo(codigo){
   if(card){
     card.classList.add('scanned');
     setTimeout(() => card.classList.remove('scanned'), 900);
-    // Scroll suave al producto
     card.scrollIntoView({ behavior:'smooth', block:'nearest' });
   }
 
-  // POST silencioso → luego redirige a /ventas para refrescar carrito
+  // POST silencioso → redirige a /ventas para refrescar carrito
   const form = document.createElement('form');
   form.method = 'POST';
   form.action = '/ventas';
@@ -313,78 +309,96 @@ function agregarPorCodigo(codigo){
 }
 
 // ─────────────────────────────────────────────────
-// LECTOR USB / BLUETOOTH (keyboard-wedge)
-// Captura entrada rápida de teclado (sin foco en input)
+// BUSCADOR DE PRODUCTOS
+// Solo se activa cuando el usuario hace clic y escribe
+// manualmente. No interfiere con el lector USB.
 // ─────────────────────────────────────────────────
-let usbBuf = '', usbTimer = null;
-const USB_TIMEOUT = 150; // ms — los lectores rápidos terminan en < 100ms
+const buscador = document.getElementById('buscador');
 
-document.addEventListener('keydown', function(e){
-  // No interceptar si el foco está en buscador u otro input
-  const tag = document.activeElement ? document.activeElement.tagName : '';
-  if(tag === 'INPUT' || tag === 'TEXTAREA') return;
+buscador.addEventListener('input', function () {
+  const q = this.value.toLowerCase().trim();
+  if (q === '') {
+    document.querySelectorAll('.producto-item').forEach(el => {
+      el.style.display = '';
+    });
+    return;
+  }
+  document.querySelectorAll('.producto-item').forEach(el => {
+    const nombre = el.dataset.nombre.toLowerCase();
+    el.style.display = nombre.includes(q) ? '' : 'none';
+  });
+});
 
-  if(e.key === 'Enter'){
-    if(usbBuf.length > 2){
+// ─────────────────────────────────────────────────
+// LECTOR USB / BLUETOOTH (keyboard-wedge)
+// Intercepta códigos automáticamente sin importar
+// si el buscador tiene el foco o no.
+// ─────────────────────────────────────────────────
+let usbBuf = '';
+let lastKeyTime = 0;
+let usbTimer = null;
+const USB_TIMEOUT = 150; // ms — los escáners terminan en < 100ms
+
+document.addEventListener('keydown', function(e) {
+  const now = Date.now();
+  const diff = now - lastKeyTime;
+  lastKeyTime = now;
+
+  // Detectar si la tecla vino de un escáner (velocidad < 50ms entre teclas)
+  const isScannerSpeed = diff < 50;
+  const isSearchFocused = document.activeElement === buscador;
+
+  // ─── Enter: procesar código si hay buffer ───
+  if (e.key === 'Enter') {
+    if (usbBuf.length > 2) {
+      e.preventDefault(); // Evitar submit accidental
       const codigo = usbBuf;
       usbBuf = '';
       agregarPorCodigo(codigo);
+
+      // Limpiar el buscador si el escáner escribió ahí
+      if (isSearchFocused && buscador.value.length > 0) {
+        buscador.value = '';
+        buscador.dispatchEvent(new Event('input')); // Resetear filtro
+      }
+      return;
     }
+    usbBuf = '';
     return;
   }
 
-  if(e.key.length === 1){
-    usbBuf += e.key;
-    clearTimeout(usbTimer);
-    usbTimer = setTimeout(() => { usbBuf = ''; }, USB_TIMEOUT);
-  }
-});
+  // ─── Caracter normal ───
+  if (e.key.length === 1) {
 
-// ─────────────────────────────────────────────────
-// BUSCADOR DE PRODUCTOS
-// ─────────────────────────────────────────────────
-// ─────────────────────────────────────────────────
-// BUSCADOR DE PRODUCTOS
-// ─────────────────────────────────────────────────
+    // Si detectamos velocidad de escáner O ya estamos bufferizando
+    if (isScannerSpeed || usbBuf.length > 0) {
+      e.preventDefault(); // ¡Bloquear que se escriba en el buscador!
 
-const buscador = document.getElementById('buscador');
+      // Si el primer caracter del escaneo ya había entrado al buscador, recuperarlo
+      if (usbBuf === '' && isSearchFocused && buscador.value.length > 0) {
+        usbBuf = buscador.value.slice(-1) + e.key;
+        buscador.value = buscador.value.slice(0, -1);
+        buscador.dispatchEvent(new Event('input')); // Actualizar filtro
+      } else {
+        usbBuf += e.key;
+      }
 
-buscador.addEventListener('focus', function () {
+      clearTimeout(usbTimer);
+      usbTimer = setTimeout(() => { usbBuf = ''; }, USB_TIMEOUT);
 
-    document.querySelectorAll('.producto-item').forEach(el => {
-
-        el.style.display = '';
-
-    });
-
-});
-
-buscador.addEventListener('input', function () {
-
-    const q = this.value.toLowerCase().trim();
-
-    // si no escribe nada → mostrar todos
-    if (q === '') {
-
-        document.querySelectorAll('.producto-item').forEach(el => {
-
-            el.style.display = '';
-
-        });
-
-        return;
+    } else {
+      // Tipeo lento (humano) sin buffer previo
+      if (!isSearchFocused) {
+        // No hay foco en buscador → podría ser inicio de escaneo lento
+        usbBuf += e.key;
+        clearTimeout(usbTimer);
+        usbTimer = setTimeout(() => { usbBuf = ''; }, USB_TIMEOUT);
+      } else {
+        // Tipeo humano normal en el buscador → no bufferizar
+        usbBuf = '';
+      }
     }
-
-    document.querySelectorAll('.producto-item').forEach(el => {
-
-        const nombre = el.dataset.nombre.toLowerCase();
-
-        el.style.display = nombre.includes(q)
-            ? ''
-            : 'none';
-
-    });
-
+  }
 });
 
 // ─────────────────────────────────────────────────
@@ -393,9 +407,9 @@ buscador.addEventListener('input', function () {
 let html5QrCode  = null;
 let cameraActive = false;
 
-const btnScan   = document.getElementById('btnScanPos');
-const camIcon   = document.getElementById('camIcon');
-const camLabel  = document.getElementById('camLabel');
+const btnScan    = document.getElementById('btnScanPos');
+const camIcon    = document.getElementById('camIcon');
+const camLabel   = document.getElementById('camLabel');
 const scanStatus  = document.getElementById('scanStatus');
 const scanOverlay = document.getElementById('scanOverlay');
 
@@ -429,20 +443,18 @@ function openCamera(){
 function onCameraReady(){
   cameraActive = true;
   btnScan.classList.add('active');
-  camIcon.className   = 'fa fa-stop';
+  camIcon.className    = 'fa fa-stop';
   camLabel.textContent = 'Detener';
   setStatus('searching', '<i class="fa fa-circle-notch fa-spin"></i> Apunta al código...');
 }
 
 function onScanSuccess(codigo){
-  // Flash visual
   const flash = document.getElementById('scanFlash');
   flash.classList.add('on');
   setTimeout(() => flash.classList.remove('on'), 120);
 
   setStatus('found', `<i class="fa fa-circle-check"></i> Detectado: <strong>${codigo}</strong>`);
 
-  // Cerrar cámara y agregar producto
   closeCamera();
   setTimeout(() => agregarPorCodigo(codigo), 300);
 }
