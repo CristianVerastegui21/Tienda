@@ -1,4 +1,5 @@
 import os
+import psycopg2
 
 from flask import (
     Blueprint,
@@ -96,18 +97,19 @@ def _migrar_columnas():
 
         try:
 
-            cursor.execute(
-                f'''
+            cursor.execute(f'''
                 ALTER TABLE productos
                 ADD COLUMN {columna}
                 {definicion}
-                '''
-            )
+            ''')
 
-        except Exception:
-            pass
+            conexion.commit()
 
-    conexion.commit()
+        except psycopg2.errors.DuplicateColumn:
+
+            conexion.rollback()
+
+    cursor.close()
 
     conexion.close()
 
@@ -120,6 +122,7 @@ _migrar_columnas()
 # ─────────────────────────────────────────────────
 
 @bp.route('/productos')
+
 @rol_requerido([
     'admin',
     'supervisor'
@@ -139,8 +142,8 @@ def productos():
     cursor.execute('''
         SELECT *
         FROM productos
-        WHERE nombre LIKE %s
-           OR codigo_barra LIKE %s
+        WHERE nombre ILIKE %s
+           OR codigo_barra ILIKE %s
         ORDER BY nombre ASC
     ''', (
         f'%{busqueda}%',
@@ -148,6 +151,8 @@ def productos():
     ))
 
     filas = cursor.fetchall()
+
+    cursor.close()
 
     conexion.close()
 
@@ -245,6 +250,8 @@ def agregar_producto():
 
         conexion.commit()
 
+        cursor.close()
+
         conexion.close()
 
         registrar_log(
@@ -293,6 +300,8 @@ def editar_producto(id):
     producto = cursor.fetchone()
 
     if not producto:
+
+        cursor.close()
 
         conexion.close()
 
@@ -373,6 +382,8 @@ def editar_producto(id):
 
         conexion.commit()
 
+        cursor.close()
+
         conexion.close()
 
         registrar_log(
@@ -386,6 +397,8 @@ def editar_producto(id):
         )
 
         return redirect('/productos')
+
+    cursor.close()
 
     conexion.close()
 
@@ -437,6 +450,8 @@ def eliminar_producto(id):
             f'Producto "{producto["nombre"]}" eliminado',
             'success'
         )
+
+    cursor.close()
 
     conexion.close()
 

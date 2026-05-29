@@ -97,9 +97,10 @@ def ventas():
 
         producto = cursor.fetchone()
 
-        conexion.close()
-
         if not producto:
+
+            cursor.close()
+            conexion.close()
 
             flash(
                 'Producto no encontrado',
@@ -110,12 +111,18 @@ def ventas():
 
         if cantidad > producto['stock']:
 
+            cursor.close()
+            conexion.close()
+
             flash(
                 f'Stock insuficiente para "{producto["nombre"]}"',
                 'error'
             )
 
             return redirect('/ventas')
+
+        cursor.close()
+        conexion.close()
 
         _agregar_al_carrito(
             producto,
@@ -128,6 +135,8 @@ def ventas():
         item['subtotal']
         for item in carrito
     )
+
+    cursor.close()
 
     conexion.close()
 
@@ -213,6 +222,8 @@ def scanner_ventas():
 
         producto = cursor.fetchone()
 
+        cursor.close()
+
         conexion.close()
 
         if producto:
@@ -247,7 +258,7 @@ def _agregar_al_carrito(
 
             item['subtotal'] = (
                 item['cantidad'] *
-                item['precio']
+                float(item['precio'])
             )
 
             session['carrito'] = carrito
@@ -260,12 +271,12 @@ def _agregar_al_carrito(
 
         'nombre': producto['nombre'],
 
-        'precio': producto['precio'],
+        'precio': float(producto['precio']),
 
         'cantidad': cantidad,
 
         'subtotal': (
-            producto['precio'] *
+            float(producto['precio']) *
             cantidad
         )
 
@@ -311,6 +322,8 @@ def aumentar(index):
     ))
 
     prod = cursor.fetchone()
+
+    cursor.close()
 
     conexion.close()
 
@@ -444,6 +457,8 @@ def finalizar_venta():
 
     if not carrito:
 
+        cursor.close()
+
         conexion.close()
 
         return redirect('/ventas')
@@ -475,6 +490,8 @@ def finalizar_venta():
             not prod or
             item['cantidad'] > prod['stock']
         ):
+
+            cursor.close()
 
             conexion.close()
 
@@ -517,6 +534,8 @@ def finalizar_venta():
         carrito,
         total
     )
+
+    cursor.close()
 
     conexion.close()
 
@@ -675,21 +694,17 @@ def generar_ticket(
         'Subtotal'
     ]]
 
-    total_unidades = 0
-
     for i, item in enumerate(
         carrito,
         1
     ):
 
-        total_unidades += item['cantidad']
-
         data.append([
             i,
             item['nombre'],
             item['cantidad'],
-            f"S/. {item['precio']:.2f}",
-            f"S/. {item['subtotal']:.2f}"
+            f"S/. {float(item['precio']):.2f}",
+            f"S/. {float(item['subtotal']):.2f}"
         ])
 
     tabla = Table(
@@ -719,7 +734,7 @@ def generar_ticket(
     ]
 
     caja_total = Table([
-        ['TOTAL:', f'S/. {total:.2f}']
+        ['TOTAL:', f'S/. {float(total):.2f}']
     ])
 
     caja_total.setStyle(TableStyle([
@@ -814,10 +829,8 @@ def ver_venta(id):
 
     detalles = cursor.fetchall()
 
+    cursor.close()
+
     conexion.close()
 
-    return render_template(
-        'venta_detalle.html',
-        venta=venta,
-        detalles=detalles
-    )
+    return render_template( 'venta_detalle.html', venta=venta, detalles=detalles )

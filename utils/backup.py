@@ -1,21 +1,36 @@
 import os
-import shutil
 from datetime import datetime
-
-from db import _DB_PATH
 
 
 def crear_backup():
+
     carpeta = 'backups'
 
-    os.makedirs(carpeta, exist_ok=True)
+    os.makedirs(
+        carpeta,
+        exist_ok=True
+    )
 
-    fecha = datetime.now().strftime('%Y%m%d_%H%M%S')
+    fecha = datetime.now().strftime(
+        '%Y%m%d_%H%M%S'
+    )
 
-    origen = _DB_PATH
+    archivo = (
+        f'backups/supabase_backup_{fecha}.txt'
+    )
 
-    destino = f'backups/bodega_{fecha}.db'
+    with open(
+        archivo,
+        'w',
+        encoding='utf-8'
+    ) as f:
 
-    shutil.copy(origen, destino)
+        f.write(
+            'Backup gestionado por Supabase PostgreSQL\n'
+        )
 
-    return destino
+        f.write(
+            f'Fecha: {fecha}\n'
+        )
+
+    return archivo

@@ -1,36 +1,65 @@
-from flask import Blueprint, render_template
+from flask import (
+    Blueprint,
+    render_template
+)
 
 from db import conectar
+
 from utils.auth import rol_requerido
 
-bp = Blueprint('dashboard', __name__)
 
+bp = Blueprint(
+    'dashboard',
+    __name__
+)
+
+
+# ─────────────────────────────────────────────
+# INICIO
+# ─────────────────────────────────────────────
 
 @bp.route('/')
-@rol_requerido(['admin', 'supervisor', 'cajero'])
+
+@rol_requerido([
+    'admin',
+    'supervisor',
+    'cajero'
+])
+
 def index():
+
     conexion = conectar()
 
-    total_productos = conexion.execute('''
-        SELECT COUNT(*) total
+    cursor = conexion.cursor()
+
+    cursor.execute('''
+        SELECT COUNT(*) AS total
         FROM productos
-    ''').fetchone()['total']
+    ''')
 
-    total_ventas = conexion.execute('''
-        SELECT COUNT(*) total
+    total_productos = cursor.fetchone()['total']
+
+    cursor.execute('''
+        SELECT COUNT(*) AS total
         FROM ventas
-    ''').fetchone()['total']
+    ''')
 
-    ingresos = conexion.execute('''
-        SELECT IFNULL(SUM(total),0) total
+    total_ventas = cursor.fetchone()['total']
+
+    cursor.execute('''
+        SELECT COALESCE(SUM(total), 0) AS total
         FROM ventas
-    ''').fetchone()['total']
+    ''')
 
-    stock_bajo = conexion.execute('''
-        SELECT COUNT(*) total
+    ingresos = cursor.fetchone()['total']
+
+    cursor.execute('''
+        SELECT COUNT(*) AS total
         FROM productos
         WHERE stock <= 5
-    ''').fetchone()['total']
+    ''')
+
+    stock_bajo = cursor.fetchone()['total']
 
     conexion.close()
 
@@ -43,63 +72,94 @@ def index():
     )
 
 
+# ─────────────────────────────────────────────
+# DASHBOARD
+# ─────────────────────────────────────────────
+
 @bp.route('/dashboard')
-@rol_requerido(['admin', 'supervisor'])
+
+@rol_requerido([
+    'admin',
+    'supervisor'
+])
+
 def dashboard():
+
     conexion = conectar()
 
-    total_productos = conexion.execute('''
-        SELECT COUNT(*) as total
+    cursor = conexion.cursor()
+
+    # TOTAL PRODUCTOS
+    cursor.execute('''
+        SELECT COUNT(*) AS total
         FROM productos
-    ''').fetchone()['total']
+    ''')
 
-    total_ventas = conexion.execute('''
-        SELECT COUNT(*) as total
+    total_productos = cursor.fetchone()['total']
+
+    # TOTAL VENTAS
+    cursor.execute('''
+        SELECT COUNT(*) AS total
         FROM ventas
-    ''').fetchone()['total']
+    ''')
 
-    ingresos = conexion.execute('''
-        SELECT IFNULL(SUM(total),0) as total
+    total_ventas = cursor.fetchone()['total']
+
+    # INGRESOS
+    cursor.execute('''
+        SELECT COALESCE(SUM(total), 0) AS total
         FROM ventas
-    ''').fetchone()['total']
+    ''')
 
-    stock_bajo = conexion.execute('''
+    ingresos = cursor.fetchone()['total']
+
+    # STOCK BAJO
+    cursor.execute('''
         SELECT *
         FROM productos
         WHERE stock <= reorden
         ORDER BY stock ASC
-    ''').fetchall()
+    ''')
 
-    ultimas_ventas = conexion.execute('''
+    stock_bajo = cursor.fetchall()
+
+    # ÚLTIMAS VENTAS
+    cursor.execute('''
         SELECT *
         FROM ventas
         ORDER BY fecha DESC
         LIMIT 5
-    ''').fetchall()
+    ''')
 
-    grafico = conexion.execute('''
+    ultimas_ventas = cursor.fetchall()
+
+    # GRÁFICO VENTAS
+    cursor.execute('''
         SELECT
-            DATE(fecha) as dia,
-            SUM(total) as total
+            DATE(fecha) AS dia,
+            SUM(total) AS total
         FROM ventas
         GROUP BY DATE(fecha)
         ORDER BY DATE(fecha)
-    ''').fetchall()
+    ''')
+
+    grafico = cursor.fetchall()
 
     dias = [
-        item['dia']
+        str(item['dia'])
         for item in grafico
     ]
 
     totales = [
-        item['total']
+        float(item['total'])
         for item in grafico
     ]
 
-    productos_top = conexion.execute('''
+    # PRODUCTOS MÁS VENDIDOS
+    cursor.execute('''
         SELECT
             productos.nombre,
-            SUM(detalle_venta.cantidad) as total
+            SUM(detalle_venta.cantidad) AS total
 
         FROM detalle_venta
 
@@ -111,7 +171,9 @@ def dashboard():
         ORDER BY total DESC
 
         LIMIT 5
-    ''').fetchall()
+    ''')
+
+    productos_top = cursor.fetchall()
 
     nombres_productos = [
         p['nombre']
@@ -119,7 +181,7 @@ def dashboard():
     ]
 
     cantidades_productos = [
-        p['total']
+        int(p['total'])
         for p in productos_top
     ]
 
@@ -139,19 +201,30 @@ def dashboard():
     )
 
 
+# ─────────────────────────────────────────────
+# ALERTAS GLOBALES
+# ─────────────────────────────────────────────
+
 def registrar_alertas_globales(app):
+
     @app.context_processor
     def alertas_globales():
+
         try:
+
             conexion = conectar()
 
-            alertas = conexion.execute('''
+            cursor = conexion.cursor()
+
+            cursor.execute('''
                 SELECT *
                 FROM productos
                 WHERE stock <= reorden
                 ORDER BY stock ASC
                 LIMIT 5
-            ''').fetchall()
+            ''')
+
+            alertas = cursor.fetchall()
 
             conexion.close()
 
@@ -159,5 +232,10 @@ def registrar_alertas_globales(app):
                 alertas=alertas,
                 total_alertas=len(alertas)
             )
+
         except Exception:
-            return dict(alertas=[], total_alertas=0)
+
+            return dict(
+                alertas=[],
+                total_alertas=0
+            )

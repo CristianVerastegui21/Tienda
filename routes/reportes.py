@@ -3,9 +3,11 @@ from datetime import datetime
 
 from flask import Blueprint, render_template, send_file
 from openpyxl import Workbook
+
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
+
 from reportlab.platypus import (
     SimpleDocTemplate,
     Paragraph,
@@ -20,15 +22,29 @@ from utils.auth import rol_requerido
 bp = Blueprint('reportes', __name__)
 
 
-@bp.route('/historial')
-@rol_requerido(['admin', 'supervisor'])
-def historial():
-    conexion = conectar()
+# ─────────────────────────────────────────────
+# HISTORIAL
+# ─────────────────────────────────────────────
 
-    ventas = conexion.execute('''
-        SELECT * FROM ventas
+@bp.route('/historial')
+
+@rol_requerido([
+    'admin',
+    'supervisor'
+])
+
+def historial():
+
+    conexion = conectar()
+    cursor = conexion.cursor()
+
+    cursor.execute('''
+        SELECT *
+        FROM ventas
         ORDER BY fecha DESC
-    ''').fetchall()
+    ''')
+
+    ventas = cursor.fetchall()
 
     conexion.close()
 
@@ -38,43 +54,65 @@ def historial():
     )
 
 
-@bp.route('/reportes')
-@rol_requerido(['admin', 'supervisor'])
-def reportes():
-    conexion = conectar()
+# ─────────────────────────────────────────────
+# REPORTES
+# ─────────────────────────────────────────────
 
-    ventas = conexion.execute('''
-        SELECT * FROM ventas
+@bp.route('/reportes')
+
+@rol_requerido([
+    'admin',
+    'supervisor'
+])
+
+def reportes():
+
+    conexion = conectar()
+    cursor = conexion.cursor()
+
+    cursor.execute('''
+        SELECT *
+        FROM ventas
         ORDER BY fecha DESC
-    ''').fetchall()
+    ''')
+
+    ventas = cursor.fetchall()
 
     total_ventas = len(ventas)
 
     ingresos = sum(
-        venta['total']
+        float(venta['total'])
         for venta in ventas
     )
 
-    grafico = conexion.execute('''
+    cursor.execute('''
         SELECT
-            DATE(fecha) dia,
-            SUM(total) total
+            DATE(fecha) as dia,
+            SUM(total) as total
 
         FROM ventas
 
         GROUP BY DATE(fecha)
 
         ORDER BY DATE(fecha)
-    ''').fetchall()
+    ''')
 
-    dias = [x['dia'] for x in grafico]
+    grafico = cursor.fetchall()
 
-    totales = [x['total'] for x in grafico]
+    dias = [
+        str(x['dia'])
+        for x in grafico
+    ]
 
-    productos_top = conexion.execute('''
+    totales = [
+        float(x['total'])
+        for x in grafico
+    ]
+
+    cursor.execute('''
         SELECT
             productos.nombre,
-            SUM(detalle_venta.cantidad) total
+            SUM(detalle_venta.cantidad) as total
 
         FROM detalle_venta
 
@@ -86,7 +124,9 @@ def reportes():
         ORDER BY total DESC
 
         LIMIT 10
-    ''').fetchall()
+    ''')
+
+    productos_top = cursor.fetchall()
 
     nombres_productos = [
         p['nombre']
@@ -94,14 +134,17 @@ def reportes():
     ]
 
     cantidades_productos = [
-        p['total']
+        int(p['total'])
         for p in productos_top
     ]
 
-    stock_bajo = conexion.execute('''
-        SELECT * FROM productos
+    cursor.execute('''
+        SELECT *
+        FROM productos
         WHERE stock <= 5
-    ''').fetchall()
+    ''')
+
+    stock_bajo = cursor.fetchall()
 
     conexion.close()
 
@@ -121,22 +164,39 @@ def reportes():
     )
 
 
-@bp.route('/reporte_pdf')
-@rol_requerido(['admin', 'supervisor'])
-def reporte_pdf():
-    conexion = conectar()
+# ─────────────────────────────────────────────
+# REPORTE PDF
+# ─────────────────────────────────────────────
 
-    total_ventas = conexion.execute('''
+@bp.route('/reporte_pdf')
+
+@rol_requerido([
+    'admin',
+    'supervisor'
+])
+
+def reporte_pdf():
+
+    conexion = conectar()
+    cursor = conexion.cursor()
+
+    cursor.execute('''
         SELECT COUNT(*) as total
         FROM ventas
-    ''').fetchone()['total']
+    ''')
 
-    ingresos = conexion.execute('''
-        SELECT IFNULL(SUM(total),0) as total
+    total_ventas = cursor.fetchone()['total']
+
+    cursor.execute('''
+        SELECT COALESCE(SUM(total),0) as total
         FROM ventas
-    ''').fetchone()['total']
+    ''')
 
-    productos_top = conexion.execute('''
+    ingresos = float(
+        cursor.fetchone()['total']
+    )
+
+    cursor.execute('''
         SELECT
             productos.nombre,
             SUM(detalle_venta.cantidad) as vendidos
@@ -151,20 +211,26 @@ def reporte_pdf():
         ORDER BY vendidos DESC
 
         LIMIT 10
-    ''').fetchall()
+    ''')
 
-    stock_bajo = conexion.execute('''
+    productos_top = cursor.fetchall()
+
+    cursor.execute('''
         SELECT nombre, stock
         FROM productos
         WHERE stock <= reorden
-    ''').fetchall()
+    ''')
+
+    stock_bajo = cursor.fetchall()
 
     conexion.close()
 
     carpeta = 'reportes'
 
-    if not os.path.exists(carpeta):
-        os.makedirs(carpeta)
+    os.makedirs(
+        carpeta,
+        exist_ok=True
+    )
 
     archivo = 'reportes/reporte_general.pdf'
 
@@ -188,16 +254,14 @@ def reporte_pdf():
 
     elementos.append(titulo)
 
-    elementos.append(Spacer(1, 20))
+    elementos.append(
+        Spacer(1, 20)
+    )
 
     resumen = f"""
-
     <b>Total Ventas:</b> {total_ventas}<br/><br/>
-
     <b>Ingresos Totales:</b> S/. {ingresos:.2f}<br/><br/>
-
     <b>Fecha:</b> {datetime.now().strftime('%d/%m/%Y %H:%M')}
-
     """
 
     elementos.append(
@@ -207,7 +271,9 @@ def reporte_pdf():
         )
     )
 
-    elementos.append(Spacer(1, 25))
+    elementos.append(
+        Spacer(1, 25)
+    )
 
     subtitulo1 = Paragraph(
         "Productos Mas Vendidos",
@@ -216,7 +282,9 @@ def reporte_pdf():
 
     elementos.append(subtitulo1)
 
-    elementos.append(Spacer(1, 10))
+    elementos.append(
+        Spacer(1, 10)
+    )
 
     datos_top = [[
         'Producto',
@@ -224,32 +292,69 @@ def reporte_pdf():
     ]]
 
     for p in productos_top:
+
         datos_top.append([
             p['nombre'],
             p['vendidos']
         ])
 
-    tabla_top = Table(datos_top, colWidths=[300, 150])
+    tabla_top = Table(
+        datos_top,
+        colWidths=[300, 150]
+    )
 
     tabla_top.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0),
-            colors.HexColor('#2575fc')),
-        ('TEXTCOLOR', (0, 0), (-1, 0),
-            colors.white),
-        ('FONTNAME', (0, 0), (-1, 0),
-            'Helvetica-Bold'),
-        ('GRID', (0, 0), (-1, -1),
+
+        (
+            'BACKGROUND',
+            (0, 0),
+            (-1, 0),
+            colors.HexColor('#2575fc')
+        ),
+
+        (
+            'TEXTCOLOR',
+            (0, 0),
+            (-1, 0),
+            colors.white
+        ),
+
+        (
+            'FONTNAME',
+            (0, 0),
+            (-1, 0),
+            'Helvetica-Bold'
+        ),
+
+        (
+            'GRID',
+            (0, 0),
+            (-1, -1),
             1,
-            colors.black),
-        ('BACKGROUND', (0, 1), (-1, -1),
-            colors.whitesmoke),
-        ('ALIGN', (1, 1), (-1, -1),
-            'CENTER')
+            colors.black
+        ),
+
+        (
+            'BACKGROUND',
+            (0, 1),
+            (-1, -1),
+            colors.whitesmoke
+        ),
+
+        (
+            'ALIGN',
+            (1, 1),
+            (-1, -1),
+            'CENTER'
+        )
+
     ]))
 
     elementos.append(tabla_top)
 
-    elementos.append(Spacer(1, 25))
+    elementos.append(
+        Spacer(1, 25)
+    )
 
     subtitulo2 = Paragraph(
         "Productos con Bajo Stock",
@@ -258,7 +363,9 @@ def reporte_pdf():
 
     elementos.append(subtitulo2)
 
-    elementos.append(Spacer(1, 10))
+    elementos.append(
+        Spacer(1, 10)
+    )
 
     datos_stock = [[
         'Producto',
@@ -266,38 +373,75 @@ def reporte_pdf():
     ]]
 
     for p in stock_bajo:
+
         datos_stock.append([
             p['nombre'],
             p['stock']
         ])
 
-    tabla_stock = Table(datos_stock, colWidths=[300, 150])
+    tabla_stock = Table(
+        datos_stock,
+        colWidths=[300, 150]
+    )
 
     tabla_stock.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0),
-            colors.red),
-        ('TEXTCOLOR', (0, 0), (-1, 0),
-            colors.white),
-        ('FONTNAME', (0, 0), (-1, 0),
-            'Helvetica-Bold'),
-        ('GRID', (0, 0), (-1, -1),
+
+        (
+            'BACKGROUND',
+            (0, 0),
+            (-1, 0),
+            colors.red
+        ),
+
+        (
+            'TEXTCOLOR',
+            (0, 0),
+            (-1, 0),
+            colors.white
+        ),
+
+        (
+            'FONTNAME',
+            (0, 0),
+            (-1, 0),
+            'Helvetica-Bold'
+        ),
+
+        (
+            'GRID',
+            (0, 0),
+            (-1, -1),
             1,
-            colors.black),
-        ('BACKGROUND', (0, 1), (-1, -1),
-            colors.beige),
-        ('ALIGN', (1, 1), (-1, -1),
-            'CENTER')
+            colors.black
+        ),
+
+        (
+            'BACKGROUND',
+            (0, 1),
+            (-1, -1),
+            colors.beige
+        ),
+
+        (
+            'ALIGN',
+            (1, 1),
+            (-1, -1),
+            'CENTER'
+        )
+
     ]))
 
     elementos.append(tabla_stock)
 
-    elementos.append(Spacer(1, 30))
+    elementos.append(
+        Spacer(1, 30)
+    )
 
     footer = Paragraph(
         """
         <para align=center>
         <font size=9 color=grey>
-        Sistema desarrollado con Flask + SQLite<br/>
+        Sistema desarrollado con Flask + PostgreSQL + Supabase<br/>
         Reporte generado automaticamente
         </font>
         </para>
@@ -315,16 +459,36 @@ def reporte_pdf():
     )
 
 
-@bp.route('/exportar_ventas')
-@rol_requerido(['admin', 'supervisor'])
-def exportar_ventas():
-    conexion = conectar()
+# ─────────────────────────────────────────────
+# EXPORTAR EXCEL
+# ─────────────────────────────────────────────
 
-    ventas = conexion.execute('''
-        SELECT * FROM ventas
-    ''').fetchall()
+@bp.route('/exportar_ventas')
+
+@rol_requerido([
+    'admin',
+    'supervisor'
+])
+
+def exportar_ventas():
+
+    conexion = conectar()
+    cursor = conexion.cursor()
+
+    cursor.execute('''
+        SELECT *
+        FROM ventas
+        ORDER BY fecha DESC
+    ''')
+
+    ventas = cursor.fetchall()
 
     conexion.close()
+
+    os.makedirs(
+        'reportes',
+        exist_ok=True
+    )
 
     wb = Workbook()
 
@@ -339,10 +503,11 @@ def exportar_ventas():
     ])
 
     for venta in ventas:
+
         ws.append([
             venta['id'],
-            venta['total'],
-            venta['fecha']
+            float(venta['total']),
+            str(venta['fecha'])
         ])
 
     archivo = 'reportes/ventas.xlsx'

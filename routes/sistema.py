@@ -4,34 +4,60 @@ from db import conectar
 from utils.auth import rol_requerido
 from utils.backup import crear_backup
 
-bp = Blueprint('sistema', __name__)
+bp = Blueprint(
+    'sistema',
+    __name__
+)
 
+
+# ─────────────────────────────────────────────
+# BACKUP
+# ─────────────────────────────────────────────
 
 @bp.route('/backup')
-@rol_requerido(['admin'])
+
+@rol_requerido([
+    'admin'
+])
+
 def backup():
+
     archivo = crear_backup()
 
     return f'''
-        <h1>Backup creado</h1>
+        <h1>Backup creado correctamente</h1>
 
         <p>{archivo}</p>
 
         <a href="/dashboard">
-            Volver
+            Volver al Dashboard
         </a>
     '''
 
 
+# ─────────────────────────────────────────────
+# LOGS
+# ─────────────────────────────────────────────
+
 @bp.route('/logs')
-@rol_requerido(['admin'])
+
+@rol_requerido([
+    'admin'
+])
+
 def logs():
+
     conexion = conectar()
 
-    logs = conexion.execute('''
-        SELECT * FROM logs
+    cursor = conexion.cursor()
+
+    cursor.execute('''
+        SELECT *
+        FROM logs
         ORDER BY fecha DESC
-    ''').fetchall()
+    ''')
+
+    logs = cursor.fetchall()
 
     conexion.close()
 
@@ -41,25 +67,31 @@ def logs():
     )
 
 
+# ─────────────────────────────────────────────
+# STOCK BAJO
+# ─────────────────────────────────────────────
+
 @bp.route('/stock_bajo')
+
 @rol_requerido([
     'admin',
     'supervisor'
 ])
+
 def stock_bajo():
+
     conexion = conectar()
 
-    productos = conexion.execute('''
+    cursor = conexion.cursor()
 
+    cursor.execute('''
         SELECT *
-
         FROM productos
-
         WHERE stock <= reorden
-
         ORDER BY stock ASC
+    ''')
 
-    ''').fetchall()
+    productos = cursor.fetchall()
 
     conexion.close()
 
