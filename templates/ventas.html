@@ -343,11 +343,48 @@ document.addEventListener('keydown', function(e){
 // ─────────────────────────────────────────────────
 // BUSCADOR DE PRODUCTOS
 // ─────────────────────────────────────────────────
-document.getElementById('buscador').addEventListener('input', function(){
-  const q = this.value.toLowerCase().trim();
-  document.querySelectorAll('.producto-item').forEach(el => {
-    el.style.display = el.dataset.nombre.includes(q) ? '' : 'none';
-  });
+// ─────────────────────────────────────────────────
+// BUSCADOR DE PRODUCTOS
+// ─────────────────────────────────────────────────
+
+const buscador = document.getElementById('buscador');
+
+buscador.addEventListener('focus', function () {
+
+    document.querySelectorAll('.producto-item').forEach(el => {
+
+        el.style.display = '';
+
+    });
+
+});
+
+buscador.addEventListener('input', function () {
+
+    const q = this.value.toLowerCase().trim();
+
+    // si no escribe nada → mostrar todos
+    if (q === '') {
+
+        document.querySelectorAll('.producto-item').forEach(el => {
+
+            el.style.display = '';
+
+        });
+
+        return;
+    }
+
+    document.querySelectorAll('.producto-item').forEach(el => {
+
+        const nombre = el.dataset.nombre.toLowerCase();
+
+        el.style.display = nombre.includes(q)
+            ? ''
+            : 'none';
+
+    });
+
 });
 
 // ─────────────────────────────────────────────────
