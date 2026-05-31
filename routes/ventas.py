@@ -8,7 +8,6 @@ from flask import (
     request,
     redirect,
     session,
-    send_file,
     flash
 )
 
@@ -35,6 +34,9 @@ from db import conectar
 from utils.auth import rol_requerido
 from utils.logs import registrar_log
 
+from utils.supabase_tickets import (
+    subir_ticket
+)
 
 bp = Blueprint(
     'ventas',
@@ -529,11 +531,28 @@ def finalizar_venta():
 
     conexion.commit()
 
-    generar_ticket(
+   # generar_ticket(
+    #    id_venta,
+      #  carrito,
+     #   total
+   # )
+
+    ticket_url = generar_ticket(
         id_venta,
         carrito,
         total
     )
+
+    cursor.execute("""
+        UPDATE ventas
+        SET ticket_url = %s
+        WHERE id = %s
+    """, (
+        ticket_url,
+        id_venta
+    ))
+
+    conexion.commit()
 
     cursor.close()
 
@@ -761,10 +780,33 @@ def generar_ticket(
         )
     ]
 
+    #doc.build(elems)
+
+    #return archivo 
+
     doc.build(elems)
 
-    return archivo
+    url_ticket = subir_ticket(
+        archivo
+    )
 
+    if not url_ticket:
+
+        flash(
+            'Error al subir el ticket',
+            'error'
+         )
+
+        return redirect('/ventas')
+
+    
+
+    try:
+        os.remove(archivo)
+    except:
+        pass
+
+    return url_ticket
 
 # ────────────────────────────────────────────────────────────
 # DESCARGAR TICKET
@@ -780,13 +822,33 @@ def generar_ticket(
 
 def ticket(id_venta):
 
-    archivo = (
-        f'static/tickets/venta_{id_venta}.pdf'
-    )
+    conexion = conectar()
 
-    return send_file(
-        archivo,
-        mimetype='application/pdf'
+    cursor = conexion.cursor()
+
+    cursor.execute("""
+        SELECT ticket_url
+        FROM ventas
+        WHERE id = %s
+    """, (id_venta,))
+
+    venta = cursor.fetchone()
+
+    cursor.close()
+
+    conexion.close()
+
+    if not venta or not venta['ticket_url']:
+
+        flash(
+            'Ticket no encontrado',
+            'error'
+        )
+
+        return redirect('/ventas')
+
+    return redirect(
+        venta['ticket_url']
     )
 
 
