@@ -11,7 +11,6 @@ from utils.reportes_filtros import parse_filtros, sql_grupo_fecha, sql_filtro_fe
 
 bp = Blueprint('reportes', __name__)
 
-
 def _query_string_desde_request():
     if not request.args:
         return ''
@@ -97,17 +96,36 @@ def _obtener_datos_reporte(cursor, filtros):
         'resumen': resumen,
     }
 
+#HISTORIAL DE VENTAS
+
+from datetime import timedelta
 
 @bp.route('/historial')
 @rol_requerido(['admin', 'supervisor'])
 def historial():
+
     conexion = conectar()
     cursor = conexion.cursor()
-    cursor.execute('SELECT * FROM ventas ORDER BY fecha DESC')
-    ventas = cursor.fetchall()
-    conexion.close()
-    return render_template('historial.html', ventas=ventas)
 
+    cursor.execute("""
+        SELECT *
+        FROM ventas
+        ORDER BY fecha DESC
+    """)
+
+    ventas = cursor.fetchall()
+
+    for venta in ventas:
+        if venta['fecha']:
+            venta['fecha'] = venta['fecha'] - timedelta(hours=5)
+
+    cursor.close()
+    conexion.close()
+
+    return render_template(
+        'historial.html',
+        ventas=ventas
+    )
 
 @bp.route('/reportes')
 @rol_requerido(['admin', 'supervisor'])

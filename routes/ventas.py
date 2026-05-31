@@ -1,6 +1,6 @@
 import os
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from flask import (
     Blueprint,
@@ -679,7 +679,10 @@ def generar_ticket(
 
     ]
 
-    fecha = datetime.now().strftime(
+    fecha = (
+        datetime.utcnow() -
+        timedelta(hours=5)
+    ).strftime(
         '%d/%m/%Y %H:%M:%S'
     )
 
@@ -797,16 +800,13 @@ def generar_ticket(
             'error'
          )
 
-        return redirect('/ventas')
-
-    
-
     try:
         os.remove(archivo)
     except:
         pass
 
     return url_ticket
+
 
 # ────────────────────────────────────────────────────────────
 # DESCARGAR TICKET
