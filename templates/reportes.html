@@ -471,19 +471,17 @@
     </h1>
     <p class="page-sub">
       Análisis de ventas, productos y estado del inventario
-      {% if request.args.get('desde') or request.args.get('hasta') %}
       <span class="period-badge" style="margin-left:.5rem">
-        <i class="fa fa-calendar-check"></i> Periodo filtrado
+        <i class="fa fa-calendar-check"></i> {{ filtros.etiqueta }}
       </span>
-      {% endif %}
     </p>
   </div>
   <div class="header-actions">
-    <a href="/reporte_pdf" class="btn btn-outline-danger">
-      <i class="fa fa-file-pdf"></i> PDF
+    <a href="/reporte_pdf{% if query_string %}?{{ query_string }}{% endif %}" class="btn btn-outline-danger">
+      <i class="fa fa-file-pdf"></i> Descargar PDF
     </a>
-    <a href="/exportar_ventas" class="btn btn-success">
-      <i class="fa fa-file-excel"></i> Excel
+    <a href="/exportar_ventas{% if query_string %}?{{ query_string }}{% endif %}" class="btn btn-success">
+      <i class="fa fa-file-excel"></i> Descargar Excel
     </a>
   </div>
 </div>
@@ -492,39 +490,73 @@
 <!-- FILTROS                                        -->
 <!-- ═══════════════════════════════════════════════ -->
 <div class="filters-card anim-up anim-up-1">
-  {% if request.args.get('desde') or request.args.get('hasta') %}
   <div class="filters-header">
     <span class="filters-header-title">
-      <i class="fa fa-sliders"></i> Filtros aplicados
+      <i class="fa fa-sliders"></i> Filtros de periodo
     </span>
     <a href="/reportes" class="filters-clear">
-      <i class="fa fa-rotate-left"></i> Quitar filtros
+      <i class="fa fa-rotate-left"></i> Mes actual
     </a>
   </div>
-  {% endif %}
   <div class="filters-body">
-    <form method="GET" action="/reportes" class="filters-form">
+    <form method="GET" action="/reportes" class="filters-form" id="formFiltrosReportes">
       <div class="filter-group">
-        <label class="filter-label">Desde</label>
-        <input type="date" name="desde" class="filter-input"
-          value="{{ request.args.get('desde', '') }}">
-      </div>
-      <div class="filter-group">
-        <label class="filter-label">Hasta</label>
-        <input type="date" name="hasta" class="filter-input"
-          value="{{ request.args.get('hasta', '') }}">
-      </div>
-      <div class="filter-group" style="max-width:180px">
-        <label class="filter-label">Agrupar por</label>
-        <select name="periodo" class="filter-input">
-          <option value="diario" {{ 'selected' if request.args.get('periodo') == 'diario' else '' }}>Diario</option>
-          <option value="mensual" {{ 'selected' if request.args.get('periodo') == 'mensual' else '' }}>Mensual</option>
-          <option value="anual" {{ 'selected' if request.args.get('periodo') == 'anual' else '' }}>Anual</option>
+        <label class="filter-label">Ver por</label>
+        <select name="tipo" id="filtroTipo" class="filter-input">
+          <option value="dia" {{ 'selected' if filtros.tipo == 'dia' else '' }}>Dia</option>
+          <option value="semana" {{ 'selected' if filtros.tipo == 'semana' else '' }}>Semana</option>
+          <option value="mes" {{ 'selected' if filtros.tipo == 'mes' else '' }}>Mes</option>
+          <option value="anio" {{ 'selected' if filtros.tipo == 'anio' else '' }}>Ano</option>
+          <option value="rango" {{ 'selected' if filtros.tipo == 'rango' else '' }}>Rango</option>
         </select>
       </div>
+
+      <div class="filter-group filtro-campo" data-tipo="dia">
+        <label class="filter-label">Dia</label>
+        <input type="date" name="fecha" class="filter-input" value="{{ filtros.fecha }}">
+      </div>
+
+      <div class="filter-group filtro-campo" data-tipo="semana">
+        <label class="filter-label">Ano</label>
+        <input type="number" name="anio" class="filter-input" min="2020" max="2035" value="{{ filtros.anio }}">
+      </div>
+      <div class="filter-group filtro-campo" data-tipo="semana">
+        <label class="filter-label">Semana (1-53)</label>
+        <input type="number" name="semana" class="filter-input" min="1" max="53" value="{{ filtros.semana }}">
+      </div>
+
+      <div class="filter-group filtro-campo" data-tipo="mes">
+        <label class="filter-label">Mes</label>
+        <input type="month" name="mes" class="filter-input" value="{{ filtros.mes }}">
+      </div>
+
+      <div class="filter-group filtro-campo" data-tipo="anio">
+        <label class="filter-label">Ano</label>
+        <input type="number" name="anio" class="filter-input" min="2020" max="2035" value="{{ filtros.anio }}">
+      </div>
+
+      <div class="filter-group filtro-campo" data-tipo="rango">
+        <label class="filter-label">Desde</label>
+        <input type="date" name="desde" class="filter-input" value="{{ filtros.desde_input }}">
+      </div>
+      <div class="filter-group filtro-campo" data-tipo="rango">
+        <label class="filter-label">Hasta</label>
+        <input type="date" name="hasta" class="filter-input" value="{{ filtros.hasta_input }}">
+      </div>
+
       <div class="filter-group">
-        <button class="btn btn-primary" type="submit" style="border-radius:10px;white-space:nowrap">
-          <i class="fa fa-filter"></i> Generar
+        <label class="filter-label">Graficos</label>
+        <select name="agrupar" class="filter-input">
+          <option value="diario" {{ 'selected' if filtros.agrupar == 'diario' else '' }}>Por dia</option>
+          <option value="mensual" {{ 'selected' if filtros.agrupar == 'mensual' else '' }}>Por mes</option>
+          <option value="anual" {{ 'selected' if filtros.agrupar == 'anual' else '' }}>Por ano</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-label">&nbsp;</label>
+        <button class="btn btn-primary" type="submit" style="border-radius:10px;white-space:nowrap;width:100%">
+          <i class="fa fa-filter"></i> Aplicar filtro
         </button>
       </div>
     </form>
@@ -618,6 +650,54 @@
     <div class="chart-body">
       <canvas id="graficoPie"></canvas>
     </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- VENTAS DEL PERIODO                             -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="table-card anim-up anim-up-5" style="margin-bottom:1.25rem">
+  <div class="table-header">
+    <h3 class="table-title">
+      <i class="fa fa-receipt" style="color:var(--blue)"></i>
+      Ventas del periodo
+    </h3>
+    <span class="table-count green">{{ ventas|length }} registros</span>
+  </div>
+  <div class="table-body">
+    {% if ventas|length > 0 %}
+    <table class="mini-table">
+      <thead>
+        <tr>
+          <th style="width:80px">ID</th>
+          <th>Fecha</th>
+          <th style="width:140px;text-align:right">Total</th>
+          <th style="width:120px">Accion</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for v in ventas %}
+        <tr>
+          <td data-label="ID"><span class="rank-num rank-n">#{{ v.id }}</span></td>
+          <td data-label="Fecha" style="font-family:'JetBrains Mono',monospace;font-size:.8rem">{{ v.fecha }}</td>
+          <td data-label="Total" style="text-align:right">
+            <span class="qty-badge green">S/. {{ "%.2f"|format(v.total|float) }}</span>
+          </td>
+          <td data-label="Accion">
+            <a href="/venta/{{ v.id }}" class="btn btn-sm btn-outline-primary" style="font-size:.72rem;border-radius:8px">
+              <i class="fa fa-eye"></i> Ver
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <i class="fa fa-calendar-xmark"></i>
+      <p>No hubo ventas en el periodo seleccionado</p>
+    </div>
+    {% endif %}
   </div>
 </div>
 
@@ -994,6 +1074,19 @@
     // Pequeño delay para que las CSS variables se actualicen
     setTimeout(buildCharts, 80);
   });
+  function actualizarCamposFiltro() {
+    const tipo = document.getElementById('filtroTipo').value;
+    document.querySelectorAll('.filtro-campo').forEach(function (el) {
+      const visible = el.dataset.tipo === tipo;
+      el.style.display = visible ? '' : 'none';
+      el.querySelectorAll('input, select').forEach(function (inp) {
+        inp.disabled = !visible;
+      });
+    });
+  }
+  document.getElementById('filtroTipo').addEventListener('change', actualizarCamposFiltro);
+  actualizarCamposFiltro();
+
   observer.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['class', 'data-theme']

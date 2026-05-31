@@ -2,82 +2,214 @@
 {% block content %}
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
-  .dash-topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:.75rem; }
-  .dash-topbar h1 { font-size:1.4rem; font-weight:700; margin:0; }
-  .dash-topbar p  { font-size:.78rem; color:var(--text-muted); margin:0; }
-  .reloj { font-family:'JetBrains Mono',monospace; font-size:.72rem; color:var(--text-muted); background:var(--bg-card); border:1px solid var(--border); border-radius:8px; padding:.4rem .8rem; }
-  .btn-reportes { display:inline-flex; align-items:center; gap:.4rem; background:linear-gradient(135deg,var(--blue),var(--purple)); border:none; border-radius:9px; color:#fff; font-weight:600; font-size:.82rem; padding:.5rem 1.1rem; text-decoration:none; transition:all .25s; box-shadow:0 4px 16px rgba(79,135,255,.3); }
-  .btn-reportes:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(79,135,255,.45); color:#fff; }
-  .kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.5rem; }
-  @media(max-width:900px){ .kpi-row{grid-template-columns:repeat(2,1fr)} }
-  @media(max-width:500px){ .kpi-row{grid-template-columns:1fr} }
-  .charts-row { display:grid; grid-template-columns:1fr 350px; gap:1rem; margin-bottom:1.5rem; }
-  @media(max-width:900px){ .charts-row{grid-template-columns:1fr} }
-  .tables-row { display:grid; grid-template-columns:3fr 2fr; gap:1rem; }
-  @media(max-width:900px){ .tables-row{grid-template-columns:1fr} }
-  .dash-card { background:var(--bg-card); border:1px solid var(--border); border-radius:14px; padding:1.4rem; transition:border-color .3s; }
-  .dash-card:hover { border-color:var(--border-hover); }
-  .card-ttl { font-size:.88rem; font-weight:700; margin-bottom:1.1rem; display:flex; align-items:center; gap:.45rem; }
-  .card-ttl .dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  .dash-header {
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+    gap:1rem; margin-bottom:1.5rem;
+  }
+  .dash-title {
+    font-size:1.55rem; font-weight:800; margin:0; letter-spacing:-.03em;
+    color:var(--text-primary);
+    display:flex; align-items:center; gap:.55rem;
+  }
+  .dash-title-icon {
+    width:42px; height:42px; border-radius:12px;
+    background:linear-gradient(135deg, var(--blue), var(--purple));
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#fff; font-size:1rem;
+    box-shadow:0 4px 16px rgba(79,135,255,.35);
+  }
+  .dash-sub { color:var(--text-muted); font-size:.88rem; margin:.35rem 0 0; }
+
+  .dash-actions { display:flex; gap:.5rem; flex-wrap:wrap; align-items:center; }
+  .reloj {
+    font-family:'JetBrains Mono',monospace; font-size:.72rem;
+    color:var(--text-muted); background:var(--bg-card);
+    border:1px solid var(--border); border-radius:10px; padding:.45rem .85rem;
+  }
+  .btn-reportes {
+    display:inline-flex; align-items:center; gap:.45rem;
+    background:linear-gradient(135deg,var(--blue),var(--purple));
+    border:none; border-radius:10px; color:#fff; font-weight:600;
+    font-size:.84rem; padding:.55rem 1.1rem; text-decoration:none;
+    box-shadow:0 4px 16px rgba(79,135,255,.3); transition:transform .2s;
+  }
+  .btn-reportes:hover { transform:translateY(-2px); color:#fff; }
+
+  .kpi-row {
+    display:grid; grid-template-columns:repeat(4, 1fr);
+    gap:1rem; margin-bottom:1.5rem;
+  }
+  @media(max-width:900px){ .kpi-row{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:500px){ .kpi-row{ grid-template-columns:1fr; } }
+
+  .kpi-card {
+    background:var(--bg-card); border:1px solid var(--border);
+    border-radius:14px; padding:1.15rem 1.25rem;
+    display:flex; align-items:center; gap:.9rem;
+    position:relative; overflow:hidden;
+    box-shadow:0 1px 3px rgba(0,0,0,.05);
+    transition:transform .2s, box-shadow .2s;
+  }
+  .kpi-card::before {
+    content:''; position:absolute; left:0; top:0; bottom:0; width:4px;
+  }
+  .kpi-card:hover { transform:translateY(-3px); box-shadow:0 10px 28px rgba(0,0,0,.08); }
+  .kpi-card.blue::before { background:var(--blue); }
+  .kpi-card.green::before { background:var(--green); }
+  .kpi-card.amber::before { background:var(--amber); }
+  .kpi-card.red::before { background:var(--red); }
+
+  .kpi-icon {
+    width:48px; height:48px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.1rem; flex-shrink:0;
+  }
+  .kpi-icon.blue { background:rgba(79,135,255,.12); color:var(--blue); }
+  .kpi-icon.green { background:rgba(34,201,138,.12); color:var(--green); }
+  .kpi-icon.amber { background:rgba(245,166,35,.12); color:var(--amber); }
+  .kpi-icon.red { background:rgba(255,79,106,.12); color:var(--red); }
+
+  .kpi-label {
+    font-size:.72rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:.05em; color:var(--text-muted);
+  }
+  .kpi-value {
+    font-size:1.5rem; font-weight:800; color:var(--text-primary);
+    font-family:'JetBrains Mono',monospace; line-height:1.2;
+  }
+  .kpi-sub { font-size:.75rem; color:var(--text-muted); margin-top:.15rem; }
+
+  .charts-row {
+    display:grid; grid-template-columns:1.4fr 1fr;
+    gap:1rem; margin-bottom:1rem;
+  }
+  @media(max-width:900px){ .charts-row{ grid-template-columns:1fr; } }
+
+  .tables-row {
+    display:grid; grid-template-columns:1.5fr 1fr;
+    gap:1rem;
+  }
+  @media(max-width:900px){ .tables-row{ grid-template-columns:1fr; } }
+
+  .dash-card {
+    background:var(--bg-card); border:1px solid var(--border);
+    border-radius:14px; padding:1.25rem 1.35rem;
+    box-shadow:0 1px 3px rgba(0,0,0,.04);
+    height:100%;
+  }
+  .card-ttl {
+    font-size:.9rem; font-weight:700; margin-bottom:1rem;
+    display:flex; align-items:center; gap:.5rem; color:var(--text-primary);
+  }
+  .card-ttl .dot { width:8px; height:8px; border-radius:50%; }
+
   .dash-tbl { width:100%; border-collapse:collapse; }
-  .dash-tbl th { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); padding:.6rem .75rem; border-bottom:1px solid var(--border); text-align:left; }
-  .dash-tbl td { font-size:.83rem; color:var(--text-secondary); padding:.7rem .75rem; border-bottom:1px solid var(--border); vertical-align:middle; }
+  .dash-tbl th {
+    font-size:.65rem; font-weight:700; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--text-muted);
+    padding:.55rem .75rem; border-bottom:1px solid var(--border); text-align:left;
+  }
+  .dash-tbl td {
+    font-size:.82rem; color:var(--text-secondary);
+    padding:.65rem .75rem; border-bottom:1px solid var(--border); vertical-align:middle;
+  }
   .dash-tbl tr:last-child td { border-bottom:none; }
-  .dash-tbl tr:hover td { background:var(--td-hover); }
-  .badge-id    { font-family:'JetBrains Mono',monospace; font-size:.72rem; background:rgba(79,135,255,.1); color:var(--blue); border:1px solid rgba(79,135,255,.2); border-radius:6px; padding:.15rem .5rem; }
-  .badge-tot   { font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:600; background:rgba(34,201,138,.1); color:var(--green); border:1px solid rgba(34,201,138,.2); border-radius:6px; padding:.15rem .55rem; }
-  .badge-stk   { font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:600; background:rgba(255,79,106,.1); color:var(--red); border:1px solid rgba(255,79,106,.2); border-radius:6px; padding:.15rem .55rem; display:inline-flex;align-items:center;gap:.25rem; }
-  .stk-bar-bg   { height:3px; background:rgba(255,79,106,.12); border-radius:999px; margin-top:4px; }
-  .stk-bar-fill { height:3px; background:linear-gradient(90deg,var(--red),var(--amber)); border-radius:999px; transition:width 1s ease; }
-  .empty-msg { text-align:center; padding:2rem; color:var(--text-muted); font-size:.83rem; }
+  .dash-tbl tr:hover td { background:rgba(79,135,255,.04); }
+
+  .badge-id {
+    font-family:'JetBrains Mono',monospace; font-size:.72rem;
+    background:rgba(79,135,255,.1); color:var(--blue);
+    border:1px solid rgba(79,135,255,.2); border-radius:6px; padding:.15rem .5rem;
+  }
+  .badge-tot {
+    font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:600;
+    background:rgba(34,201,138,.1); color:var(--green);
+    border:1px solid rgba(34,201,138,.2); border-radius:6px; padding:.15rem .55rem;
+  }
+  .badge-stk {
+    font-family:'JetBrains Mono',monospace; font-size:.78rem; font-weight:600;
+    background:rgba(255,79,106,.1); color:var(--red);
+    border-radius:6px; padding:.15rem .55rem;
+  }
+  .status-ok {
+    font-size:.68rem; background:rgba(34,201,138,.1); color:var(--green);
+    border-radius:6px; padding:.15rem .5rem; font-weight:600;
+  }
+  .stat-alert {
+    margin-left:auto; font-size:.68rem; font-weight:700;
+    background:rgba(255,79,106,.1); color:var(--red); border-radius:6px; padding:.15rem .5rem;
+  }
+  .stk-bar-bg { height:4px; background:rgba(255,79,106,.12); border-radius:999px; margin-top:4px; }
+  .stk-bar-fill { height:4px; background:linear-gradient(90deg,var(--red),var(--amber)); border-radius:999px; }
+  .empty-msg { text-align:center; padding:2rem; color:var(--text-muted); font-size:.85rem; }
   .empty-msg i { font-size:1.8rem; display:block; margin-bottom:.5rem; opacity:.25; }
-  .stat-alert { font-size:.68rem; font-weight:700; background:rgba(255,79,106,.1); border:1px solid rgba(255,79,106,.2); color:var(--red); border-radius:6px; padding:.15rem .5rem; margin-left:auto; }
-  .status-ok { font-size:.68rem; background:rgba(34,201,138,.1); border:1px solid rgba(34,201,138,.2); color:var(--green); border-radius:6px; padding:.15rem .5rem; }
 </style>
 
-<!-- HEADER -->
-<div class="dash-topbar">
+<div class="dash-header">
   <div>
-    <h1>Dashboard <span style="background:linear-gradient(135deg,var(--blue),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">General</span></h1>
-    <p>Panel de control · Bodega Verastegui</p>
+    <h1 class="dash-title">
+      <span class="dash-title-icon"><i class="fa fa-chart-pie"></i></span>
+      Dashboard ejecutivo
+    </h1>
+    <p class="dash-sub">Vision general del negocio en tiempo real</p>
   </div>
-  <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
+  <div class="dash-actions">
     <span class="reloj" id="reloj">—</span>
-    <a href="/reportes" class="btn-reportes"><i class="fa fa-chart-line"></i> Ver Reportes</a>
+    <a href="/reportes" class="btn-reportes"><i class="fa fa-chart-line"></i> Centro de reportes</a>
   </div>
 </div>
 
-<!-- KPIs -->
 <div class="kpi-row">
-  <div class="stat-card sc-blue"><div class="stat-icon"><i class="fa fa-box"></i></div>
-    <div class="stat-label">Productos</div><div class="stat-value sv-blue" data-val="{{ total_productos }}">0</div><div class="stat-sub">en inventario</div></div>
-  <div class="stat-card sc-green"><div class="stat-icon"><i class="fa fa-cart-shopping"></i></div>
-    <div class="stat-label">Ventas</div><div class="stat-value sv-green" data-val="{{ total_ventas }}">0</div><div class="stat-sub">transacciones</div></div>
-  <div class="stat-card sc-amber"><div class="stat-icon"><i class="fa fa-money-bill-wave"></i></div>
-    <div class="stat-label">Ingresos</div><div class="stat-value sv-amber" id="kpi-ing" style="font-size:1.5rem;">S/. 0</div><div class="stat-sub">acumulados</div></div>
-  <div class="stat-card sc-red"><div class="stat-icon"><i class="fa fa-triangle-exclamation"></i></div>
-    <div class="stat-label">Bajo Stock</div><div class="stat-value sv-red" data-val="{{ stock_bajo|length }}">0</div>
-    <div class="stat-sub">{% if stock_bajo|length %}requieren reposición{% else %}sin alertas{% endif %}</div></div>
+  <div class="kpi-card blue">
+    <div class="kpi-icon blue"><i class="fa fa-box"></i></div>
+    <div>
+      <div class="kpi-label">Productos</div>
+      <div class="kpi-value" data-val="{{ total_productos }}">0</div>
+      <div class="kpi-sub">en inventario</div>
+    </div>
+  </div>
+  <div class="kpi-card green">
+    <div class="kpi-icon green"><i class="fa fa-cart-shopping"></i></div>
+    <div>
+      <div class="kpi-label">Ventas</div>
+      <div class="kpi-value" data-val="{{ total_ventas }}">0</div>
+      <div class="kpi-sub">transacciones totales</div>
+    </div>
+  </div>
+  <div class="kpi-card amber">
+    <div class="kpi-icon amber"><i class="fa fa-sack-dollar"></i></div>
+    <div>
+      <div class="kpi-label">Ingresos</div>
+      <div class="kpi-value" id="kpi-ing">S/. 0</div>
+      <div class="kpi-sub">acumulado historico</div>
+    </div>
+  </div>
+  <div class="kpi-card red">
+    <div class="kpi-icon red"><i class="fa fa-triangle-exclamation"></i></div>
+    <div>
+      <div class="kpi-label">Bajo stock</div>
+      <div class="kpi-value" data-val="{{ stock_bajo|length }}">0</div>
+      <div class="kpi-sub">{% if stock_bajo|length %}requieren reposicion{% else %}sin alertas{% endif %}</div>
+    </div>
+  </div>
 </div>
 
-<!-- CHARTS -->
 <div class="charts-row">
   <div class="dash-card">
-    <div class="card-ttl"><span class="dot" style="background:var(--blue)"></span>Ventas por Día</div>
-    <canvas id="chartVentas" height="100"></canvas>
+    <div class="card-ttl"><span class="dot" style="background:var(--blue)"></span>Evolucion de ventas</div>
+    <canvas id="chartVentas" height="110"></canvas>
   </div>
   <div class="dash-card">
-    <div class="card-ttl"><span class="dot" style="background:var(--purple)"></span>Productos Top</div>
+    <div class="card-ttl"><span class="dot" style="background:var(--purple)"></span>Top productos</div>
     <canvas id="chartProductos" height="210"></canvas>
   </div>
 </div>
 
-<!-- TABLES -->
 <div class="tables-row">
-  <!-- Últimas ventas -->
   <div class="dash-card">
-    <div class="card-ttl"><span class="dot" style="background:var(--green)"></span>Últimas Ventas</div>
+    <div class="card-ttl"><span class="dot" style="background:var(--green)"></span>Ultimas ventas</div>
     {% if ultimas_ventas %}
     <div style="overflow-x:auto">
       <table class="dash-tbl">
@@ -87,23 +219,22 @@
           <tr>
             <td><span class="badge-id">#{{ v.id }}</span></td>
             <td><span class="badge-tot">S/. {{ "%.2f"|format(v.total) }}</span></td>
-            <td style="font-family:'JetBrains Mono',monospace;font-size:.73rem;">{{ v.fecha }}</td>
-            <td><span class="status-ok">✓ Completada</span></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-size:.73rem">{{ v.fecha }}</td>
+            <td><span class="status-ok">Completada</span></td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
     </div>
     {% else %}
-    <div class="empty-msg"><i class="fa fa-receipt"></i>No hay ventas aún</div>
+    <div class="empty-msg"><i class="fa fa-receipt"></i>No hay ventas aun</div>
     {% endif %}
   </div>
 
-  <!-- Bajo stock -->
   <div class="dash-card">
     <div class="card-ttl">
-      <span class="dot" style="background:var(--red)"></span>Bajo Stock
-      {% if stock_bajo|length %}<span class="stat-alert">{{ stock_bajo|length }} alertas</span>{% endif %}
+      <span class="dot" style="background:var(--red)"></span>Alertas de stock
+      {% if stock_bajo|length %}<span class="stat-alert">{{ stock_bajo|length }}</span>{% endif %}
     </div>
     {% if stock_bajo %}
     <table class="dash-tbl">
@@ -112,30 +243,30 @@
         {% for p in stock_bajo %}
         <tr>
           <td>
-            <div style="font-weight:500;color:var(--text-primary);font-size:.83rem;">{{ p.nombre }}</div>
+            <div style="font-weight:600;color:var(--text-primary)">{{ p.nombre }}</div>
             <div class="stk-bar-bg"><div class="stk-bar-fill" style="width:{{ [p.stock*10,100]|min }}%"></div></div>
           </td>
-          <td><span class="badge-stk"><i class="fa fa-arrow-down" style="font-size:.58rem"></i>{{ p.stock }}</span></td>
+          <td><span class="badge-stk">{{ p.stock }}</span></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
     {% else %}
-    <div class="empty-msg"><i class="fa fa-circle-check" style="color:var(--green);opacity:.6"></i>Stock en orden</div>
+    <div class="empty-msg"><i class="fa fa-circle-check" style="color:var(--green);opacity:.6"></i>Inventario en orden</div>
     {% endif %}
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  /* Reloj */
   function tick(){
-    const n=new Date();
-    document.getElementById('reloj').textContent=n.toLocaleDateString('es-PE',{weekday:'short',year:'numeric',month:'short',day:'numeric'})+' · '+n.toLocaleTimeString('es-PE');
+    const n = new Date();
+    document.getElementById('reloj').textContent =
+      n.toLocaleDateString('es-PE',{weekday:'short',day:'numeric',month:'short',year:'numeric'}) +
+      ' · ' + n.toLocaleTimeString('es-PE');
   }
-  tick(); setInterval(tick,1000);
+  tick(); setInterval(tick, 1000);
 
-  /* Counters */
   function countUp(el, target, prefix='', suffix='', dec=0){
     const dur=1200, t0=performance.now();
     function step(t){
@@ -148,49 +279,35 @@
   document.querySelectorAll('[data-val]').forEach(el=>countUp(el,+el.dataset.val));
   countUp(document.getElementById('kpi-ing'), {{ ingresos }}, 'S/. ', '', 2);
 
-  /* Datos */
-  const dias     = JSON.parse('{{ dias | tojson | safe }}');
-  const totales  = JSON.parse('{{ totales | tojson | safe }}');
+  const dias = JSON.parse('{{ dias | tojson | safe }}');
+  const totales = JSON.parse('{{ totales | tojson | safe }}');
   const nomProds = JSON.parse('{{ nombres_productos | tojson | safe }}');
-  const cantProds= JSON.parse('{{ cantidades_productos | tojson | safe }}');
-  const PALETTE  = ['#4f87ff','#22c98a','#f5a623','#ff4f6a','#a855f7','#38bdf8','#34d399','#fb923c'];
+  const cantProds = JSON.parse('{{ cantidades_productos | tojson | safe }}');
+  const PALETTE = ['#4f87ff','#22c98a','#f5a623','#ff4f6a','#a855f7'];
 
-  /* Detectar tema */
   function isDark(){ return document.documentElement.getAttribute('data-theme')==='dark'; }
 
-  /* Ventas */
   const ctxV = document.getElementById('chartVentas').getContext('2d');
   const grad = ctxV.createLinearGradient(0,0,0,280);
-  grad.addColorStop(0,'rgba(79,135,255,.3)'); grad.addColorStop(1,'rgba(79,135,255,0)');
+  grad.addColorStop(0,'rgba(79,135,255,.28)'); grad.addColorStop(1,'rgba(79,135,255,0)');
   new Chart(ctxV,{
     type:'line',
     data:{ labels:dias, datasets:[{ label:'S/.', data:totales, borderColor:'#4f87ff', borderWidth:2.5,
-      pointBackgroundColor:'#4f87ff', pointBorderColor: isDark()?'#0a0e1a':'#eef2ff', pointBorderWidth:2,
-      pointRadius:4, pointHoverRadius:7, tension:.42, fill:true, backgroundColor:grad }] },
-    options:{ responsive:true, plugins:{ legend:{display:false}, tooltip:{
-      backgroundColor: isDark()?'rgba(10,14,26,.95)':'rgba(255,255,255,.97)',
-      borderColor:'rgba(79,135,255,.3)', borderWidth:1,
-      titleColor:isDark()?'#7a86a8':'#44506a', bodyColor:'#4f87ff',
-      bodyFont:{family:'JetBrains Mono',size:13}, callbacks:{label:c=>`  S/. ${c.parsed.y.toFixed(2)}`} }},
+      pointBackgroundColor:'#4f87ff', tension:.4, fill:true, backgroundColor:grad }] },
+    options:{ responsive:true, plugins:{ legend:{display:false} },
       scales:{
-        x:{ grid:{color:isDark()?'rgba(99,132,255,.06)':'rgba(99,132,255,.1)'}, ticks:{color:isDark()?'#4a5270':'#8a92b2',font:{family:'JetBrains Mono',size:10}} },
-        y:{ grid:{color:isDark()?'rgba(99,132,255,.06)':'rgba(99,132,255,.1)'}, ticks:{color:isDark()?'#4a5270':'#8a92b2',font:{family:'JetBrains Mono',size:10}, callback:v=>'S/. '+v} }
+        x:{ ticks:{ color:isDark()?'#64748b':'#94a3b8', font:{size:10} }, grid:{display:false} },
+        y:{ ticks:{ color:isDark()?'#64748b':'#94a3b8', callback:v=>'S/. '+v }, grid:{ color:isDark()?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)' } }
       }
     }
   });
 
-  /* Productos */
   if(nomProds.length){
-    new Chart(document.getElementById('chartProductos').getContext('2d'),{
+    new Chart(document.getElementById('chartProductos'),{
       type:'doughnut',
-      data:{ labels:nomProds, datasets:[{ data:cantProds, backgroundColor:PALETTE.map(c=>c+'bb'), borderColor:PALETTE, borderWidth:1.5, hoverOffset:8 }] },
-      options:{ responsive:true, cutout:'66%', plugins:{
-        legend:{ position:'bottom', labels:{color:isDark()?'#7a86a8':'#44506a', font:{family:'Space Grotesk',size:11}, padding:12, boxWidth:10, boxHeight:10} },
-        tooltip:{ backgroundColor:isDark()?'rgba(10,14,26,.95)':'rgba(255,255,255,.97)', borderColor:'rgba(99,132,255,.3)', borderWidth:1 }
-      }}
+      data:{ labels:nomProds, datasets:[{ data:cantProds, backgroundColor:PALETTE, borderWidth:0, hoverOffset:6 }] },
+      options:{ responsive:true, cutout:'65%', plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, font:{size:10} } } } }
     });
-  } else {
-    document.getElementById('chartProductos').parentElement.innerHTML='<div class="empty-msg"><i class="fa fa-chart-pie"></i>Sin datos aún</div>';
   }
 </script>
 
