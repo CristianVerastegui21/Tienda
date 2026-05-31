@@ -16,6 +16,9 @@ from db import conectar
 
 from utils.auth import rol_requerido
 from utils.logs import registrar_log
+from utils.supabase_storage import (
+    subir_imagen_supabase
+)
 
 
 bp = Blueprint(
@@ -220,8 +223,14 @@ def agregar_producto():
                 'agregar_producto.html'
             )
 
-        nombre_imagen = guardar_imagen(
+        '''nombre_imagen = guardar_imagen(
             imagen
+        )'''
+
+        nombre_imagen = (
+            subir_imagen_supabase(
+                imagen
+            )
         )
 
         conexion = conectar()

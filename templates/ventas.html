@@ -140,7 +140,7 @@
            data-codigo="{{ producto.codigo_barra or '' }}">
 
         {% if producto.imagen %}
-          <img src="{{ url_for('static', filename='productos/' + producto.imagen) }}" class="prod-img" alt="{{ producto.nombre }}">
+          <img src="{{producto.imagen}}" class="prod-img" alt="{{ producto.nombre }}">
         {% else %}
           <div class="prod-img" style="display:flex;align-items:center;justify-content:center;">
             <i class="fa fa-box" style="font-size:2rem;color:var(--text-muted);opacity:.25;"></i>

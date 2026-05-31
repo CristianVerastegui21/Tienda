@@ -564,7 +564,7 @@
             </td>
             <td data-label="Imagen">
               {% if p.imagen %}
-                <img src="{{ url_for('static', filename='productos/' + p.imagen) }}"
+                <img src="{{p.imagen}}"
                   class="prod-img-thumb" alt="{{ p.nombre }}">
               {% else %}
                 <div class="no-img"><i class="fa fa-image"></i></div>
