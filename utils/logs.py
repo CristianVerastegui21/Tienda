@@ -1,9 +1,15 @@
-from db import conectar
+from db import conectar, liberar
 
 
 def registrar_log(usuario, accion):
+    from flask import g, has_request_context
 
-    conexion = conectar()
+    propia = True
+    if has_request_context() and getattr(g, '_db', None):
+        conexion = g._db
+        propia = False
+    else:
+        conexion = conectar()
 
     cursor = conexion.cursor()
 
@@ -20,7 +26,7 @@ def registrar_log(usuario, accion):
     ))
 
     conexion.commit()
-
     cursor.close()
 
-    conexion.close()
+    if propia:
+        liberar(conexion)

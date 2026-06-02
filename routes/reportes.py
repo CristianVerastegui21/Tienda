@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 from flask import Blueprint, render_template, request, send_file
 
-from db import conectar
+from db import conectar, liberar
 from utils.auth import rol_requerido
 from utils.reportes_export import generar_excel_reporte, generar_pdf_reporte
 from utils.reportes_filtros import parse_filtros, sql_grupo_fecha, sql_filtro_fecha
@@ -120,7 +120,7 @@ def historial():
             venta['fecha'] = venta['fecha'] - timedelta(hours=5)
 
     cursor.close()
-    conexion.close()
+    liberar(conexion)
 
     return render_template(
         'historial.html',
@@ -135,7 +135,7 @@ def reportes():
     conexion = conectar()
     cursor = conexion.cursor()
     datos = _obtener_datos_reporte(cursor, filtros)
-    conexion.close()
+    liberar(conexion)
 
     return render_template(
         'reportes.html',
@@ -153,7 +153,7 @@ def reporte_pdf():
     conexion = conectar()
     cursor = conexion.cursor()
     datos = _obtener_datos_reporte(cursor, filtros)
-    conexion.close()
+    liberar(conexion)
 
     os.makedirs('reportes', exist_ok=True)
     slug = filtros['desde'].replace('-', '')
@@ -183,7 +183,7 @@ def exportar_ventas():
     conexion = conectar()
     cursor = conexion.cursor()
     datos = _obtener_datos_reporte(cursor, filtros)
-    conexion.close()
+    liberar(conexion)
 
     os.makedirs('reportes', exist_ok=True)
     archivo = f'reportes/reporte_{filtros["desde"]}.xlsx'

@@ -11,7 +11,7 @@ from werkzeug.security import (
     check_password_hash
 )
 
-from db import conectar
+from db import conectar, liberar
 
 from utils.logs import registrar_log
 
@@ -50,7 +50,8 @@ def login():
 
         user = cursor.fetchone()
 
-        conexion.close()
+        cursor.close()
+        liberar(conexion)
 
         if user and check_password_hash(
             user['password'],
@@ -70,7 +71,7 @@ def login():
                 'Inicio de sesion'
             )
 
-            return redirect('/')
+            return redirect('/inicio')
 
         flash(
             'Usuario o contraseña incorrectos',

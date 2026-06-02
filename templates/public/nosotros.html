@@ -1,0 +1,533 @@
+{% extends 'public/layout_public.html' %}
+{% block title %}Nosotros — Comercial Verastegui{% endblock %}
+
+{% block content %}
+
+<!-- Dependencia de Animaciones -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════
+   HERO NOSOTROS - INMERSIVO
+══════════════════════════════════════════════ */
+.hero-nosotros {
+  position: relative;
+  min-height: 70vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; padding: 8rem 2rem 5rem;
+  text-align: center; color: #fff;
+}
+
+/* Fondo con imagen o degradado abstracto */
+.hero-nos-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+}
+.hero-nos-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(5,8,16,0.92) 30%, rgba(26,17,5,0.85) 100%);
+  backdrop-filter: blur(2px);
+}
+[data-theme="light"] .hero-nos-bg::after {
+  background: linear-gradient(135deg, rgba(244,246,255,0.95) 30%, rgba(254,249,195,0.9) 100%);
+}
+
+/* Orbs y Partículas */
+.hero-orb {
+  position: absolute; border-radius: 50%; filter: blur(80px); z-index: 1; pointer-events: none;
+}
+.hero-orb.o1 { width: 400px; height: 400px; background: rgba(232,184,109,0.15); top: -100px; left: -100px; animation: float 12s ease-in-out infinite; }
+.hero-orb.o2 { width: 300px; height: 300px; background: rgba(79,142,247,0.10); bottom: -50px; right: -50px; animation: float 15s ease-in-out infinite reverse; }
+
+.hero-particles { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
+.gold-particle {
+  position: absolute; width: 3px; height: 3px;
+  background: var(--gold); border-radius: 50%;
+  animation: particleRise linear infinite;
+  box-shadow: 0 0 6px var(--gold-glow);
+}
+@keyframes particleRise {
+  0% { opacity: 0; transform: translateY(100vh) scale(0); }
+  10% { opacity: 1; } 90% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-20vh) scale(1); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-20px) translateX(10px); }
+}
+
+.hero-nos-content { position: relative; z-index: 3; max-width: 800px; }
+
+.hero-nos-badge {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: rgba(10,15,30,0.6); backdrop-filter: blur(12px);
+  border: 1px solid rgba(232,184,109,.3); border-radius: 50px;
+  padding: .45rem 1.2rem; font-size: .78rem; font-weight: 600;
+  margin-bottom: 1.5rem; color: var(--gold);
+  box-shadow: 0 0 15px var(--gold-glow);
+}
+[data-theme="light"] .hero-nos-badge { background: rgba(255,255,255,0.8); color: var(--gold-2); }
+.hero-nos-badge i { color: var(--gold); }
+
+.hero-nos-content h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.8rem, 5vw, 4.2rem); font-weight: 800;
+  letter-spacing: -0.04em; margin-bottom: 1.2rem;
+  background: linear-gradient(135deg, var(--txt) 40%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+[data-theme="light"] .hero-nos-content h1 {
+  background: linear-gradient(135deg, var(--txt) 30%, var(--gold-2) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+.hero-nos-content p {
+  font-size: 1.15rem; color: var(--txt-2); line-height: 1.8;
+  max-width: 600px; margin: 0 auto;
+}
+
+/* ══════════════════════════════════════════════
+   FEATURES (MISIÓN, VISIÓN, VALORES) - GLASS
+══════════════════════════════════════════════ */
+.features-section { padding: 6rem 0; position: relative; z-index: 1; }
+
+.section-header { text-align: center; max-width: 620px; margin: 0 auto 3.5rem; }
+.section-label {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: .72rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .1em; margin-bottom: .8rem; color: var(--gold);
+}
+.section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 800;
+  color: var(--txt); letter-spacing: -.04em; margin-bottom: .7rem;
+}
+.section-desc { font-size: .95rem; color: var(--txt-2); line-height: 1.7; }
+
+.features-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card {
+  background: rgba(10,15,30,0.6); backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--border); border-radius: 20px;
+  padding: 2.5rem 2rem; text-align: center;
+  transition: all .3s ease; position: relative; overflow: hidden;
+}
+[data-theme="light"] .feature-card { background: rgba(255,255,255,0.8); backdrop-filter: none; }
+
+.feature-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--gold));
+  opacity: 0; transition: opacity .3s;
+}
+.feature-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(232,184,109,.4);
+  box-shadow: 0 20px 40px rgba(0,0,0,.2), 0 0 25px var(--gold-glow);
+}
+[data-theme="light"] .feature-card:hover { box-shadow: 0 15px 30px rgba(0,0,0,.06), 0 0 20px var(--gold-glow); }
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+  width: 64px; height: 64px; border-radius: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; margin-bottom: 1.5rem;
+  transition: transform .3s, box-shadow .3s;
+}
+.feature-icon.ico-gold { background: var(--gold-soft); color: var(--gold); border: 1px solid rgba(232,184,109,.2); }
+.feature-icon.ico-blue { background: var(--blue-soft); color: var(--blue); border: 1px solid rgba(79,142,247,.2); }
+.feature-icon.ico-cyan { background: var(--cyan-glow); color: var(--cyan); border: 1px solid rgba(34,211,238,.2); }
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 8px 20px var(--gold-glow);
+}
+
+.feature-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.2rem; font-weight: 700; color: var(--txt); margin-bottom: .8rem;
+}
+.feature-card p { font-size: .92rem; color: var(--txt-2); line-height: 1.75; }
+
+.values-list { list-style: none; text-align: left; display: inline-block; margin-top: .6rem; width: 100%; }
+.values-list li {
+  display: flex; align-items: center; gap: .7rem;
+  font-size: .9rem; color: var(--txt-2); margin-bottom: .65rem;
+  transition: transform .2s;
+}
+.values-list li:hover { transform: translateX(4px); color: var(--txt); }
+.values-list li i { color: var(--gold); font-size: .75rem; width: 18px; text-align: center; }
+
+/* ══════════════════════════════════════════════
+   STATS COUNTER - GLASS CARD
+══════════════════════════════════════════════ */
+.stats-section { padding: 2rem 0 6rem; position: relative; z-index: 1; }
+
+.stats-glass-card {
+  background: rgba(10,15,30,0.7); backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-h); border-radius: 24px;
+  padding: 3.5rem 2rem;
+  box-shadow: 0 20px 50px rgba(0,0,0,.3), inset 0 1px 1px rgba(255,255,255,.05);
+  position: relative; overflow: hidden;
+}
+[data-theme="light"] .stats-glass-card {
+  background: rgba(255,255,255,0.9); border-color: var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,.05);
+}
+.stats-glass-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--blue), transparent);
+}
+
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem;
+}
+
+.stat-item { text-align: center; padding: 1rem; }
+.stat-number {
+  font-family: 'Outfit', sans-serif;
+  font-size: 3rem; font-weight: 800; color: var(--gold);
+  letter-spacing: -0.03em; margin-bottom: .3rem;
+  text-shadow: 0 0 15px var(--gold-glow);
+}
+.stat-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: .78rem; color: var(--txt-2);
+  text-transform: uppercase; letter-spacing: .08em; font-weight: 600;
+}
+.stat-divider { width: 40px; height: 2px; margin: .8rem auto 0; background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: .5; }
+
+/* ══════════════════════════════════════════════
+   HISTORIA / STORY
+══════════════════════════════════════════════ */
+.story-section { padding: 4rem 0 6rem; position: relative; z-index: 1; }
+
+.story-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 5rem; align-items: center;
+}
+
+.story-img-wrapper {
+  position: relative; border-radius: 20px; overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0,0,0,.4);
+  transform: rotate(-2deg); transition: transform .5s ease;
+  border: 1px solid var(--border);
+}
+.story-img-wrapper:hover { transform: rotate(0deg); border-color: var(--border-h); }
+.story-img {
+  width: 100%; height: 500px; object-fit: cover; display: block;
+  transition: filter .3s;
+}
+[data-theme="dark"] .story-img { filter: brightness(0.85) contrast(1.1); }
+[data-theme="light"] .story-img { filter: brightness(1); }
+
+.story-img-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(79,142,247,.15), rgba(232,184,109,.1));
+  mix-blend-mode: overlay;
+}
+
+.story-year-badge {
+  position: absolute; bottom: 20px; left: 20px; z-index: 3;
+  background: rgba(10,15,30,0.8); backdrop-filter: blur(16px);
+  border: 1px solid rgba(232,184,109,.3); border-radius: 14px;
+  padding: .8rem 1.2rem; text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3), 0 0 20px var(--blue-glow);
+}
+[data-theme="light"] .story-year-badge { background: rgba(255,255,255,0.9); border-color: var(--border); box-shadow: 0 5px 15px rgba(0,0,0,.08); }
+.story-year-badge .year {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem; font-weight: 800; color: var(--gold); line-height: 1;
+  text-shadow: 0 0 10px var(--gold-glow);
+}
+.story-year-badge .year-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: .65rem; color: var(--txt-2); text-transform: uppercase; letter-spacing: .1em; font-weight: 700;
+}
+
+.story-content { padding-left: 2rem; }
+.story-content h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem; font-weight: 800; color: var(--txt);
+  letter-spacing: -0.03em; margin-bottom: 1.2rem;
+}
+.story-content h2 span { color: var(--gold); }
+.story-content p { font-size: .95rem; color: var(--txt-2); line-height: 1.85; margin-bottom: 1.2rem; }
+
+.story-cta {
+  display: inline-flex; align-items: center; gap: .6rem;
+  background: linear-gradient(135deg, var(--blue), var(--gold));
+  color: #fff; font-family: 'Space Grotesk'; font-weight: 700; font-size: .9rem;
+  padding: .8rem 1.6rem; border-radius: 12px; text-decoration: none;
+  transition: all .25s; box-shadow: 0 4px 15px var(--blue-glow);
+}
+.story-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 25px var(--blue-glow); color: #fff; }
+.story-cta i { transition: transform .2s; }
+.story-cta:hover i { transform: translateX(3px); }
+
+/* ══════════════════════════════════════════════
+   CTA SECTION - WHATSAPP
+══════════════════════════════════════════════ */
+.cta-section { padding: 0 0 6rem; position: relative; z-index: 1; }
+
+.cta-wa-inner {
+  background: rgba(10,15,30,0.6); backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(37,211,102,.3); border-radius: 20px;
+  padding: 4rem; text-align: center;
+  position: relative; overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0,0,0,.3), inset 0 1px 1px rgba(255,255,255,.05);
+}
+[data-theme="light"] .cta-wa-inner { background: rgba(255,255,255,0.9); box-shadow: 0 4px 20px rgba(0,0,0,.05); border-color: rgba(37,211,102,.2); }
+
+.cta-wa-inner::before {
+  content: '\f232'; font-family: 'Font Awesome 6 Brands';
+  position: absolute; right: -50px; top: -50px;
+  font-size: 25rem; opacity: .03; color: #25d366; pointer-events: none;
+  filter: drop-shadow(0 0 20px rgba(37,211,102,.2));
+}
+
+.cta-wa-inner h2 {
+  font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800;
+  color: var(--txt); margin-bottom: .5rem; position: relative; z-index: 1;
+}
+.cta-wa-inner h2 span { color: var(--gold); }
+.cta-wa-inner p { color: var(--txt-2); max-width: 500px; margin: 0 auto 2rem; position: relative; z-index: 1; }
+
+.cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+
+.btn-wa-big {
+  display: inline-flex; align-items: center; gap: .6rem;
+  background: #25d366; color: #fff; border: none; border-radius: 12px;
+  padding: 1rem 2rem; font-family: 'Space Grotesk'; font-weight: 700; font-size: .95rem;
+  cursor: pointer; text-decoration: none; transition: all .25s;
+  box-shadow: 0 6px 20px rgba(37,211,102,.3);
+}
+.btn-wa-big:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(37,211,102,.4); color: #fff; }
+
+.btn-outline {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: transparent; border: 1px solid var(--border); color: var(--txt-2);
+  font-family: 'Space Grotesk'; font-weight: 600; font-size: .95rem;
+  padding: 1rem 2rem; border-radius: 12px; text-decoration: none; transition: all .2s;
+}
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-soft); }
+
+/* ══════════════════════════════════════════════
+   CONTAINER & RESPONSIVE
+══════════════════════════════════════════════ */
+.container { max-width: 1260px; margin: 0 auto; padding: 0 2rem; }
+
+@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) {
+  .hero-nosotros { min-height: 60vh; padding: 7rem 1.5rem 4rem; }
+  .story-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .story-content { padding-left: 0; margin-top: 2rem; }
+  .story-img-wrapper { transform: rotate(0deg); max-height: 350px; }
+  .story-img { height: 350px; }
+  .cta-wa-inner { padding: 3rem 1.5rem; }
+}
+@media (max-width: 480px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .stat-number { font-size: 2.2rem; }
+  .cta-buttons { flex-direction: column; align-items: center; }
+}
+</style>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- HERO DORADO                                    -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="hero-nosotros">
+  <div class="hero-nos-bg"></div>
+  <div class="hero-orb o1"></div>
+  <div class="hero-orb o2"></div>
+  <div class="hero-particles" id="heroParticles"></div>
+
+  <div class="hero-nos-content" data-aos="fade-up" data-aos-duration="1000">
+    <span class="hero-nos-badge">
+      <i class="fa fa-crown"></i> Conócenos
+    </span>
+    <h1>Sobre Comercial Verastegui</h1>
+    <p>Somos una bodega comprometida con ofrecer productos de calidad, buen servicio y precios justos para toda nuestra clientela.</p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- MISIÓN, VISIÓN, VALORES                        -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="features-section">
+  <div class="container">
+    <div class="section-header" data-aos="fade-up">
+      <span class="section-label"><i class="fa fa-gem"></i> Nuestro Propósito</span>
+      <h2 class="section-title">Lo que nos mueve cada día</h2>
+      <p class="section-desc">Más que vender productos, buscamos ser parte importante de la vida de nuestros vecinos.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+        <div class="feature-icon ico-gold"><i class="fa fa-bullseye"></i></div>
+        <h3>Nuestra Misión</h3>
+        <p>Brindar productos esenciales de calidad con atención rápida y confiable, mejorando la experiencia de compra de nuestros clientes.</p>
+      </div>
+
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+        <div class="feature-icon ico-blue"><i class="fa fa-eye"></i></div>
+        <h3>Nuestra Visión</h3>
+        <p>Ser la bodega de referencia en la zona, destacando por servicio, confianza y precios competitivos.</p>
+      </div>
+
+      <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+        <div class="feature-icon ico-cyan"><i class="fa fa-award"></i></div>
+        <h3>Nuestros Valores</h3>
+        <ul class="values-list">
+          <li><i class="fa fa-check-circle"></i> Honestidad en cada interacción</li>
+          <li><i class="fa fa-check-circle"></i> Responsabilidad y compromiso</li>
+          <li><i class="fa fa-check-circle"></i> Cercanía con el cliente</li>
+          <li><i class="fa fa-check-circle"></i> Calidad garantizada</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- STATS                                          -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-glass-card" data-aos="zoom-in" data-aos-duration="800">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number" data-target="5">0</div>
+          <div class="stat-label">Años de experiencia</div>
+          <div class="stat-divider"></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="500">0</div>
+          <div class="stat-label">Clientes satisfechos</div>
+          <div class="stat-divider"></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="1200">0</div>
+          <div class="stat-label">Productos disponibles</div>
+          <div class="stat-divider"></div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" data-target="98">0</div>
+          <div class="stat-label">% Satisfacción</div>
+          <div class="stat-divider"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- NUESTRA HISTORIA                               -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="story-section">
+  <div class="container">
+    <div class="story-grid">
+
+      <div class="story-img-wrapper" data-aos="fade-right">
+        <!-- Usa una imagen real de la tienda si tienes, si no, la de Unsplash se ve genial -->
+        <img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Nuestra tienda" class="story-img">
+        <div class="story-img-overlay"></div>
+        <div class="story-year-badge">
+          <div class="year">2021</div>
+          <div class="year-label">Desde</div>
+        </div>
+      </div>
+
+      <div class="story-content" data-aos="fade-left">
+        <h2>Nuestra <span>Historia</span></h2>
+        <p>Desde nuestros inicios, Comercial Verastegui nació con el sueño de ofrecer un servicio cercano y de calidad a nuestros vecinos. Lo que empezó como un pequeño emprendimiento familiar, hoy es un referente en la comunidad.</p>
+        <p>A lo largo de los años, hemos crecido gracias a la confianza de nuestros clientes, manteniendo siempre la esencia que nos define: trato humano, productos frescos y precios justos.</p>
+        <a href="/contacto" class="story-cta">
+          Contáctanos <i class="fa fa-arrow-right"></i>
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CTA FINAL                                      -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-wa-inner" data-aos="fade-up">
+      <h2>Ven a <span>conocernos</span></h2>
+      <p>Estamos siempre listos para atenderte con la mejor disposición y los productos que necesitas.</p>
+      <div class="cta-buttons">
+        <a href="https://wa.me/51968495632?text=Hola!%20Quiero%20información" target="_blank" class="btn-wa-big">
+          <i class="fab fa-whatsapp"></i> Escríbenos por WhatsApp
+        </a>
+        <a href="/catalogo" class="btn-outline">
+          <i class="fa fa-store"></i> Ver productos
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Scripts -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  // Inicializar AOS
+  AOS.init({ once: true, duration: 800, easing: 'ease-out-cubic' });
+
+  /* ─── Gold Particles ─── */
+  (function createParticles() {
+    const container = document.getElementById('heroParticles');
+    if (!container) return;
+    const count = 20;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'gold-particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (6 + Math.random() * 8) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      p.style.width = p.style.height = (2 + Math.random() * 2) + 'px';
+      container.appendChild(p);
+    }
+  })();
+
+  /* ─── Counter Animation ─── */
+  const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.dataset.target);
+        const duration = 2000;
+        const start = performance.now();
+        const suffix = el.closest('.stat-item').querySelector('.stat-label').textContent.includes('%') ? '%' : '+';
+
+        function update(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3); // Ease out cubic
+          const value = Math.round(eased * target);
+          el.textContent = value.toLocaleString() + suffix;
+          if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+        counterObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.stat-number[data-target]').forEach(el => counterObserver.observe(el));
+</script>
+
+{% endblock %}

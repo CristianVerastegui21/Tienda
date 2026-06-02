@@ -1,0 +1,881 @@
+
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Comercial Verastegui{% endblock %}</title>
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="theme-color" content="#050810">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    /* ════════════════════════════════════════
+       TOKENS FUTURISTAS — AZUL + DORADO SUEÑO
+    ════════════════════════════════════════ */
+    :root, [data-theme="dark"] {
+      /* fondos profundos azulados */
+      --bg:           #050810;
+      --bg-2:         #0a0f1e;
+      --bg-card:      rgba(10, 15, 30, 0.75);
+      --surface:      rgba(79, 142, 247, 0.04);
+      --surface-h:    rgba(79, 142, 247, 0.08);
+
+      /* bordes luminosos */
+      --border:       rgba(79, 142, 247, 0.10);
+      --border-h:     rgba(232, 184, 109, 0.25);
+
+      /* texto */
+      --txt:          #e8ecf8;
+      --txt-2:        #7a8bb0;
+      --txt-3:        #3a4568;
+
+      /* ── ACENTO AZUL ELÉCTRICO ── */
+      --blue:         #4f8ef7;
+      --blue-2:       #2563eb;
+      --blue-glow:    rgba(79, 142, 247, 0.35);
+      --blue-soft:    rgba(79, 142, 247, 0.10);
+
+      /* ── ACENTO DORADO SUEÑO ── */
+      --gold:         #e8b86d;
+      --gold-2:       #c9922e;
+      --gold-glow:    rgba(232, 184, 109, 0.30);
+      --gold-soft:    rgba(232, 184, 109, 0.10);
+
+      /* ── PUENTE CIAN ── */
+      --cyan:         #22d3ee;
+      --cyan-glow:    rgba(34, 211, 238, 0.20);
+
+      /* estados */
+      --green:        #34d399;
+      --red:          #f87171;
+
+      /* navbar */
+      --nav-h:        70px;
+      --nav-bg:       rgba(5, 8, 16, 0.80);
+
+      /* misc */
+      --radius:       16px;
+      --radius-sm:    10px;
+      --radius-xs:    6px;
+      --shadow:       0 8px 40px rgba(0, 0, 0, 0.6);
+      --shadow-sm:    0 2px 12px rgba(0, 0, 0, 0.4);
+      --shadow-glow:  0 0 60px rgba(79, 142, 247, 0.15);
+    }
+
+    [data-theme="light"] {
+      --bg:           #f4f6ff;
+      --bg-2:         #e8ecfa;
+      --bg-card:      rgba(255, 255, 255, 0.85);
+      --surface:      rgba(79, 142, 247, 0.05);
+      --surface-h:    rgba(79, 142, 247, 0.10);
+      --border:       rgba(79, 142, 247, 0.12);
+      --border-h:     rgba(232, 184, 109, 0.30);
+      --txt:          #0c1220;
+      --txt-2:        #4a5578;
+      --txt-3:        #8a95b8;
+      --blue:         #2563eb;
+      --blue-2:       #1d4ed8;
+      --blue-glow:    rgba(37, 99, 235, 0.25);
+      --blue-soft:    rgba(37, 99, 235, 0.08);
+      --gold:         #b87333;
+      --gold-2:       #8b5e20;
+      --gold-glow:    rgba(184, 115, 51, 0.20);
+      --gold-soft:    rgba(184, 115, 51, 0.08);
+      --cyan:         #0891b2;
+      --cyan-glow:    rgba(8, 145, 178, 0.15);
+      --shadow:       0 8px 40px rgba(0, 0, 0, 0.1);
+      --shadow-sm:    0 2px 12px rgba(0, 0, 0, 0.06);
+      --shadow-glow:  0 0 40px rgba(37, 99, 235, 0.10);
+      --nav-bg:       rgba(244, 246, 255, 0.85);
+    }
+
+    /* ════════════════════════════════════════
+       BASE
+    ════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--txt);
+      overflow-x: hidden;
+      line-height: 1.65;
+      transition: background .4s, color .4s;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    /* ─── Noise grain ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: .03; pointer-events: none; z-index: 0;
+    }
+    [data-theme="light"] body::before { opacity: .015; }
+
+    /* ─── Mesh Orbs Futuristas ─── */
+    .orb {
+      position: fixed; border-radius: 50%;
+      filter: blur(120px); pointer-events: none; z-index: 0;
+      transition: opacity .5s;
+    }
+    .orb-1 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(79, 142, 247, .18) 0%, transparent 70%);
+      top: -200px; right: -150px;
+      animation: floatOrb 18s ease-in-out infinite;
+    }
+    .orb-2 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(232, 184, 109, .14) 0%, transparent 70%);
+      bottom: 5%; left: -180px;
+      animation: floatOrb 22s ease-in-out infinite reverse;
+    }
+    .orb-3 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(34, 211, 238, .10) 0%, transparent 70%);
+      top: 40%; right: 10%;
+      animation: floatOrb 20s ease-in-out infinite 3s;
+    }
+    @keyframes floatOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(40px, -30px) scale(1.08); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+    [data-theme="light"] .orb-1 { opacity: .5; }
+    [data-theme="light"] .orb-2 { opacity: .45; }
+    [data-theme="light"] .orb-3 { opacity: .35; }
+
+    /* ─── Grid de fondo sutil ─── */
+    .grid-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(79, 142, 247, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79, 142, 247, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 70%);
+    }
+    [data-theme="light"] .grid-bg {
+      background-image: 
+        linear-gradient(rgba(79, 142, 247, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79, 142, 247, 0.05) 1px, transparent 1px);
+    }
+
+    /* ════════════════════════════════════════
+       NAVBAR FUTURISTA
+    ════════════════════════════════════════ */
+    .navbar {
+      position: sticky; top: 0; z-index: 900;
+      height: var(--nav-h);
+      background: var(--nav-bg);
+      backdrop-filter: blur(24px) saturate(2);
+      -webkit-backdrop-filter: blur(24px) saturate(2);
+      border-bottom: 1px solid var(--border);
+      transition: all .35s ease;
+    }
+    .navbar.scrolled {
+      box-shadow: 0 4px 30px rgba(79, 142, 247, 0.08);
+      border-bottom-color: var(--border-h);
+    }
+    [data-theme="light"] .navbar.scrolled {
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto;
+      height: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 1.5rem; gap: 1.5rem;
+    }
+
+    /* Logo */
+    .nav-logo {
+      display: flex; align-items: center; gap: .7rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700; font-size: 1.1rem;
+      letter-spacing: -.02em;
+      color: var(--txt);
+      flex-shrink: 0;
+    }
+    .logo-mark {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--blue), var(--gold));
+      border-radius: var(--radius-xs);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem; color: #fff; flex-shrink: 0;
+      box-shadow: 0 4px 20px var(--blue-glow), 0 0 0 1px rgba(232, 184, 109, 0.2);
+      position: relative; overflow: hidden;
+    }
+    .logo-mark::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,.25) 50%, transparent 70%);
+      transform: translateX(-100%);
+      transition: transform .8s ease;
+    }
+    .nav-logo:hover .logo-mark::after { transform: translateX(100%); }
+    .logo-text-main { color: var(--txt); }
+    .logo-text-sub {
+      font-size: .6rem; font-weight: 500;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--txt-3); display: block; margin-top: 1px;
+      font-family: 'Inter', monospace;
+    }
+
+    /* Nav links */
+    .nav-links {
+      display: flex; align-items: center; gap: .25rem;
+      flex: 1; justify-content: center;
+    }
+    .nav-link {
+      font-size: .85rem; font-weight: 500;
+      color: var(--txt-2); padding: .5rem 1rem;
+      border-radius: var(--radius-xs); transition: all .25s ease;
+      position: relative;
+      font-family: 'Inter', sans-serif;
+    }
+    .nav-link::after {
+      content: ''; position: absolute; bottom: 2px; left: 50%;
+      width: 0; height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--gold));
+      border-radius: 2px; transition: all .3s ease;
+      transform: translateX(-50%);
+    }
+    .nav-link:hover { color: var(--txt); background: var(--surface); }
+    .nav-link:hover::after { width: 24px; }
+    .nav-link.active {
+      color: var(--gold);
+      background: linear-gradient(135deg, var(--blue-soft), var(--gold-soft));
+      font-weight: 600;
+    }
+    .nav-link.active::after { width: 24px; background: var(--gold); }
+
+    /* Acciones */
+    .nav-actions { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
+
+    .btn-wa-nav {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .82rem; font-weight: 600;
+      color: var(--txt-2); padding: .5rem 1rem;
+      border-radius: var(--radius-xs); border: 1px solid var(--border);
+      background: var(--surface); cursor: pointer; transition: all .25s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-wa-nav:hover {
+      border-color: rgba(37, 211, 102, .4); color: #22c55e;
+      background: rgba(37, 211, 102, .08);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(37, 211, 102, .1);
+    }
+
+    .btn-admin {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .82rem; font-weight: 700;
+      color: #fff; padding: .5rem 1.1rem;
+      border-radius: var(--radius-xs); border: none;
+      background: linear-gradient(135deg, var(--blue), var(--gold));
+      cursor: pointer; transition: all .3s ease;
+      font-family: 'Space Grotesk', sans-serif;
+      box-shadow: 0 4px 16px var(--blue-glow), 0 0 0 1px rgba(232, 184, 109, 0.15);
+      position: relative; overflow: hidden;
+    }
+    .btn-admin::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.2), transparent);
+      transform: translateX(-100%);
+      transition: transform .7s ease;
+    }
+    .btn-admin:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px var(--blue-glow), 0 0 0 1px rgba(232, 184, 109, 0.25);
+    }
+    .btn-admin:hover::before { transform: translateX(100%); }
+
+    .btn-theme {
+      width: 36px; height: 36px; border-radius: var(--radius-xs);
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--txt-2); font-size: .85rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .25s ease;
+    }
+    .btn-theme:hover {
+      background: linear-gradient(135deg, var(--blue-soft), var(--gold-soft));
+      color: var(--gold);
+      border-color: var(--border-h);
+      transform: rotate(15deg);
+    }
+
+    .hamburger {
+      display: none; background: var(--surface);
+      border: 1px solid var(--border); border-radius: var(--radius-xs);
+      color: var(--txt-2); width: 36px; height: 36px; font-size: .9rem;
+      cursor: pointer; align-items: center; justify-content: center; transition: all .25s ease;
+    }
+    .hamburger:hover { background: var(--surface-h); color: var(--txt); }
+
+    /* ════════════════════════════════════════
+       MARQUEE FUTURISTA
+    ════════════════════════════════════════ */
+    .marquee-wrap {
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 0;
+      background: linear-gradient(90deg, var(--bg-2), rgba(79, 142, 247, 0.03), var(--bg-2));
+      position: relative; z-index: 1;
+    }
+    .marquee-wrap::before,
+    .marquee-wrap::after {
+      content: '';
+      position: absolute; top: 0; bottom: 0;
+      width: 100px; z-index: 2; pointer-events: none;
+    }
+    .marquee-wrap::before { left: 0; background: linear-gradient(90deg, var(--bg-2), transparent); }
+    .marquee-wrap::after  { right: 0; background: linear-gradient(-90deg, var(--bg-2), transparent); }
+
+    .marquee-track {
+      display: flex; gap: 2.5rem; width: max-content;
+      animation: marquee 35s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    .marquee-item {
+      display: inline-flex; align-items: center; gap: .6rem;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .75rem; font-weight: 600;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--txt-3); white-space: nowrap;
+      transition: all .3s ease;
+      cursor: default;
+    }
+    .marquee-item i {
+      color: var(--blue);
+      font-size: .55rem;
+      transition: all .3s ease;
+    }
+    .marquee-item:hover {
+      color: var(--gold);
+      text-shadow: 0 0 20px var(--gold-glow);
+    }
+    .marquee-item:hover i {
+      transform: scale(1.5);
+      color: var(--cyan);
+    }
+
+    /* ════════════════════════════════════════
+       CONTENIDO PRINCIPAL
+    ════════════════════════════════════════ */
+    .site-main { position: relative; z-index: 1; min-height: 60vh; }
+
+    /* ════════════════════════════════════════
+       FOOTER FUTURISTA
+    ════════════════════════════════════════ */
+    .footer {
+      position: relative; z-index: 1;
+      background: linear-gradient(180deg, var(--bg-2), var(--bg));
+      border-top: 1px solid var(--border);
+      padding: 5rem 1.5rem 2.5rem;
+      transition: all .35s ease;
+      overflow: hidden;
+    }
+    .footer::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue), var(--gold), transparent);
+      opacity: .6;
+    }
+    .footer-inner { max-width: 1280px; margin: 0 auto; }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.2fr;
+      gap: 3.5rem;
+      padding-bottom: 3.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Brand */
+    .footer-brand .nav-logo { margin-bottom: 1.25rem; }
+    .footer-brand p {
+      font-size: .9rem; color: var(--txt-2);
+      line-height: 1.8; max-width: 300px; margin-top: 1rem;
+    }
+    .footer-socials { display: flex; gap: .5rem; margin-top: 1.75rem; }
+    .s-ico {
+      width: 38px; height: 38px; border-radius: var(--radius-xs);
+      background: var(--surface); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--txt-2); font-size: .85rem; transition: all .3s ease;
+      position: relative; overflow: hidden;
+    }
+    .s-ico::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--blue), var(--gold));
+      opacity: 0; transition: opacity .3s ease;
+    }
+    .s-ico:hover {
+      border-color: var(--border-h);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 20px var(--blue-glow);
+      color: #fff;
+    }
+    .s-ico:hover::before { opacity: 1; }
+    .s-ico i { position: relative; z-index: 1; }
+    .s-ico.wa:hover {
+      box-shadow: 0 8px 20px rgba(37, 211, 102, .2);
+    }
+    .s-ico.wa:hover::before {
+      background: linear-gradient(135deg, #25d366, #128c7e);
+    }
+
+    /* Columnas */
+    .footer-col h5 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: .75rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: var(--txt); margin-bottom: 1.25rem;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: .75rem; }
+    .footer-col a {
+      font-size: .88rem; color: var(--txt-2);
+      transition: all .25s ease;
+      display: inline-flex; align-items: center; gap: .5rem;
+    }
+    .footer-col a:hover {
+      color: var(--gold);
+      transform: translateX(4px);
+      text-shadow: 0 0 20px var(--gold-glow);
+    }
+    .footer-col a::before {
+      content: '›'; opacity: 0; transition: all .25s ease;
+      color: var(--blue); font-weight: 700; font-size: 1.1rem;
+    }
+    .footer-col a:hover::before { opacity: 1; }
+
+    .f-contact-line {
+      display: flex; align-items: flex-start; gap: .6rem;
+      font-size: .88rem; color: var(--txt-2);
+      margin-bottom: .85rem; line-height: 1.6;
+      transition: all .25s ease;
+    }
+    .f-contact-line:hover { color: var(--txt); }
+    .f-contact-line i {
+      color: var(--blue); font-size: .85rem;
+      flex-shrink: 0; margin-top: .25rem;
+      transition: all .3s ease;
+    }
+    .f-contact-line:hover i {
+      transform: scale(1.2);
+      color: var(--gold);
+    }
+
+    /* Horario chip */
+    .open-chip {
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-size: .75rem; font-weight: 700;
+      background: rgba(52, 211, 153, .08); border: 1px solid rgba(52, 211, 153, .25);
+      border-radius: 999px; padding: .35rem .9rem; color: var(--green);
+      margin-bottom: 1rem; width: fit-content;
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: .02em;
+    }
+    .open-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+      animation: blink 2s ease-in-out infinite;
+      box-shadow: 0 0 10px rgba(52, 211, 153, .4);
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+    .footer-schedule li {
+      font-size: .85rem; color: var(--txt-2);
+      margin-bottom: .6rem; display: flex; justify-content: space-between;
+      gap: 1rem;
+    }
+    .footer-schedule li span { color: var(--txt-3); font-weight: 500; }
+
+    /* Bottom */
+    .footer-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 2rem; font-size: .8rem; color: var(--txt-3);
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-bottom a { color: var(--txt-3); transition: all .25s ease; }
+    .footer-bottom a:hover { color: var(--gold); text-shadow: 0 0 10px var(--gold-glow); }
+    .made-badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-family: 'Space Grotesk', sans-serif; font-size: .7rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 999px; padding: .3rem .85rem; color: var(--txt-3);
+      letter-spacing: .02em;
+    }
+    .made-badge i { color: var(--red); font-size: .65rem; animation: heartbeat 2s ease-in-out infinite; }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      14% { transform: scale(1.2); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.2); }
+    }
+
+    /* ════════════════════════════════════════
+       WHATSAPP FAB FUTURISTA
+    ════════════════════════════════════════ */
+    .wa-fab {
+      position: fixed; bottom: 2rem; right: 2rem; z-index: 800;
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, #25d366, #128c7e);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.6rem;
+      box-shadow: 0 4px 24px rgba(37, 211, 102, .5);
+      transition: all .3s ease;
+      animation: waFloat 3s ease-in-out infinite;
+    }
+    .wa-fab:hover {
+      transform: scale(1.15) rotate(5deg);
+      box-shadow: 0 8px 32px rgba(37, 211, 102, .6);
+      color: #fff;
+    }
+    .wa-fab::before, .wa-fab::after {
+      content: ''; position: absolute; inset: -4px; border-radius: 50%;
+      border: 2px solid rgba(37, 211, 102, .3);
+      animation: waPulse 2.5s ease-out infinite;
+    }
+    .wa-fab::after { animation-delay: 0.5s; }
+    @keyframes waPulse {
+      0%{transform:scale(1);opacity:.5}
+      100%{transform:scale(1.6);opacity:0}
+    }
+    @keyframes waFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* ════════════════════════════════════════
+       REVEAL & ANIMACIONES
+    ════════════════════════════════════════ */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+
+    /* ════════════════════════════════════════
+       SCROLLBAR FUTURISTA
+    ════════════════════════════════════════ */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--blue), var(--gold)); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, var(--gold), var(--blue)); }
+
+    /* ════════════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════════════ */
+    @media(max-width:1024px){
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    }
+    @media(max-width:768px){
+      .nav-links {
+        position: fixed; top: var(--nav-h); left: 0; right: 0;
+        background: rgba(5, 8, 16, .97); backdrop-filter: blur(24px);
+        flex-direction: column; align-items: stretch;
+        padding: 1rem; border-bottom: 1px solid var(--border);
+        gap: .25rem; pointer-events: none; opacity: 0;
+        transform: translateY(-10px);
+        transition: all .3s cubic-bezier(.16,1,.3,1); z-index: 800;
+        max-height: calc(100vh - var(--nav-h));
+        overflow-y: auto;
+      }
+      [data-theme="light"] .nav-links { background: rgba(244, 246, 255, .97); }
+      .nav-links.open { opacity: 1; transform: translateY(0); pointer-events: all; }
+      .nav-link { padding: .85rem 1rem; font-size: .95rem; }
+      .hamburger { display: flex; }
+      .nav-actions .btn-wa-nav { display: none; }
+      .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+    @media(max-width:480px){
+      .nav-logo { font-size: 1rem; }
+      .logo-mark { width: 32px; height: 32px; font-size: .8rem; }
+      .btn-admin { padding: .45rem .9rem; font-size: .78rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Grid de fondo -->
+  <div class="grid-bg"></div>
+
+  <!-- Orbs futuristas -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- ══════════════════════════════════════════
+       NAVBAR
+  ══════════════════════════════════════════ -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+
+      <a href="/" class="nav-logo" aria-label="Comercial Verastegui - Inicio">
+        <div class="logo-mark"><i class="fa fa-store"></i></div>
+        <div>
+          <span class="logo-text-main">Comercial Verastegui</span>
+          <span class="logo-text-sub">San Martín de Porres · Lima</span>
+        </div>
+      </a>
+
+      <div class="nav-links" id="navMenu" role="navigation" aria-label="Navegación principal">
+        <a href="/" class="nav-link">Inicio</a>
+        <a href="/catalogo" class="nav-link">Catálogo</a>
+        <a href="/nosotros" class="nav-link">Nosotros</a>
+        <a href="/contacto" class="nav-link">Contacto</a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn-theme" id="btnTheme" title="Cambiar tema" aria-label="Cambiar entre modo claro y oscuro">
+          <i id="themeIcon" class="fa fa-sun"></i>
+        </button>
+        <a href="https://wa.me/51968495632" target="_blank" rel="noopener noreferrer" class="btn-wa-nav" aria-label="Contactar por WhatsApp">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <a href="/login" class="btn-admin" aria-label="Acceso de administrador">
+          <i class="fa fa-lock"></i> Admin
+        </a>
+        <button class="hamburger" id="btnHamburger" aria-label="Abrir menú" aria-expanded="false" aria-controls="navMenu">
+          <i class="fa fa-bars" id="hambIcon"></i>
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════
+       MARQUEE
+  ══════════════════════════════════════════ -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Abarrotes</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Lácteos Frescos</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Embutidos</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Bebidas & Gaseosas</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Snacks & Dulces</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Limpieza del Hogar</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Higiene Personal</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Enlatados</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Granos & Cereales</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Artículos del Hogar</span>
+      <!-- duplicado -->
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Abarrotes</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Lácteos Frescos</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Embutidos</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Bebidas & Gaseosas</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Snacks & Dulces</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Limpieza del Hogar</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Higiene Personal</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Enlatados</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Granos & Cereales</span>
+      <span class="marquee-item"><i class="fa fa-circle-dot"></i> Artículos del Hogar</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       CONTENIDO PRINCIPAL
+  ══════════════════════════════════════════ -->
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-inner">
+
+      <div class="footer-top">
+
+        <!-- Marca -->
+        <div class="footer-brand">
+          <a href="/" class="nav-logo" style="display:inline-flex;" aria-label="Comercial Verastegui">
+            <div class="logo-mark"><i class="fa fa-store"></i></div>
+            <div>
+              <span class="logo-text-main">Comercial Verastegui</span>
+              <span class="logo-text-sub">Desde hace generaciones</span>
+            </div>
+          </a>
+          <p>Productos de primera necesidad con calidad garantizada y atención personalizada para toda tu familia en San Martín de Porres.</p>
+          <div class="footer-socials">
+            <a href="#" class="s-ico" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="s-ico" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="s-ico" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="https://wa.me/51968495632" target="_blank" rel="noopener noreferrer" class="s-ico wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <!-- Navegación -->
+        <div class="footer-col">
+          <h5>Tienda</h5>
+          <ul>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/catalogo">Catálogo de productos</a></li>
+            <li><a href="/nosotros">Quiénes somos</a></li>
+            <li><a href="/contacto">Contacto</a></li>
+          </ul>
+        </div>
+
+        <!-- Horario -->
+        <div class="footer-col">
+          <h5>Horario</h5>
+          <div class="open-chip" id="openChip"><span class="open-dot"></span> <span id="openText">Hoy abierto</span></div>
+          <ul class="footer-schedule">
+            <li>Lunes — Viernes <span>7:00 am – 10:00 pm</span></li>
+            <li>Sábados <span>7:00 am – 11:00 pm</span></li>
+            <li>Domingos <span>8:00 am – 11:00 pm</span></li>
+          </ul>
+        </div>
+
+        <!-- Contacto -->
+        <div class="footer-col">
+          <h5>Contacto</h5>
+          <div class="f-contact-line">
+            <i class="fa fa-location-dot"></i>
+            Av. Central 123, San Martín de Porres, Lima
+          </div>
+          <div class="f-contact-line">
+            <i class="fa fa-phone"></i>
+            <a href="tel:+51968495632">+51 968 495 632</a>
+          </div>
+          <div class="f-contact-line">
+            <i class="fab fa-whatsapp"></i>
+            <a href="https://wa.me/51968495632" target="_blank" rel="noopener noreferrer">Escríbenos al WhatsApp</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Comercial Verastegui. Todos los derechos reservados.</span>
+        <div style="display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;">
+          <a href="/login" style="font-size:.78rem;">Acceso Administrador</a>
+          <span class="made-badge"><i class="fa fa-heart"></i> Hecho en Lima, Perú</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- WhatsApp FAB -->
+  <a href="https://wa.me/51968495632" target="_blank" rel="noopener noreferrer" class="wa-fab" aria-label="Escribir por WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <!-- ══════════════════════════════════════════
+       SCRIPTS
+  ══════════════════════════════════════════ -->
+  <script>
+    /* ── Tema ── */
+    (function(){
+      const saved = localStorage.getItem('bv_theme');
+      const sys   = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const t     = saved || (sys ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', t);
+      const icon = document.getElementById('themeIcon');
+      if(icon) icon.className = t === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
+    })();
+
+    document.getElementById('btnTheme').addEventListener('click', function(){
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('bv_theme', next);
+      document.getElementById('themeIcon').className = next === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
+    });
+
+    /* ── Navbar scroll shadow ── */
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+    });
+
+    /* ── Hamburger ── */
+    const btnH    = document.getElementById('btnHamburger');
+    const hambIco = document.getElementById('hambIcon');
+    const navMenu = document.getElementById('navMenu');
+
+    btnH.addEventListener('click', () => {
+      const open = navMenu.classList.toggle('open');
+      hambIco.className = open ? 'fa fa-xmark' : 'fa fa-bars';
+      btnH.setAttribute('aria-expanded', open);
+    });
+    document.querySelectorAll('.nav-link').forEach(a => {
+      a.addEventListener('click', () => { 
+        navMenu.classList.remove('open'); 
+        hambIco.className = 'fa fa-bars';
+        btnH.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('click', e => {
+      if(!navMenu.contains(e.target) && !btnH.contains(e.target)){
+        navMenu.classList.remove('open'); 
+        hambIco.className = 'fa fa-bars';
+        btnH.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    /* ── Link activo ── */
+    document.querySelectorAll('.nav-link').forEach(link => {
+      if(link.getAttribute('href') === window.location.pathname){
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      }
+    });
+
+    /* ── Reveal ── */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if(e.isIntersecting){ 
+          e.target.classList.add('visible'); 
+          io.unobserve(e.target); 
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    /* ── Horario dinámico ── */
+    (function(){
+      const now  = new Date();
+      const day  = now.getDay();
+      const hour = now.getHours() + now.getMinutes() / 60;
+      const chip = document.getElementById('openChip');
+      const text = document.getElementById('openText');
+      if(!chip || !text) return;
+      
+      let open = false;
+      if(day >= 1 && day <= 5) open = hour >= 7 && hour < 22;
+      else if(day === 6)       open = hour >= 7 && hour < 23;
+      else                     open = hour >= 8 && hour < 23;
+      
+      if(!open){
+        chip.style.background = 'rgba(248,113,113,.08)';
+        chip.style.borderColor = 'rgba(248,113,113,.2)';
+        chip.style.color = 'var(--red)';
+        chip.querySelector('.open-dot').style.background = 'var(--red)';
+        chip.querySelector('.open-dot').style.boxShadow = '0 0 10px rgba(248,113,113,.4)';
+        text.textContent = 'Cerrado ahora';
+      }
+    })();
+  </script>
+
+</body>
+</html>
+

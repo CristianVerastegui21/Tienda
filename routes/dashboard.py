@@ -3,7 +3,21 @@ from flask import (
     render_template
 )
 
-from db import conectar
+import time
+
+from db import conectar, liberar
+
+_cache_alertas = {
+    'ts': 0,
+    'alertas': [],
+    'total': 0,
+}
+_CACHE_ALERTAS_SEG = 45
+
+
+def invalidar_cache_alertas():
+    _cache_alertas['ts'] = 0
+
 
 from utils.auth import rol_requerido
 
@@ -18,7 +32,7 @@ bp = Blueprint(
 # INICIO
 # ─────────────────────────────────────────────
 
-@bp.route('/')
+@bp.route('/inicio')
 
 @rol_requerido([
     'admin',
@@ -61,7 +75,7 @@ def index():
 
     stock_bajo = cursor.fetchone()['total']
 
-    conexion.close()
+    liberar(conexion)
 
     return render_template(
         'index.html',
@@ -185,7 +199,7 @@ def dashboard():
         for p in productos_top
     ]
 
-    conexion.close()
+    liberar(conexion)
 
     return render_template(
         'dashboard.html',
@@ -209,13 +223,16 @@ def registrar_alertas_globales(app):
 
     @app.context_processor
     def alertas_globales():
+        ahora = time.time()
+        if ahora - _cache_alertas['ts'] < _CACHE_ALERTAS_SEG:
+            return dict(
+                alertas=_cache_alertas['alertas'],
+                total_alertas=_cache_alertas['total'],
+            )
 
         try:
-
             conexion = conectar()
-
             cursor = conexion.cursor()
-
             cursor.execute('''
                 SELECT *
                 FROM productos
@@ -223,19 +240,20 @@ def registrar_alertas_globales(app):
                 ORDER BY stock ASC
                 LIMIT 5
             ''')
-
             alertas = cursor.fetchall()
+            cursor.close()
+            liberar(conexion)
 
-            conexion.close()
+            _cache_alertas['ts'] = ahora
+            _cache_alertas['alertas'] = alertas
+            _cache_alertas['total'] = len(alertas)
 
             return dict(
                 alertas=alertas,
-                total_alertas=len(alertas)
+                total_alertas=len(alertas),
             )
-
         except Exception:
-
             return dict(
                 alertas=[],
-                total_alertas=0
+                total_alertas=0,
             )

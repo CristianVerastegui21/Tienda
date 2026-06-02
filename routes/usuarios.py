@@ -10,7 +10,7 @@ from werkzeug.security import (
     generate_password_hash
 )
 
-from db import conectar
+from db import conectar, liberar
 
 from utils.auth import rol_requerido
 
@@ -45,7 +45,7 @@ def usuarios():
 
     usuarios = cursor.fetchall()
 
-    conexion.close()
+    liberar(conexion)
 
     admins = len([
         u for u in usuarios
@@ -119,7 +119,7 @@ def agregar_usuario():
 
         conexion.commit()
 
-        conexion.close()
+        liberar(conexion)
 
         flash(
             'Usuario agregado correctamente',
@@ -162,7 +162,7 @@ def editar_usuario(id):
 
     if not usuario:
 
-        conexion.close()
+        liberar(conexion)
 
         return redirect('/usuarios')
 
@@ -217,7 +217,7 @@ def editar_usuario(id):
 
         conexion.commit()
 
-        conexion.close()
+        liberar(conexion)
 
         flash(
             'Usuario actualizado correctamente',
@@ -226,7 +226,7 @@ def editar_usuario(id):
 
         return redirect('/usuarios')
 
-    conexion.close()
+    liberar(conexion)
 
     return render_template(
         'editar_usuario.html',
@@ -257,7 +257,7 @@ def eliminar_usuario(id):
 
     conexion.commit()
 
-    conexion.close()
+    liberar(conexion)
 
     flash(
         'Usuario eliminado correctamente',

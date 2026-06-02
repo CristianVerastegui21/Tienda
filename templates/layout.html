@@ -563,7 +563,7 @@ hr { border-color: var(--border); opacity: 1; }
 
   <nav class="sb-nav">
     <div class="sb-section">Principal</div>
-    <a href="/" {% if request.path == '/' %}class="active"{% endif %}>
+    <a href="/inicio" {% if request.path == '/' %}class="active"{% endif %}>
       <span class="ni"><i class="fa fa-house"></i></span> Inicio
     </a>
     <a href="/ventas" {% if 'ventas' in request.path %}class="active"{% endif %}>
@@ -615,7 +615,7 @@ hr { border-color: var(--border); opacity: 1; }
       <span id="theme-label">Modo Oscuro</span>
       <div class="toggle-track"></div>
     </button>
-    <a href="/logout" class="logout-link">
+    <a href="/" class="logout-link">
       <i class="fa fa-right-from-bracket"></i> Cerrar Sesión
     </a>
   </div>

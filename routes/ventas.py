@@ -29,8 +29,9 @@ from reportlab.platypus import (
     HRFlowable
 )
 
-from db import conectar
+from db import conectar, liberar
 
+from routes.dashboard import invalidar_cache_alertas
 from utils.auth import rol_requerido
 from utils.logs import registrar_log
 
@@ -61,8 +62,42 @@ bp = Blueprint(
 
 def ventas():
 
-    conexion = conectar()
+    if 'carrito' not in session:
+        session['carrito'] = []
 
+    carrito = session['carrito']
+
+    if request.method == 'POST':
+        id_producto = request.form.get('producto_id')
+        cantidad = int(request.form.get('cantidad', 1))
+
+        conexion = conectar()
+        cursor = conexion.cursor()
+
+        cursor.execute('''
+            SELECT *
+            FROM productos
+            WHERE id = %s
+        ''', (id_producto,))
+
+        producto = cursor.fetchone()
+        cursor.close()
+
+        if not producto:
+            flash('Producto no encontrado', 'error')
+            return redirect('/ventas')
+
+        if cantidad > producto['stock']:
+            flash(
+                f'Stock insuficiente para "{producto["nombre"]}"',
+                'error'
+            )
+            return redirect('/ventas')
+
+        _agregar_al_carrito(producto, cantidad)
+        return redirect('/ventas')
+
+    conexion = conectar()
     cursor = conexion.cursor()
 
     cursor.execute('''
@@ -72,75 +107,9 @@ def ventas():
     ''')
 
     productos = cursor.fetchall()
-
-    if 'carrito' not in session:
-        session['carrito'] = []
-
-    carrito = session['carrito']
-
-    if request.method == 'POST':
-
-        id_producto = request.form.get(
-            'producto_id'
-        )
-
-        cantidad = int(
-            request.form.get(
-                'cantidad',
-                1
-            )
-        )
-
-        cursor.execute('''
-            SELECT *
-            FROM productos
-            WHERE id = %s
-        ''', (id_producto,))
-
-        producto = cursor.fetchone()
-
-        if not producto:
-
-            cursor.close()
-            conexion.close()
-
-            flash(
-                'Producto no encontrado',
-                'error'
-            )
-
-            return redirect('/ventas')
-
-        if cantidad > producto['stock']:
-
-            cursor.close()
-            conexion.close()
-
-            flash(
-                f'Stock insuficiente para "{producto["nombre"]}"',
-                'error'
-            )
-
-            return redirect('/ventas')
-
-        cursor.close()
-        conexion.close()
-
-        _agregar_al_carrito(
-            producto,
-            cantidad
-        )
-
-        return redirect('/ventas')
-
-    total = sum(
-        item['subtotal']
-        for item in carrito
-    )
-
     cursor.close()
 
-    conexion.close()
+    total = sum(item['subtotal'] for item in carrito)
 
     return render_template(
         'ventas.html',
@@ -226,7 +195,7 @@ def scanner_ventas():
 
         cursor.close()
 
-        conexion.close()
+        liberar(conexion)
 
         if producto:
 
@@ -327,7 +296,7 @@ def aumentar(index):
 
     cursor.close()
 
-    conexion.close()
+    liberar(conexion)
 
     if (
         prod and
@@ -461,7 +430,7 @@ def finalizar_venta():
 
         cursor.close()
 
-        conexion.close()
+        liberar(conexion)
 
         return redirect('/ventas')
 
@@ -478,30 +447,26 @@ def finalizar_venta():
 
     id_venta = cursor.fetchone()['id']
 
+    ids = [item['id'] for item in carrito]
+    cursor.execute('''
+        SELECT id, stock
+        FROM productos
+        WHERE id = ANY(%s)
+    ''', (ids,))
+    stocks = {
+        row['id']: row['stock']
+        for row in cursor.fetchall()
+    }
+
     for item in carrito:
+        stock_actual = stocks.get(item['id'])
 
-        cursor.execute('''
-            SELECT *
-            FROM productos
-            WHERE id = %s
-        ''', (item['id'],))
-
-        prod = cursor.fetchone()
-
-        if (
-            not prod or
-            item['cantidad'] > prod['stock']
-        ):
-
+        if stock_actual is None or item['cantidad'] > stock_actual:
             cursor.close()
-
-            conexion.close()
-
             flash(
                 'Error de stock al finalizar la venta',
                 'error'
             )
-
             return redirect('/ventas')
 
         cursor.execute('''
@@ -554,16 +519,15 @@ def finalizar_venta():
 
     conexion.commit()
 
-    cursor.close()
-
-    conexion.close()
-
     session['carrito'] = []
 
     registrar_log(
         session['usuario'],
         f'Generó venta #{id_venta}'
     )
+
+    invalidar_cache_alertas()
+    cursor.close()
 
     return redirect(
         f'/ticket/{id_venta}'
@@ -836,7 +800,7 @@ def ticket(id_venta):
 
     cursor.close()
 
-    conexion.close()
+    liberar(conexion)
 
     if not venta or not venta['ticket_url']:
 
@@ -893,6 +857,6 @@ def ver_venta(id):
 
     cursor.close()
 
-    conexion.close()
+    liberar(conexion)
 
     return render_template( 'venta_detalle.html', venta=venta, detalles=detalles )

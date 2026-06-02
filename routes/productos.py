@@ -1,5 +1,4 @@
 import os
-import psycopg2
 
 from flask import (
     Blueprint,
@@ -12,8 +11,9 @@ from flask import (
 
 from werkzeug.utils import secure_filename
 
-from db import conectar
+from db import conectar, liberar
 
+from routes.dashboard import invalidar_cache_alertas
 from utils.auth import rol_requerido
 from utils.logs import registrar_log
 from utils.supabase_storage import (
@@ -81,46 +81,6 @@ def guardar_imagen(file):
 
 
 # ─────────────────────────────────────────────────
-# MIGRACIÓN COLUMNAS
-# ─────────────────────────────────────────────────
-
-def _migrar_columnas():
-
-    conexion = conectar()
-
-    cursor = conexion.cursor()
-
-    for columna, definicion in [
-
-        ('entradas', 'INTEGER DEFAULT 0'),
-
-        ('salidas', 'INTEGER DEFAULT 0'),
-
-    ]:
-
-        try:
-
-            cursor.execute(f'''
-                ALTER TABLE productos
-                ADD COLUMN {columna}
-                {definicion}
-            ''')
-
-            conexion.commit()
-
-        except psycopg2.errors.DuplicateColumn:
-
-            conexion.rollback()
-
-    cursor.close()
-
-    conexion.close()
-
-
-_migrar_columnas()
-
-
-# ─────────────────────────────────────────────────
 # LISTAR PRODUCTOS
 # ─────────────────────────────────────────────────
 
@@ -157,7 +117,7 @@ def productos():
 
     cursor.close()
 
-    conexion.close()
+    liberar(conexion)
 
     return render_template(
         'productos.html',
@@ -173,15 +133,15 @@ def productos():
     '/agregar',
     methods=['GET', 'POST']
 )
-
 @rol_requerido([
     'admin',
     'supervisor'
 ])
-
 def agregar_producto():
 
     if request.method == 'POST':
+        conexion = conectar()
+        cursor = conexion.cursor()
 
         nombre = request.form.get(
             'nombre',
@@ -203,6 +163,10 @@ def agregar_producto():
             5
         )
 
+        categoria_id = request.form.get(
+            'categoria_id'
+        )
+
         codigo = request.form.get(
             'codigo',
             ''
@@ -219,23 +183,28 @@ def agregar_producto():
                 'error'
             )
 
+            cursor.close()
+            liberar(conexion)
+
+            conexion = conectar()
+            cursor = conexion.cursor()
+            cursor.execute("""
+                SELECT id, nombre
+                FROM categorias
+                ORDER BY nombre
+            """)
+            categorias = cursor.fetchall()
+            cursor.close()
+            liberar(conexion)
+
             return render_template(
-                'agregar_producto.html'
+                'agregar_producto.html',
+                categorias=categorias
             )
 
-        '''nombre_imagen = guardar_imagen(
+        nombre_imagen = subir_imagen_supabase(
             imagen
-        )'''
-
-        nombre_imagen = (
-            subir_imagen_supabase(
-                imagen
-            )
         )
-
-        conexion = conectar()
-
-        cursor = conexion.cursor()
 
         cursor.execute('''
             INSERT INTO productos
@@ -245,23 +214,25 @@ def agregar_producto():
                 stock,
                 codigo_barra,
                 imagen,
+                categoria_id,
                 reorden
             )
-            VALUES (%s, %s, %s, %s, %s, %s)
+            VALUES (%s,%s,%s,%s,%s,%s,%s)
         ''', (
             nombre,
             precio,
             stock,
             codigo,
             nombre_imagen,
+            categoria_id,
             reorden
         ))
 
         conexion.commit()
+        invalidar_cache_alertas()
 
         cursor.close()
-
-        conexion.close()
+        liberar(conexion)
 
         registrar_log(
             session['usuario'],
@@ -275,8 +246,20 @@ def agregar_producto():
 
         return redirect('/productos')
 
+    conexion = conectar()
+    cursor = conexion.cursor()
+    cursor.execute("""
+        SELECT id, nombre
+        FROM categorias
+        ORDER BY nombre
+    """)
+    categorias = cursor.fetchall()
+    cursor.close()
+    liberar(conexion)
+
     return render_template(
-        'agregar_producto.html'
+        'agregar_producto.html',
+        categorias=categorias
     )
 
 
@@ -288,16 +271,13 @@ def agregar_producto():
     '/editar/<int:id>',
     methods=['GET', 'POST']
 )
-
 @rol_requerido([
     'admin',
     'supervisor'
 ])
-
 def editar_producto(id):
 
     conexion = conectar()
-
     cursor = conexion.cursor()
 
     cursor.execute('''
@@ -311,8 +291,7 @@ def editar_producto(id):
     if not producto:
 
         cursor.close()
-
-        conexion.close()
+        liberar(conexion)
 
         flash(
             'Producto no encontrado',
@@ -338,6 +317,10 @@ def editar_producto(id):
                 'reorden',
                 5
             )
+        )
+
+        categoria_id = request.form.get(
+            'categoria_id'
         )
 
         codigo = request.form.get(
@@ -376,6 +359,7 @@ def editar_producto(id):
                 entradas     = %s,
                 salidas      = %s,
                 codigo_barra = %s,
+                categoria_id = %s,
                 reorden      = %s
             WHERE id = %s
         ''', (
@@ -385,15 +369,16 @@ def editar_producto(id):
             entradas,
             salidas,
             codigo,
+            categoria_id,
             reorden,
             id
         ))
 
         conexion.commit()
+        invalidar_cache_alertas()
 
         cursor.close()
-
-        conexion.close()
+        liberar(conexion)
 
         registrar_log(
             session['usuario'],
@@ -407,15 +392,22 @@ def editar_producto(id):
 
         return redirect('/productos')
 
-    cursor.close()
+    cursor.execute("""
+        SELECT id, nombre
+        FROM categorias
+        ORDER BY nombre
+    """)
 
-    conexion.close()
+    categorias = cursor.fetchall()
+
+    cursor.close()
+    liberar(conexion)
 
     return render_template(
         'editar_producto.html',
-        producto=producto
+        producto=producto,
+        categorias=categorias
     )
-
 
 # ─────────────────────────────────────────────────
 # ELIMINAR PRODUCTO
@@ -449,6 +441,7 @@ def eliminar_producto(id):
         ''', (id,))
 
         conexion.commit()
+        invalidar_cache_alertas()
 
         registrar_log(
             session['usuario'],
@@ -462,7 +455,7 @@ def eliminar_producto(id):
 
     cursor.close()
 
-    conexion.close()
+    liberar(conexion)
 
     return redirect('/productos')
 

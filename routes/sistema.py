@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-from db import conectar
+from db import conectar, liberar
 from utils.auth import rol_requerido
 from utils.backup import crear_backup
 
@@ -59,7 +59,7 @@ def logs():
 
     logs = cursor.fetchall()
 
-    conexion.close()
+    liberar(conexion)
 
     return render_template(
         'logs.html',
@@ -93,7 +93,7 @@ def stock_bajo():
 
     productos = cursor.fetchall()
 
-    conexion.close()
+    liberar(conexion)
 
     return render_template(
         'stock_bajo.html',

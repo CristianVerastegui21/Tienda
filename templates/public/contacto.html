@@ -1,0 +1,420 @@
+{% extends 'public/layout_public.html' %}
+{% block title %}Contacto — Comercial Verastegui{% endblock %}
+
+{% block content %}
+
+<!-- Dependencia de Animaciones -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════
+   HERO CONTACTO - INMERSIVO
+══════════════════════════════════════════════ */
+.hero-contact {
+  position: relative;
+  min-height: 45vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; padding: 8rem 2rem 4rem;
+  text-align: center; color: #fff;
+}
+
+.hero-contact-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+}
+.hero-contact-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(5,8,16,0.93) 30%, rgba(26,17,5,0.88) 100%);
+  backdrop-filter: blur(2px);
+}
+[data-theme="light"] .hero-contact-bg::after {
+  background: linear-gradient(135deg, rgba(244,246,255,0.96) 30%, rgba(254,249,195,0.92) 100%);
+}
+
+.hero-contact-content { position: relative; z-index: 3; max-width: 700px; }
+
+.hero-contact-badge {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: rgba(10,15,30,0.6); backdrop-filter: blur(12px);
+  border: 1px solid rgba(37,211,102,.3); border-radius: 50px;
+  padding: .45rem 1.2rem; font-size: .78rem; font-weight: 600;
+  margin-bottom: 1.5rem; color: #25d366;
+  box-shadow: 0 0 15px rgba(37,211,102,.2);
+}
+[data-theme="light"] .hero-contact-badge { background: rgba(255,255,255,0.8); color: #128c7e; border-color: rgba(37,211,102,.2); }
+
+.hero-contact h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.8rem, 5vw, 4rem); font-weight: 800;
+  letter-spacing: -0.04em; margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--txt) 40%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero-contact p {
+  font-size: 1.1rem; color: var(--txt-2); line-height: 1.7; max-width: 550px; margin: 0 auto;
+}
+
+/* ══════════════════════════════════════════════
+   CONTACT GRID
+══════════════════════════════════════════════ */
+.contact-section { max-width: 1260px; margin: -3rem auto 0; padding: 0 2rem 6rem; position: relative; z-index: 5; }
+
+.contact-grid {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 1.5rem;
+}
+
+/* ══════════════════════════════════════════════
+   GLASS CARD BASE
+══════════════════════════════════════════════ */
+.glass-card {
+  background: rgba(10,15,30,0.7); backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border); border-radius: 20px;
+  overflow: hidden; transition: all .3s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,.2);
+}
+[data-theme="light"] .glass-card { background: rgba(255,255,255,0.9); backdrop-filter: none; box-shadow: 0 4px 15px rgba(0,0,0,.04); }
+
+.glass-card:hover { border-color: rgba(232,184,109,.3); box-shadow: 0 15px 40px rgba(0,0,0,.3), 0 0 20px var(--gold-glow); }
+[data-theme="light"] .glass-card:hover { box-shadow: 0 8px 25px rgba(0,0,0,.06), 0 0 15px var(--gold-glow); }
+
+.card-header {
+  padding: 1.5rem 2rem; border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--gold-soft), transparent);
+}
+[data-theme="light"] .card-header { background: linear-gradient(135deg, rgba(232,184,109,.05), transparent); }
+
+.card-header h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem; font-weight: 700; color: var(--txt);
+  display: flex; align-items: center; gap: .6rem; margin: 0;
+}
+.card-header h2 i { color: var(--gold); font-size: 1rem; }
+.card-header p { font-size: .85rem; color: var(--txt-2); margin: .3rem 0 0; }
+
+.card-body { padding: 2rem; }
+
+/* ══════════════════════════════════════════════
+   INFO CARD SPECIFICS
+══════════════════════════════════════════════ */
+.contact-item {
+  display: flex; align-items: flex-start; gap: 1rem;
+  padding: 1rem; border-radius: 12px; margin-bottom: .5rem;
+  transition: background .2s, transform .2s;
+}
+.contact-item:hover { background: var(--surface-h); transform: translateX(5px); }
+
+.contact-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0; border: 1px solid var(--border);
+}
+.contact-icon.gold   { background: var(--gold-soft); color: var(--gold); border-color: rgba(232,184,109,.2); box-shadow: 0 0 10px var(--gold-glow); }
+.contact-icon.blue   { background: var(--blue-soft); color: var(--blue); border-color: rgba(79,142,247,.2); box-shadow: 0 0 10px var(--blue-glow); }
+.contact-icon.green  { background: rgba(37,211,102,.1); color: #25d366; border-color: rgba(37,211,102,.2); box-shadow: 0 0 10px rgba(37,211,102,.2); }
+
+.contact-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: .7rem; font-weight: 700; color: var(--txt-3);
+  text-transform: uppercase; letter-spacing: .08em; margin-bottom: .2rem;
+}
+.contact-value { font-size: .95rem; font-weight: 600; color: var(--txt); }
+.contact-value a { color: var(--txt); text-decoration: none; transition: color .2s; }
+.contact-value a:hover { color: var(--gold); }
+
+/* WhatsApp Button */
+.btn-wa {
+  display: flex; align-items: center; justify-content: center; gap: .6rem;
+  width: 100%; padding: 1rem;
+  background: linear-gradient(135deg, #25d366, #128c7e); color: #fff;
+  border: none; border-radius: 14px;
+  font-family: 'Outfit', sans-serif; font-size: .95rem; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  transition: all .25s; margin-top: 1.5rem;
+  box-shadow: 0 6px 20px rgba(37,211,102,.3);
+}
+.btn-wa:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(37,211,102,.4); color: #fff; }
+
+/* Horarios */
+.hours-box {
+  margin-top: 1.5rem; padding: 1.25rem;
+  border-radius: 14px; background: var(--surface);
+  border: 1px solid var(--border);
+}
+.hours-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: .72rem; font-weight: 700; color: var(--gold);
+  text-transform: uppercase; letter-spacing: .08em; margin-bottom: .8rem;
+  display: flex; align-items: center; gap: .4rem;
+}
+.hours-row {
+  display: flex; justify-content: space-between;
+  font-size: .85rem; padding: .35rem 0; color: var(--txt-2);
+  border-bottom: 1px solid rgba(79,142,247,.05);
+}
+.hours-row:last-child { border-bottom: none; }
+.hours-row span:last-child { font-weight: 600; color: var(--txt); font-family: 'Space Grotesk', sans-serif; font-size: .82rem; }
+
+/* ══════════════════════════════════════════════
+   FORM CARD SPECIFICS
+══════════════════════════════════════════════ */
+.form-group { margin-bottom: 1.25rem; }
+.form-label {
+  display: block; font-family: 'Space Grotesk', sans-serif;
+  font-size: .72rem; font-weight: 700; color: var(--txt-2);
+  text-transform: uppercase; letter-spacing: .06em; margin-bottom: .5rem;
+}
+.form-input, .form-textarea {
+  width: 100%; padding: .85rem 1.2rem;
+  background: rgba(10,15,30,0.5); backdrop-filter: blur(8px);
+  border: 1px solid var(--border); border-radius: 12px;
+  color: var(--txt); font-size: .9rem; font-family: 'Inter', sans-serif;
+  outline: none; transition: all .25s;
+}
+[data-theme="light"] .form-input, [data-theme="light"] .form-textarea { background: rgba(244,246,255,0.8); }
+
+.form-input:focus, .form-textarea:focus {
+  border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow);
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--txt-3); }
+.form-textarea { resize: vertical; min-height: 130px; }
+
+.char-counter {
+  text-align: right; font-size: .7rem; color: var(--txt-3);
+  margin-top: .3rem; font-family: 'Space Grotesk', sans-serif;
+}
+
+.btn-submit {
+  width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+  background: linear-gradient(135deg, var(--blue), var(--gold));
+  border: none; color: #fff; font-family: 'Outfit', sans-serif;
+  font-weight: 700; font-size: .95rem;
+  padding: 1rem; border-radius: 14px; cursor: pointer;
+  transition: all .25s; margin-top: .5rem;
+  box-shadow: 0 6px 20px var(--blue-glow);
+}
+.btn-submit:hover { transform: translateY(-3px); box-shadow: 0 10px 28px var(--blue-glow); color: #fff; }
+
+/* ══════════════════════════════════════════════
+   MAP SECTION
+══════════════════════════════════════════════ */
+.map-section { max-width: 1260px; margin: 0 auto 6rem; padding: 0 2rem; position: relative; z-index: 1; }
+
+.map-wrapper {
+  border-radius: 20px; overflow: hidden; border: 1px solid var(--border);
+  box-shadow: 0 15px 40px rgba(0,0,0,.2);
+  position: relative;
+}
+.map-wrapper::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--blue), transparent); z-index: 2;
+}
+
+.map-embed {
+  width: 100%; height: 400px; border: none;
+  filter: grayscale(.2) contrast(1.05);
+  transition: filter .5s ease;
+}
+
+/* Modo oscuro: Solo oscurecemos el mapa para que no queme los ojos, SIN invertir colores */
+[data-theme="dark"] .map-embed { 
+  filter: brightness(0.75) contrast(1.2) grayscale(.1); 
+}
+
+.map-embed {
+  width: 100%; height: 400px; border: none;
+  filter: grayscale(.2) contrast(1.05);
+  transition: filter .5s ease;
+}
+
+/* Modo oscuro: Solo oscurecemos el mapa para que no queme los ojos, SIN invertir colores */
+[data-theme="dark"] .map-embed { 
+  filter: brightness(0.75) contrast(1.2) grayscale(.1); 
+}
+
+.map-embed:hover { 
+  filter: grayscale(0) contrast(1); 
+}
+[data-theme="dark"] .map-embed:hover { 
+  filter: brightness(0.9) contrast(1.1) grayscale(0); 
+}
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .hero-contact { min-height: auto; padding: 7rem 1.5rem 3rem; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .map-embed { height: 300px; }
+}
+</style>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- HERO CONTACTO                                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<section class="hero-contact">
+  <div class="hero-contact-bg"></div>
+  <div class="hero-contact-content" data-aos="fade-up" data-aos-duration="1000">
+    <span class="hero-contact-badge">
+      <i class="fab fa-whatsapp"></i> Respuesta Rápida
+    </span>
+    <h1>Contáctanos</h1>
+    <p>Estamos aquí para escucharte. Escríbenos, llámanos o visítanos en nuestra tienda.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CONTACT GRID                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="contact-section">
+  <div class="contact-grid">
+
+    <!-- INFO CARD -->
+    <div class="glass-card" data-aos="fade-right" data-aos-delay="100">
+      <div class="card-header">
+        <h2><i class="fa fa-store"></i> Información</h2>
+      </div>
+      <div class="card-body">
+
+        <div class="contact-item">
+          <div class="contact-icon gold"><i class="fa fa-location-dot"></i></div>
+          <div>
+            <div class="contact-label">Ubicación</div>
+            <div class="contact-value">Av Central, San Martín de Porres, Lima</div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon blue"><i class="fa fa-phone"></i></div>
+          <div>
+            <div class="contact-label">Teléfono</div>
+            <div class="contact-value"><a href="tel:+51968495632">+51 968 495 632</a></div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon blue"><i class="fa fa-envelope"></i></div>
+          <div>
+            <div class="contact-label">Email</div>
+            <div class="contact-value"><a href="mailto:verasteguivictor07@gmail.com">verasteguivictor07@gmail.com</a></div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <div class="contact-icon green"><i class="fab fa-whatsapp"></i></div>
+          <div>
+            <div class="contact-label">WhatsApp</div>
+            <div class="contact-value"><a href="https://wa.me/51968495632" target="_blank">+51 968 495 632</a></div>
+          </div>
+        </div>
+
+        <a href="https://wa.me/51968495632" target="_blank" class="btn-wa">
+          <i class="fab fa-whatsapp"></i> Escribir por WhatsApp
+        </a>
+
+        <div class="hours-box">
+          <div class="hours-title"><i class="fa fa-clock"></i> Horario de Atención</div>
+          <div class="hours-row">
+            <span>Lunes a Viernes</span>
+            <span>7:00 am – 10:00 pm</span>
+          </div>
+          <div class="hours-row">
+            <span>Sábados</span>
+            <span>7:00 am – 11:00 pm</span>
+          </div>
+          <div class="hours-row">
+            <span>Domingos</span>
+            <span>8:00 am – 11:00 pm</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="glass-card" data-aos="fade-left" data-aos-delay="200">
+      <div class="card-header">
+        <h2><i class="fa fa-paper-plane"></i> Envíanos un mensaje</h2>
+        <p>Completa el formulario y te responderemos lo antes posible.</p>
+      </div>
+      <div class="card-body">
+        <form id="contactForm" method="POST" action="/contacto">
+
+          <div class="form-group">
+            <label class="form-label">Nombre completo</label>
+            <input type="text" name="nombre" class="form-input" placeholder="Ej: Juan Pérez" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Correo electrónico</label>
+            <input type="email" name="email" class="form-input" placeholder="Ej: juan@correo.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Asunto</label>
+            <input type="text" name="asunto" class="form-input" placeholder="¿Sobre qué quieres hablar?">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mensaje</label>
+            <textarea name="mensaje" class="form-textarea" id="messageArea" placeholder="Escribe tu mensaje aquí..." maxlength="500" required></textarea>
+            <div class="char-counter"><span id="charCount">0</span> / 500</div>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <i class="fa fa-paper-plane"></i> Enviar Mensaje
+          </button>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- MAPA                                          -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="map-section" data-aos="fade-up" data-aos-delay="100">
+  <div class="map-wrapper">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!4v1780247267260!6m8!1m7!1sYVHS2uAaxzebAHqQuwFufA!2m2!1d-11.95795340198789!2d-77.088771972166!3f317.0946041188601!4f10.435254197083438!5f0.41380726753161184"
+      class="map-embed"
+      allowfullscreen="" loading="lazy" 
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  // Inicializar AOS
+  AOS.init({ once: true, duration: 800, easing: 'ease-out-cubic' });
+
+  // Character counter
+  const msgArea = document.getElementById('messageArea');
+  const charCount = document.getElementById('charCount');
+
+  msgArea.addEventListener('input', function() {
+    charCount.textContent = this.value.length;
+    charCount.style.color = this.value.length > 450 ? 'var(--red)' : 'var(--txt-3)';
+  });
+
+  // Form validation visual
+  document.querySelectorAll('.form-input, .form-textarea').forEach(el => {
+    el.addEventListener('blur', function() {
+      if (this.value.trim() !== '') {
+        this.style.borderColor = 'var(--green)';
+        this.style.boxShadow = '0 0 0 3px rgba(52,211,153,.2)';
+      } else if (this.hasAttribute('required')) {
+        this.style.borderColor = 'var(--red)';
+        this.style.boxShadow = '0 0 0 3px rgba(248,113,113,.2)';
+      }
+    });
+    el.addEventListener('focus', function() {
+      this.style.borderColor = 'var(--gold)';
+      this.style.boxShadow = '0 0 0 3px var(--gold-glow)';
+    });
+  });
+</script>
+
+{% endblock %}
