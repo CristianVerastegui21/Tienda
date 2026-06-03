@@ -1,938 +1,947 @@
 {% extends 'public/layout_public.html' %}
-{% block title %}Comercial Verastegui — Tu Bodega Premium{% endblock %}
+{% block title %}Comercial Verastegui — Tu Bodega Premium en Trujillo{% endblock %}
 
 {% block content %}
 
-<!-- Dependencias Externas para Carrusel y Animaciones -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
 <style>
-/* ══════════════════════════════════════════════
-   HERO INMERSIVO - ELEGANTE Y CONFORTABLE
-══════════════════════════════════════════════ */
-.hero-super {
-  position: relative;
-  height: 88vh;
-  min-height: 550px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
+/* ══════════════════════════════════════════
+   HERO — MODERNO RETAIL (Estilo Falabella)
+══════════════════════════════════════════ */
+.hero-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1a56db 100%);
+  position: relative; overflow: hidden;
+  padding: 4rem 0 0;
 }
-
-.hero-bg {
+.hero-banner::before {
+  content: '';
   position: absolute; inset: 0;
-  background: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
-  z-index: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
-.hero-bg::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(105deg, var(--bg) 40%, transparent 100%);
-}
-[data-theme="light"] .hero-bg::after {
-  background: linear-gradient(105deg, rgba(248,249,252,0.97) 40%, rgba(248,249,252,0.85) 100%);
-}
-
-.hero-content {
+.hero-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 0 1.5rem;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 3rem; align-items: flex-end;
   position: relative; z-index: 2;
-  max-width: 1200px; margin: 0 auto;
-  padding: 0 2rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: center;
-  width: 100%;
 }
+.hero-left { padding-bottom: 4rem; }
 
-.hero-left { max-width: 580px; }
-
-.hero-eyebrow {
+.hero-tag {
   display: inline-flex; align-items: center; gap: .5rem;
-  font-size: .85rem; font-weight: 600;
-  color: var(--gold); background: var(--gold-soft);
-  border: 1px solid rgba(212,175,55,.2);
-  padding: .4rem 1rem; border-radius: 999px;
-  margin-bottom: 1.5rem;
-  text-transform: uppercase; letter-spacing: .08em;
-  font-family: 'Outfit', sans-serif;
+  background: rgba(249,115,22,.2); border: 1px solid rgba(249,115,22,.4);
+  border-radius: 999px; padding: .35rem .9rem;
+  font-family: var(--font-display); font-size: .72rem; font-weight: 700;
+  color: #fb923c; text-transform: uppercase; letter-spacing: .08em;
+  margin-bottom: 1.25rem;
 }
-.hero-eyebrow i { font-size: .75rem; }
 
 .hero-h1 {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(2.5rem, 5vw, 4.2rem);
-  font-weight: 800; line-height: 1.08;
-  letter-spacing: -.03em; color: var(--txt);
-  margin-bottom: 1.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  font-weight: 800; line-height: 1.1; letter-spacing: -.03em;
+  color: #fff; margin-bottom: 1.25rem;
 }
-.hero-h1 span {
-  color: var(--gold);
-}
-.hero-p {
-  font-size: 1.15rem; color: var(--txt-2);
-  line-height: 1.7; margin-bottom: 2.5rem; max-width: 480px;
+.hero-h1 .accent { color: #fb923c; }
+.hero-h1 .highlight {
+  background: linear-gradient(135deg, #60a5fa, #93c5fd);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.hero-search {
-  display: flex; 
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: .35rem; max-width: 480px;
-  backdrop-filter: blur(12px);
-  box-shadow: var(--shadow-sm);
-}
-.hero-search input {
-  flex: 1; border: none; background: transparent;
-  padding: .85rem 1.1rem; color: var(--txt);
-  font-size: 1rem; outline: none; font-family: 'Inter', sans-serif;
-}
-.hero-search input::placeholder { color: var(--txt-3); }
-.hero-search button {
-  background: linear-gradient(135deg, var(--blue), var(--gold));
-  border: none; border-radius: 10px; color: #fff;
-  padding: .85rem 1.4rem; cursor: pointer; font-weight: 600;
-  font-family: 'Outfit', sans-serif;
-  font-size: 1rem;
-  display: flex; align-items: center; gap: .5rem;
-  transition: transform .2s, box-shadow .2s;
-  box-shadow: 0 4px 12px var(--blue-glow);
-}
-.hero-search button:hover { transform: translateY(-1px); box-shadow: 0 6px 16px var(--blue-glow); }
-
-/* Hero Derecha - Tarjetas */
-.hero-right { position: relative; height: 420px; }
-
-.product-float-card {
-  position: absolute; width: 260px;
-  background: var(--bg-card); backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid var(--border); border-radius: 20px;
-  overflow: hidden; 
-  box-shadow: var(--shadow);
-  animation: float 6s ease-in-out infinite;
+.hero-sub {
+  font-size: 1.05rem; color: rgba(255,255,255,.75);
+  line-height: 1.7; margin-bottom: 2rem; max-width: 460px;
 }
 
-.pfc-img {
-  height: 180px; width: 100%;
-  background-size: cover; background-position: center;
-  border-bottom: 1px solid var(--border);
-}
-.pfc-body { padding: 1.2rem; }
-.pfc-cat { font-size: .85rem; color: var(--blue); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .25rem; }
-.pfc-name { font-family: 'Outfit'; font-size: 1.15rem; font-weight: 700; color: var(--txt); margin-bottom: .5rem; }
-.pfc-price { font-family: 'Outfit'; font-size: 1.4rem; font-weight: 700; color: var(--gold); }
-.pfc-price small { font-size: .75rem; color: var(--txt-3); text-decoration: line-through; margin-left: .5rem; font-weight: 400; }
+.hero-cta-row { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 2rem; }
 
-.pfc-badge {
-  position: absolute; top: 12px; right: 12px;
-  background: var(--red); color: #fff; font-size: .7rem;
-  padding: .25rem .6rem; border-radius: 6px; font-weight: 700;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0) rotate(1deg); }
-  50% { transform: translateY(-12px) rotate(-1deg); }
-}
-
-/* ══════════════════════════════════════════════
-   CATEGORÍAS VISUALES
-══════════════════════════════════════════════ */
-.cats-visual-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
-}
-.cat-visual {
-  position: relative; height: 220px;
-  border-radius: var(--radius); overflow: hidden;
+.btn-hero-primary {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--accent); color: #fff; border: none;
+  padding: .85rem 1.75rem; border-radius: var(--radius-sm);
+  font-family: var(--font-display); font-size: .95rem; font-weight: 700;
   cursor: pointer; text-decoration: none;
-  border: 1px solid var(--border);
-  transition: all .3s ease;
+  box-shadow: 0 4px 16px rgba(249,115,22,.4);
+  transition: all .25s;
 }
-.cat-visual:hover { border-color: var(--border-h); transform: translateY(-3px); box-shadow: var(--shadow); }
+.btn-hero-primary:hover { background: var(--accent-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(249,115,22,.45); color: #fff; }
 
-.cat-visual-bg {
+.btn-hero-secondary {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: rgba(255,255,255,.1); color: #fff;
+  border: 1px solid rgba(255,255,255,.2);
+  padding: .85rem 1.75rem; border-radius: var(--radius-sm);
+  font-family: var(--font-display); font-size: .95rem; font-weight: 600;
+  cursor: pointer; text-decoration: none; transition: all .25s;
+  backdrop-filter: blur(8px);
+}
+.btn-hero-secondary:hover { background: rgba(255,255,255,.18); color: #fff; transform: translateY(-1px); }
+
+.hero-stats {
+  display: flex; gap: 2rem; flex-wrap: wrap;
+  padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.1);
+}
+.hero-stat-num {
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: #fff;
+}
+.hero-stat-lbl { font-size: .8rem; color: rgba(255,255,255,.55); }
+
+/* Hero derecha — imagen con producto floating */
+.hero-right {
+  position: relative; align-self: flex-end;
+  display: flex; justify-content: center;
+}
+.hero-img-wrap {
+  width: 100%; max-width: 480px; height: 380px;
+  background: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center bottom / cover no-repeat;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -8px 40px rgba(0,0,0,.3);
+  position: relative; overflow: hidden;
+}
+.hero-img-wrap::before {
+  content: '';
   position: absolute; inset: 0;
-  background-size: cover; background-position: center;
-  transition: transform .5s ease, filter .5s ease;
-  filter: brightness(0.5);
+  background: linear-gradient(to top, rgba(26,86,219,.15) 0%, transparent 50%);
 }
-[data-theme="light"] .cat-visual-bg { filter: brightness(0.75); }
-.cat-visual:hover .cat-visual-bg { transform: scale(1.05); filter: brightness(0.65); }
-[data-theme="light"] .cat-visual:hover .cat-visual-bg { filter: brightness(0.9); }
 
-.cat-visual-content {
-  position: absolute; bottom: 0; left: 0; right: 0;
-  padding: 1.5rem; z-index: 2;
-  background: linear-gradient(to top, rgba(0,0,0,.7) 20%, transparent 100%);
+.hero-float-badge {
+  position: absolute; top: 1.5rem; right: -1rem;
+  background: #fff; border-radius: var(--radius-sm);
+  padding: .85rem 1rem; box-shadow: var(--shadow-md);
+  text-align: center; min-width: 110px;
 }
-[data-theme="light"] .cat-visual-content { background: linear-gradient(to top, rgba(255,255,255,.85) 20%, transparent 100%); }
-.cat-visual-name { font-family: 'Outfit'; font-size: 1.35rem; font-weight: 700; color: #fff; margin-bottom: .25rem; }
-[data-theme="light"] .cat-visual-name { color: var(--txt); }
-.cat-visual-count { font-size: .9rem; color: var(--gold); font-weight: 600; }
+.hfb-num { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
+.hfb-lbl { font-size: .72rem; color: var(--txt-2); font-weight: 500; margin-top: .25rem; }
 
-/* ══════════════════════════════════════════════
-   TARJETAS DE PRODUCTO (SWIPER)
-══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   TRUST BAR
+══════════════════════════════════════════ */
+.trust-strip {
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-xs);
+}
+.trust-strip-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 1.5rem;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.trust-item {
+  display: flex; align-items: center; gap: .85rem;
+  padding: 1.1rem 1rem; border-right: 1px solid var(--border);
+  transition: background .2s;
+}
+.trust-item:last-child { border-right: none; }
+.trust-item:hover { background: var(--bg-subtle); }
+.trust-ico {
+  width: 38px; height: 38px; border-radius: var(--radius-sm); flex-shrink: 0;
+  background: var(--primary-light); display: flex; align-items: center; justify-content: center;
+  color: var(--primary); font-size: .9rem;
+}
+.trust-item strong {
+  display: block; font-family: var(--font-display); font-size: .86rem; font-weight: 700;
+  color: var(--txt); margin-bottom: .1rem;
+}
+.trust-item span { font-size: .78rem; color: var(--txt-3); line-height: 1.35; }
+
+/* ══════════════════════════════════════════
+   SECCIONES GENERALES
+══════════════════════════════════════════ */
+.section-wrap { max-width: 1280px; margin: 0 auto; padding: 3rem 1.5rem; }
+.section-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem;
+}
+.section-tag {
+  font-family: var(--font-display); font-size: .7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em; color: var(--accent);
+  margin-bottom: .4rem; display: flex; align-items: center; gap: .4rem;
+}
+.section-tag::before { content: ''; display: block; width: 16px; height: 2px; background: currentColor; border-radius: 2px; }
+.section-title-h2 {
+  font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800; color: var(--txt); letter-spacing: -.02em;
+}
+.btn-ver-todo {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--font-display); font-size: .85rem; font-weight: 700;
+  color: var(--primary); text-decoration: none; padding: .5rem .9rem;
+  border: 1.5px solid var(--primary-light); border-radius: var(--radius-xs);
+  transition: all .2s; white-space: nowrap; background: var(--bg-white);
+}
+.btn-ver-todo:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* ══════════════════════════════════════════
+   CATEGORÍAS GRID
+══════════════════════════════════════════ */
+.cats-grid {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem;
+}
+.cat-card {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 1.25rem .75rem; background: var(--bg-white);
+  border: 1.5px solid var(--border); border-radius: var(--radius);
+  text-decoration: none; transition: all .25s; cursor: pointer;
+  text-align: center;
+}
+.cat-card:hover {
+  border-color: var(--primary); transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+.cat-card:hover .cat-icon-wrap { background: var(--primary); }
+.cat-card:hover .cat-icon-wrap i { color: #fff; }
+.cat-icon-wrap {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--primary-light);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: .85rem; transition: all .25s;
+}
+.cat-icon-wrap i { color: var(--primary); font-size: 1.1rem; }
+.cat-name {
+  font-family: var(--font-display); font-size: .8rem; font-weight: 700;
+  color: var(--txt); line-height: 1.3;
+}
+.cat-count { font-size: .72rem; color: var(--txt-3); margin-top: .2rem; }
+
+/* ══════════════════════════════════════════
+   PRODUCT CARD (Swiper)
+══════════════════════════════════════════ */
 .product-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 16px; overflow: hidden;
-  transition: all .3s ease; position: relative;
-  backdrop-filter: blur(12px);
-  box-shadow: var(--shadow-sm);
+  background: var(--bg-white); border: 1.5px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+  transition: all .3s; position: relative;
+  display: flex; flex-direction: column;
+  box-shadow: var(--shadow-xs);
 }
-
-.product-card:hover { 
-  border-color: var(--border-h); 
-  transform: translateY(-4px); 
-  box-shadow: var(--shadow);
+.product-card:hover {
+  border-color: var(--primary-light);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
 }
+.product-card:hover .pc-img { transform: scale(1.05); }
 
 .pc-img-wrap {
-  position: relative; height: 200px; overflow: hidden;
-  background: var(--bg-2);
+  position: relative; height: 195px; overflow: hidden;
+  background: var(--bg-subtle);
 }
-.pc-img {
-  width: 100%; height: 100%; object-fit: cover;
-  transition: transform .4s ease;
-}
-.product-card:hover .pc-img { transform: scale(1.06); }
-
+.pc-img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
 .pc-badge {
-  position: absolute; top: 10px; left: 10px;
-  padding: .3rem .75rem; border-radius: 6px;
-  font-size: .8rem; font-weight: 700; color: #fff;
+  position: absolute; top: 8px; left: 8px;
+  padding: .25rem .65rem; border-radius: 5px;
+  font-family: var(--font-display); font-size: .68rem; font-weight: 700;
+  color: #fff; z-index: 2;
 }
-.badge-hot { background: var(--red); }
-.badge-new { background: var(--blue); }
+.badge-hot { background: #ef4444; }
+.badge-new { background: var(--primary); }
 
-.pc-wishlist {
-  position: absolute; top: 10px; right: 10px;
-  width: 32px; height: 32px; border-radius: 50%;
-  background: var(--bg-card); backdrop-filter: blur(4px);
-  border: 1px solid var(--border); color: var(--txt-2); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .2s; font-size: .8rem;
+.pc-body { padding: 1rem 1.1rem; flex: 1; display: flex; flex-direction: column; }
+.pc-cat {
+  font-size: .7rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--primary); margin-bottom: .3rem;
 }
-.pc-wishlist:hover { background: var(--red); border-color: var(--red); color: #fff; transform: scale(1.1); }
-
-.pc-body { padding: 1.35rem; }
-.pc-cat { font-size: .85rem; color: var(--blue); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .35rem; }
-.pc-name { font-family: 'Outfit'; font-weight: 700; color: var(--txt); font-size: 1.1rem; margin-bottom: .5rem; line-height: 1.35; }
-.pc-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; }
-.pc-price { font-family: 'Outfit'; font-weight: 700; color: var(--gold); font-size: 1.35rem; }
-.pc-price-old { font-size: .8rem; color: var(--txt-3); text-decoration: line-through; margin-left: .4rem; font-weight: 400; }
-
+.pc-name {
+  font-family: var(--font-display); font-size: .95rem; font-weight: 700;
+  color: var(--txt); line-height: 1.35; margin-bottom: .75rem;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+.pc-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+.pc-price {
+  font-family: var(--font-display); font-size: 1.25rem; font-weight: 800;
+  color: var(--txt);
+}
+.pc-price span { font-size: .75rem; font-weight: 500; color: var(--txt-3); }
 .pc-add-btn {
-  width: 40px; height: 40px; border-radius: 10px;
-  background: var(--surface); border: 1px solid var(--border);
-  color: var(--gold); cursor: pointer;
+  width: 36px; height: 36px; border-radius: var(--radius-xs);
+  background: var(--primary); border: none; color: #fff;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: .8rem; transition: all .2s;
+  box-shadow: 0 2px 8px rgba(26,86,219,.3);
+}
+.pc-add-btn:hover { background: var(--primary-dark); transform: scale(1.08); }
+
+/* Swiper config */
+.swiper-section-wrap { position: relative; }
+.swiper-navs-row {
+  display: flex; gap: .4rem;
+}
+.swiper-nav-btn {
+  width: 36px; height: 36px; border-radius: var(--radius-xs);
+  background: var(--bg-white); border: 1.5px solid var(--border);
+  color: var(--txt-2); cursor: pointer; font-size: .8rem;
   display: flex; align-items: center; justify-content: center;
   transition: all .2s;
 }
-.pc-add-btn:hover { background: var(--gold); color: #1a0e00; border-color: var(--gold); }
+.swiper-nav-btn:hover { background: var(--primary); border-color: var(--primary); color: #fff; }
+.swiper-produtos { padding: 4px 0 16px !important; overflow: visible !important; }
 
-/* Swiper Custom */
-.swiper-section { padding: 4rem 0; max-width: 1200px; margin: 0 auto; position: relative; }
-.swiper-header { display: flex; justify-content: space-between; align-items: flex-end; padding: 0 2rem; margin-bottom: 2rem; }
-.swiper-navs { display: flex; gap: .5rem; align-items: center; }
-.swiper-btn {
-  width: 40px; height: 40px; border-radius: 10px;
-  background: var(--surface); border: 1px solid var(--border);
-  color: var(--txt-2); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .2s; font-size: .85rem;
+/* ══════════════════════════════════════════
+   BANNER MEDIO (2 col)
+══════════════════════════════════════════ */
+.mid-banners {
+  max-width: 1280px; margin: 0 auto; padding: 0 1.5rem 3rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
 }
-.swiper-btn:hover { background: var(--surface-h); color: var(--txt); border-color: var(--border-h); }
-.swiper-link-btn {
-  width: auto; padding: 0 1.25rem; font-size: .9rem;
-  font-family: 'Outfit', sans-serif; font-weight: 600;
+.mid-banner {
+  border-radius: var(--radius); overflow: hidden; position: relative;
+  min-height: 180px; display: flex; align-items: flex-end;
   text-decoration: none;
+  background-size: cover; background-position: center;
+  transition: transform .3s;
 }
-.swiper { padding: 0 2rem 2rem; overflow: visible !important; }
+.mid-banner:hover { transform: scale(1.01); }
+.mid-banner::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.7) 30%, transparent 80%);
+}
+.mid-banner-1 { background-image: url('https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80'); }
+.mid-banner-2 { background-image: url('https://images.unsplash.com/photo-1585619307200-44be7b6ade4a?auto=format&fit=crop&w=800&q=80'); }
+.mid-banner-content { position: relative; z-index: 2; padding: 1.5rem; }
+.mid-banner-tag {
+  font-family: var(--font-display); font-size: .65rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em; color: #fb923c;
+  margin-bottom: .4rem;
+}
+.mid-banner-title {
+  font-family: var(--font-display); font-size: 1.2rem; font-weight: 800;
+  color: #fff; margin-bottom: .65rem; line-height: 1.2;
+}
+.mid-banner-btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: #fff; color: var(--txt); font-family: var(--font-display);
+  font-size: .78rem; font-weight: 700; padding: .45rem .9rem;
+  border-radius: var(--radius-xs); transition: all .2s;
+}
+.mid-banner:hover .mid-banner-btn { background: var(--accent); color: #fff; }
 
-/* ══════════════════════════════════════════════
-   NUESTRA TIENDA (ABOUT)
-══════════════════════════════════════════════ */
-.store-section {
-  max-width: 1200px; margin: 0 auto;
-  padding: 5rem 2rem;
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 4rem; align-items: center;
+/* ══════════════════════════════════════════
+   ABOUT SECTION
+══════════════════════════════════════════ */
+.about-section {
+  background: var(--bg-white);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
+.about-inner {
+  max-width: 1280px; margin: 0 auto; padding: 4rem 1.5rem;
+  display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; align-items: center;
+}
+.about-img-col { position: relative; }
+.about-img {
+  width: 100%; height: 420px; object-fit: cover;
+  border-radius: var(--radius); box-shadow: var(--shadow-lg);
+}
+.about-stats-float {
+  position: absolute; bottom: -1.5rem; right: -1.5rem;
+  background: var(--bg-white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-md);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+  min-width: 220px;
+}
+.asf-num { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; color: var(--primary); line-height: 1; }
+.asf-lbl { font-size: .78rem; color: var(--txt-3); margin-top: .2rem; }
 
-.store-img-container {
-  position: relative; border-radius: 20px; overflow: hidden;
-  box-shadow: var(--shadow);
-  transform: rotate(-2deg); transition: transform .5s ease;
-  border: 1px solid var(--border);
+.about-features { margin-top: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+.about-feat {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: 1.1rem; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--bg-subtle);
+  transition: all .2s;
 }
-.store-img-container:hover { transform: rotate(0deg); border-color: var(--border-h); }
-.store-img {
-  width: 100%; height: 500px; object-fit: cover; display: block;
-  transition: filter .3s;
+.about-feat:hover { border-color: var(--primary-light); background: var(--primary-light); }
+.af-icon {
+  width: 42px; height: 42px; border-radius: var(--radius-xs); flex-shrink: 0;
+  background: var(--primary-light); display: flex; align-items: center; justify-content: center;
+  color: var(--primary); font-size: .95rem;
 }
-[data-theme="light"] .store-img { filter: brightness(1); }
+.about-feat:hover .af-icon { background: var(--primary); color: #fff; }
+.af-text h4 { font-family: var(--font-display); font-size: .95rem; font-weight: 700; color: var(--txt); margin-bottom: .2rem; }
+.af-text p { font-size: .85rem; color: var(--txt-2); line-height: 1.5; }
 
-.store-floating-stats {
-  position: absolute; bottom: -25px; right: -15px;
-  background: var(--bg-card); backdrop-filter: blur(20px);
-  border: 1px solid var(--border); border-radius: 16px;
-  padding: 1.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
-  box-shadow: var(--shadow);
-  z-index: 2;
+/* ══════════════════════════════════════════
+   STEPS
+══════════════════════════════════════════ */
+.steps-wrap {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  padding: 4rem 0;
 }
-
-.sf-stat-num { font-family: 'Outfit'; font-size: 2rem; font-weight: 800; color: var(--gold); line-height: 1; }
-.sf-stat-lbl { font-size: .9rem; color: var(--txt-2); margin-top: .25rem; }
-
-.store-content { padding-left: 2rem; }
-.store-features { margin-top: 2.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
-.store-feat { display: flex; gap: 1rem; align-items: flex-start; }
-.sf-icon {
-  width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0;
-  background: var(--gold-soft); border: 1px solid rgba(212,175,55,.15);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--gold); font-size: 1.1rem;
-}
-.sf-text h4 { font-family: 'Outfit'; font-weight: 700; color: var(--txt); margin-bottom: .25rem; font-size: 1.1rem; }
-.sf-text p { font-size: 1rem; color: var(--txt-2); line-height: 1.6; }
-
-/* ══════════════════════════════════════════════
-   CTA WHATSAPP
-══════════════════════════════════════════════ */
-.cta-wa-section {
-  max-width: 1200px; margin: 0 auto 5rem; padding: 0 2rem;
-}
-.cta-wa-inner {
-  background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(37,211,102,.2);
-  border-radius: 20px; padding: 3.5rem;
-  display: flex; align-items: center; justify-content: space-between;
-  position: relative; overflow: hidden;
-  box-shadow: var(--shadow-sm);
-}
-
-.cta-wa-inner::before {
-  content: '\f232'; font-family: 'Font Awesome 6 Brands';
-  position: absolute; right: -50px; top: -50px;
-  font-size: 22rem; opacity: .03; color: #25d366;
-  pointer-events: none;
-}
-.cta-wa-text h2 {
-  font-family: 'Outfit'; font-size: 2.2rem; font-weight: 800;
-  color: var(--txt); margin-bottom: .5rem;
-}
-.cta-wa-text p { color: var(--txt-2); max-width: 500px; font-size: 1.1rem; line-height: 1.7; }
-
-.btn-wa-big {
-  display: inline-flex; align-items: center; gap: .75rem;
-  background: #25d366; color: #fff; border: none;
-  padding: 1rem 2rem; border-radius: 12px;
-  font-family: 'Outfit'; font-weight: 700; font-size: 1.1rem;
-  cursor: pointer; transition: all .3s;
-  box-shadow: 0 6px 20px rgba(37,211,102,.25);
-  text-decoration: none; flex-shrink: 0;
-}
-.btn-wa-big:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(37,211,102,.35); background: #20bd5a; color: #fff; }
-
-/* ══════════════════════════════════════════════
-   UTILITARIOS Y SECCIONES
-══════════════════════════════════════════════ */
-.section-eyebrow {
-  font-family: 'Outfit', sans-serif;
-  font-size: .8rem; font-weight: 600;
-  letter-spacing: .12em; text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: .65rem;
-  display: flex; align-items: center; gap: .5rem;
-}
-.section-eyebrow::before {
-  content: '';
-  display: inline-block;
-  width: 18px; height: 2px;
-  background: var(--gold);
-  opacity: .5;
-}
-.section-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(2rem, 3.5vw, 3rem);
-  font-weight: 800;
-  letter-spacing: -.03em;
-  color: var(--txt);
-  margin-bottom: .7rem;
-}
-.section-sub {
-  font-size: 1.1rem;
-  color: var(--txt-2);
-  max-width: 560px;
-  line-height: 1.7;
-}
-
-/* Trust Bar */
-.trust-bar {
-  max-width: 1200px; margin: -2.5rem auto 0; padding: 0 2rem;
-  position: relative; z-index: 6;
-}
-.trust-bar-inner {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;
-  background: var(--bg-card); backdrop-filter: blur(16px);
-  border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem 2rem;
-  box-shadow: var(--shadow);
-}
-.trust-item { display: flex; align-items: center; gap: .85rem; }
-.trust-icon {
-  width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0;
-  background: var(--surface); border: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: center;
-  color: var(--gold); font-size: 1.1rem;
-}
-.trust-item strong { display: block; font-family: 'Outfit'; font-size: 1.05rem; color: var(--txt); margin-bottom: .1rem; }
-.trust-item span { font-size: .9rem; color: var(--txt-2); line-height: 1.4; }
-
-.hero-pills { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; }
-.hero-pill {
-  font-family: 'Outfit', sans-serif; font-size: .9rem; font-weight: 600;
-  color: var(--txt-2); background: var(--surface); border: 1px solid var(--border);
-  border-radius: 999px; padding: .45rem .9rem; transition: all .2s; text-decoration: none;
-}
-.hero-pill:hover { color: var(--gold); border-color: var(--border-h); background: var(--gold-soft); }
-
-/* Steps */
-.steps-section { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem 2rem; }
-.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2.5rem; }
+.steps-inner { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+.steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
 .step-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 18px; padding: 2rem; text-align: center;
-  transition: all .3s;
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius); padding: 2rem;
+  text-align: center; transition: all .3s;
+  backdrop-filter: blur(8px);
 }
-.step-card:hover { border-color: var(--border-h); transform: translateY(-4px); box-shadow: var(--shadow-sm); }
+.step-card:hover { background: rgba(255,255,255,.1); transform: translateY(-4px); }
 .step-num {
   width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 1.25rem;
-  background: linear-gradient(135deg, var(--blue), var(--gold));
+  background: var(--accent); color: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-family: 'Outfit'; font-size: 1.4rem; font-weight: 800; color: #fff;
+  font-family: var(--font-display); font-size: 1.3rem; font-weight: 800;
+  box-shadow: 0 4px 16px rgba(249,115,22,.4);
 }
-.step-card h3 { font-family: 'Outfit'; font-size: 1.2rem; font-weight: 700; color: var(--txt); margin-bottom: .75rem; }
-.step-card p { font-size: 1rem; color: var(--txt-2); line-height: 1.65; }
+.step-card h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: .65rem; }
+.step-card p { font-size: .88rem; color: rgba(255,255,255,.65); line-height: 1.65; }
+.steps-title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 800; color: #fff; letter-spacing: -.02em; }
+.steps-sub { color: rgba(255,255,255,.6); font-size: .95rem; margin-top: .5rem; }
 
-/* Testimonials */
-.testimonials-section { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
-.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 2rem; }
+/* ══════════════════════════════════════════
+   TESTIMONIOS
+══════════════════════════════════════════ */
+.testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.75rem; }
 .testi-card {
-  background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
-  padding: 1.75rem; position: relative;
+  background: var(--bg-white); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem;
+  transition: all .25s;
 }
-.testi-stars { color: var(--gold); font-size: .9rem; margin-bottom: 1rem; letter-spacing: .1em; }
-.testi-text { font-size: 1rem; color: var(--txt-2); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
-.testi-author { font-family: 'Outfit'; font-weight: 700; font-size: 1rem; color: var(--txt); }
-.testi-meta { font-size: .85rem; color: var(--txt-3); margin-top: .2rem; }
+.testi-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+.testi-stars { color: #f59e0b; font-size: .9rem; letter-spacing: .05em; margin-bottom: 1rem; }
+.testi-text { font-size: .9rem; color: var(--txt-2); line-height: 1.75; margin-bottom: 1.25rem; }
+.testi-author { display: flex; align-items: center; gap: .75rem; }
+.testi-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--primary-light); color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: .85rem; font-weight: 700;
+}
+.testi-name { font-family: var(--font-display); font-size: .88rem; font-weight: 700; color: var(--txt); }
+.testi-meta { font-size: .75rem; color: var(--txt-3); }
 
-/* FAQ */
-.faq-section { max-width: 860px; margin: 0 auto; padding: 2rem 2rem 5rem; }
-.faq-list { margin-top: 2rem; display: flex; flex-direction: column; gap: .75rem; }
-.faq-item {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 14px; overflow: hidden;
+/* ══════════════════════════════════════════
+   CTA WHATSAPP
+══════════════════════════════════════════ */
+.cta-wa {
+  background: #15803d;
+  background-image: linear-gradient(135deg, #15803d 0%, #166534 100%);
 }
+.cta-wa-inner {
+  max-width: 1280px; margin: 0 auto; padding: 3rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2rem; flex-wrap: wrap;
+}
+.cta-wa-text h2 {
+  font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 800; color: #fff; margin-bottom: .45rem;
+}
+.cta-wa-text p { color: rgba(255,255,255,.75); font-size: .95rem; max-width: 460px; }
+.btn-cta-wa {
+  display: inline-flex; align-items: center; gap: .65rem;
+  background: #fff; color: #166534;
+  padding: 1rem 2rem; border-radius: var(--radius-sm);
+  font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+  cursor: pointer; text-decoration: none; flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  transition: all .3s;
+}
+.btn-cta-wa:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.25); color: #166534; }
+.btn-cta-wa i { font-size: 1.2rem; color: #22c55e; }
+
+/* ══════════════════════════════════════════
+   FAQ
+══════════════════════════════════════════ */
+.faq-wrap { max-width: 820px; margin: 0 auto; }
+.faq-list { display: flex; flex-direction: column; gap: .6rem; margin-top: 1.75rem; }
+.faq-item {
+  background: var(--bg-white); border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); overflow: hidden;
+  transition: border-color .2s;
+}
+.faq-item.open { border-color: var(--primary-light); }
 .faq-q {
   width: 100%; text-align: left; background: transparent; border: none;
-  padding: 1.25rem 1.5rem; cursor: pointer;
-  font-family: 'Outfit'; font-size: 1.05rem; font-weight: 700; color: var(--txt);
+  padding: 1.1rem 1.25rem; cursor: pointer;
+  font-family: var(--font-display); font-size: .95rem; font-weight: 700; color: var(--txt);
   display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+  transition: background .15s;
 }
-.faq-q i { color: var(--txt-3); transition: transform .25s; font-size: .8rem; }
-.faq-item.open .faq-q i { transform: rotate(180deg); color: var(--gold); }
+.faq-q:hover { background: var(--bg-subtle); }
+.faq-q i { color: var(--txt-3); transition: transform .25s, color .25s; font-size: .75rem; flex-shrink: 0; }
+.faq-item.open .faq-q { background: var(--primary-light); }
+.faq-item.open .faq-q i { transform: rotate(180deg); color: var(--primary); }
 .faq-a {
   max-height: 0; overflow: hidden; transition: max-height .35s ease;
-  font-size: 1rem; color: var(--txt-2); line-height: 1.7;
-  padding: 0 1.5rem;
+  font-size: .9rem; color: var(--txt-2); line-height: 1.75;
+  padding: 0 1.25rem;
 }
-.faq-item.open .faq-a { max-height: 200px; padding-bottom: 1.25rem; }
+.faq-item.open .faq-a { max-height: 180px; padding-bottom: 1.25rem; padding-top: .75rem; }
 
-/* Floating Cart */
+/* ══════════════════════════════════════════
+   CARRITO FAB (Inicio)
+══════════════════════════════════════════ */
 .cart-fab-inicio {
-  position: fixed; bottom: 6rem; right: 1.5rem; z-index: 750;
-  width: 56px; height: 56px; border-radius: 14px;
-  background: linear-gradient(135deg, var(--gold), var(--gold-2));
-  border: none; cursor: pointer; color: #1a0e00; font-size: 1.25rem;
-  box-shadow: 0 6px 20px var(--gold-glow); transition: transform .25s;
+  position: fixed; bottom: 6rem; right: 1.5rem; z-index: 700;
+  width: 52px; height: 52px; border-radius: var(--radius-sm);
+  background: var(--primary); border: none; cursor: pointer;
+  color: #fff; font-size: 1.2rem;
   display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-primary); transition: all .25s;
 }
-.cart-fab-inicio:hover { transform: scale(1.05); }
-.cart-fab-inicio-count {
-  position: absolute; top: -6px; right: -6px; width: 22px; height: 22px;
-  border-radius: 50%; background: var(--red); color: #fff;
-  font-family: 'Outfit'; font-size: .7rem; font-weight: 700;
-  display: none; align-items: center; justify-content: center;
-  border: 2px solid var(--bg);
+.cart-fab-inicio:hover { background: var(--primary-dark); transform: scale(1.06); }
+.cart-fab-count {
+  position: absolute; top: -5px; right: -5px; width: 20px; height: 20px;
+  border-radius: 50%; background: var(--accent); color: #fff;
+  font-family: var(--font-display); font-size: .65rem; font-weight: 700;
+  display: none; align-items: center; justify-content: center; border: 2px solid var(--bg);
 }
-.cart-fab-inicio-count.on { display: flex; }
+.cart-fab-count.on { display: flex; }
 
 .toast-inicio {
-  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: var(--bg-card); border: 1px solid rgba(52,211,153,.3); border-radius: 12px;
-  padding: .85rem 1.4rem; font-family: 'Outfit'; font-size: .95rem; font-weight: 600;
-  color: var(--green); box-shadow: var(--shadow); z-index: 2000;
-  opacity: 0; pointer-events: none; transition: all .3s; backdrop-filter: blur(12px);
+  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(12px);
+  background: #111827; border-radius: var(--radius-sm); padding: .75rem 1.25rem;
+  font-family: var(--font-display); font-size: .85rem; font-weight: 600; color: #fff;
+  box-shadow: var(--shadow-lg); z-index: 3000; opacity: 0; pointer-events: none;
+  transition: all .3s; display: flex; align-items: center; gap: .5rem; white-space: nowrap;
 }
 .toast-inicio.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast-inicio i { color: #4ade80; }
 
-/* ══════════════════════════════════════════════
+/* ══════════════════════════════════════════
    RESPONSIVE
-══════════════════════════════════════════════ */
-@media(max-width:960px){
-  .hero-content { grid-template-columns: 1fr; text-align: center; }
-  .hero-right { display: none; }
-  .hero-search { margin: 0 auto; }
-  .hero-pills { justify-content: center; }
-  .trust-bar-inner { grid-template-columns: 1fr 1fr; }
-  .steps-grid, .testimonials-grid { grid-template-columns: 1fr; }
-  .cats-visual-grid { grid-template-columns: repeat(2, 1fr); }
-  .store-section { grid-template-columns: 1fr; }
-  .store-content { padding-left: 0; margin-top: 3rem; }
-  .store-img-container { transform: rotate(0deg); }
-  .cta-wa-inner { flex-direction: column; text-align: center; gap: 2rem; padding: 2.5rem 1.5rem; }
-  .section-sub { margin: 0 auto; }
+══════════════════════════════════════════ */
+@media(max-width:1024px){
+  .cats-grid { grid-template-columns: repeat(4, 1fr); }
+  .about-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .about-stats-float { position: relative; bottom: auto; right: auto; margin-top: 1.5rem; }
+  .about-img { height: 300px; }
+  .testi-grid { grid-template-columns: 1fr 1fr; }
+  .footer-strip-inner { grid-template-columns: 1fr 1fr; }
 }
-@media(max-width:640px){
-  .trust-bar-inner { grid-template-columns: 1fr; gap: 1rem; }
-  .cats-visual-grid { grid-template-columns: 1fr; height: auto; }
-  .cat-visual { height: 160px; }
-  .store-floating-stats { position: relative; bottom: auto; right: auto; margin-top: 1.5rem; }
-  .hero-super { height: auto; min-height: auto; padding: 5rem 0 3rem; }
-  .cta-wa-inner::before { opacity: 0; }
+@media(max-width:768px){
+  .hero-inner { grid-template-columns: 1fr; text-align: center; }
+  .hero-right { display: none; }
+  .hero-cta-row { justify-content: center; }
+  .hero-stats { justify-content: center; }
+  .hero-sub { margin: 0 auto 2rem; }
+  .trust-strip-inner { grid-template-columns: 1fr 1fr; }
+  .trust-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .trust-item:nth-child(even) { border-left: 1px solid var(--border); }
+  .cats-grid { grid-template-columns: repeat(3, 1fr); }
+  .mid-banners { grid-template-columns: 1fr; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .cta-wa-inner { text-align: center; flex-direction: column; }
+  .section-header { flex-direction: column; align-items: flex-start; }
+}
+@media(max-width:480px){
+  .cats-grid { grid-template-columns: repeat(2, 1fr); }
+  .trust-strip-inner { grid-template-columns: 1fr; }
+  .trust-item { border-right: none; border-left: none; }
+  .hero-banner { padding: 2.5rem 0 0; }
+  .hero-h1 { font-size: 1.9rem; }
 }
 </style>
 
 
-<!-- ══════════════════════════════════════════════
-     HERO INMERSIVO
-══════════════════════════════════════════════ -->
-<section class="hero-super">
-  <div class="hero-bg"></div>
-  
-  <div class="hero-content">
-    <div class="hero-left" data-aos="fade-right" data-aos-duration="1000">
-      <div class="hero-eyebrow">
-        <i class="fa fa-truck-fast"></i> Delivery Rápido en Trujillo
+<!-- ═══════════════════════════════════════
+     HERO BANNER
+═══════════════════════════════════════ -->
+<section class="hero-banner">
+  <div class="hero-inner">
+    <div class="hero-left" data-aos="fade-right" data-aos-duration="800">
+      <div class="hero-tag">
+        <i class="fa fa-truck-fast"></i> Delivery Rápido · Trujillo
       </div>
       <h1 class="hero-h1">
-        Tu bodega de siempre, <span>ahora en línea.</span>
+        Tu bodega de siempre,<br>
+        <span class="highlight">ahora más cerca</span><br>
+        de <span class="accent">tu puerta.</span>
       </h1>
-      <p class="hero-p">
-        Abarrotes, bebidas, lácteos y todo lo que tu hogar necesita. Calidad garantizada, precios justos y entrega a tu puerta.
-      </p>
-      <form class="hero-search" action="/catalogo" method="get">
-        <input type="text" name="q" placeholder="¿Qué necesitas hoy? Ej. Leche, Arroz..." value="">
-        <button type="submit"><i class="fa fa-search"></i> Buscar</button>
-      </form>
-      {% if todas_categorias %}
-      <div class="hero-pills">
-        {% for cat in todas_categorias[:6] %}
-        <a href="/catalogo?cat={{ cat.slug }}" class="hero-pill">{{ cat.nombre }}</a>
-        {% endfor %}
+      <p class="hero-sub">Abarrotes, bebidas, lácteos y todo lo que necesitas. Pedido fácil por WhatsApp, entrega rápida en tu zona.</p>
+      <div class="hero-cta-row">
+        <a href="/catalogo" class="btn-hero-primary"><i class="fa fa-grid-2"></i> Ver Catálogo</a>
+        <a href="https://wa.me/51968495632?text=Hola!%20Quiero%20hacer%20un%20pedido" target="_blank" class="btn-hero-secondary"><i class="fab fa-whatsapp"></i> Pedir por WhatsApp</a>
       </div>
-      {% endif %}
-    </div>
-
-    <div class="hero-right" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
-      {% for p in hero_productos %}
-      <div class="product-float-card" style="{% if loop.index0 == 0 %}top: 0; right: 20px; z-index: 2;{% else %}bottom: 0; left: 0; z-index: 1;{% endif %} animation-delay: {{ loop.index0 * 2 }}s;">
-        {% if loop.index0 == 0 and p.stock <= 5 %}
-        <div class="pfc-badge">¡Últimas!</div>
-        {% endif %}
-        <div class="pfc-img" style="background-image: url('{{ p.imagen_url }}');"></div>
-        <div class="pfc-body">
-          <div class="pfc-cat">{{ p.categoria or 'Producto' }}</div>
-          <div class="pfc-name">{{ p.nombre }}</div>
-          <div class="pfc-price">S/. {{ "%.2f"|format(p.precio|float) }}</div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-num">{{ stats.productos_disponibles }}+</div>
+          <div class="hero-stat-lbl">Productos</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">{{ stats.ventas_con_productos }}+</div>
+          <div class="hero-stat-lbl">Pedidos atendidos</div>
+        </div>
+        <div>
+          <div class="hero-stat-num">4.9★</div>
+          <div class="hero-stat-lbl">Satisfacción</div>
         </div>
       </div>
-      {% endfor %}
     </div>
-  </div>
-</section>
 
-
-<!-- ══════════════════════════════════════════════
-     BARRA DE CONFIANZA
-══════════════════════════════════════════════ -->
-<section class="trust-bar" data-aos="fade-up">
-  <div class="trust-bar-inner">
-    <div class="trust-item">
-      <div class="trust-icon"><i class="fa fa-truck-fast"></i></div>
-      <div><strong>Delivery rápido</strong><span>En tu zona en minutos</span></div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon"><i class="fa fa-box-open"></i></div>
-      <div><strong>{{ stats.productos_disponibles }}+ productos</strong><span>Stock actualizado</span></div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon"><i class="fab fa-whatsapp"></i></div>
-      <div><strong>Pedido por WhatsApp</strong><span>Sin apps, fácil</span></div>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon"><i class="fa fa-star"></i></div>
-      <div><strong>Atención de confianza</strong><span>La bodega de tu barrio</span></div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════
-     CATEGORÍAS VISUALES
-══════════════════════════════════════════════ -->
-<section class="swiper-section" style="margin-top: 2rem; position: relative; z-index: 5;">
-  <div class="cats-visual-grid" data-aos="fade-up" data-aos-duration="800">
-    {% for cat in categorias %}
-    <a href="/catalogo?cat={{ cat.slug }}" class="cat-visual">
-      <div class="cat-visual-bg" style="background-image: url('{{ cat.imagen_url }}');"></div>
-      <div class="cat-visual-content">
-        <div class="cat-visual-name">{{ cat.nombre }}</div>
-        <div class="cat-visual-count">{{ cat.total }} producto{% if cat.total != 1 %}s{% endif %}</div>
+    <div class="hero-right" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
+      <div class="hero-img-wrap">
+        <div class="hero-float-badge">
+          <div class="hfb-num">{{ stats.productos_disponibles }}+</div>
+          <div class="hfb-lbl">Productos<br>disponibles</div>
+        </div>
       </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════
+     TRUST STRIP
+═══════════════════════════════════════ -->
+<div class="trust-strip">
+  <div class="trust-strip-inner">
+    <div class="trust-item">
+      <div class="trust-ico"><i class="fa fa-truck-fast"></i></div>
+      <div><strong>Delivery Express</strong><span>En tu zona en minutos</span></div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-ico" style="background:var(--accent-light)"><i class="fa fa-box-open" style="color:var(--accent)"></i></div>
+      <div><strong>Stock actualizado</strong><span>Disponibilidad en tiempo real</span></div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-ico" style="background:#dcfce7"><i class="fab fa-whatsapp" style="color:#16a34a"></i></div>
+      <div><strong>Pedido por WhatsApp</strong><span>Sin apps ni registro</span></div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-ico" style="background:#fef9c3"><i class="fa fa-star" style="color:#ca8a04"></i></div>
+      <div><strong>Calidad garantizada</strong><span>Productos frescos y seguros</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     CATEGORÍAS
+═══════════════════════════════════════ -->
+<div class="section-wrap" style="padding-bottom:1.5rem;">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Explora</div>
+      <h2 class="section-title-h2">Categorías</h2>
+    </div>
+    <a href="/catalogo" class="btn-ver-todo">Ver todo <i class="fa fa-arrow-right"></i></a>
+  </div>
+  <div class="cats-grid">
+    {% for cat in categorias %}
+    <a href="/catalogo?cat={{ cat.slug }}" class="cat-card">
+      <div class="cat-icon-wrap"><i class="fa {{ cat.icono or 'fa-box' }}"></i></div>
+      <div class="cat-name">{{ cat.nombre }}</div>
+      <div class="cat-count">{{ cat.total }} productos</div>
     </a>
     {% else %}
-    <a href="/catalogo" class="cat-visual">
-      <div class="cat-visual-bg" style="background-image: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60');"></div>
-      <div class="cat-visual-content">
-        <div class="cat-visual-name">Ver catálogo</div>
-        <div class="cat-visual-count">Todos los productos</div>
-      </div>
+    {% for item in [('fa-wheat-awn','Abarrotes','abarrotes'),('fa-droplet','Lácteos','lacteos'),('fa-bottle-water','Bebidas','bebidas'),('fa-cookie','Snacks','snacks'),('fa-spray-can-sparkles','Limpieza','limpieza'),('fa-heart-pulse','Higiene','higiene')] %}
+    <a href="/catalogo?cat={{ item[2] }}" class="cat-card">
+      <div class="cat-icon-wrap"><i class="fa {{ item[0] }}"></i></div>
+      <div class="cat-name">{{ item[1] }}</div>
     </a>
     {% endfor %}
+    {% endfor %}
   </div>
-</section>
+</div>
 
 
-<!-- ══════════════════════════════════════════════
-     PRODUCTOS MÁS VENDIDOS (CARRUSEL)
-══════════════════════════════════════════════ -->
-<section class="swiper-section">
-  <div class="swiper-header">
-    <div data-aos="fade-right">
-      <div class="section-eyebrow"><i class="fa fa-fire" style="color:var(--red); margin-right:.4rem;"></i> Los favoritos</div>
-      <h2 class="section-title">Más Vendidos</h2>
+<!-- ═══════════════════════════════════════
+     MÁS VENDIDOS (SWIPER)
+═══════════════════════════════════════ -->
+<div class="section-wrap" style="padding-top:0;">
+  <div class="section-header">
+    <div>
+      <div class="section-tag" style="color:#ef4444"><i class="fa fa-fire" style="margin-right:.35rem;color:#ef4444"></i> Populares</div>
+      <h2 class="section-title-h2">Más Vendidos</h2>
     </div>
-    <div class="swiper-navs">
-      <a href="/catalogo" class="swiper-btn swiper-link-btn" title="Ver catálogo completo">Ver todo</a>
-      <button class="swiper-btn" id="btnPrevHot"><i class="fa fa-arrow-left"></i></button>
-      <button class="swiper-btn" id="btnNextHot"><i class="fa fa-arrow-right"></i></button>
+    <div style="display:flex;gap:.5rem;align-items:center;">
+      <a href="/catalogo" class="btn-ver-todo">Ver todos</a>
+      <div class="swiper-navs-row">
+        <button class="swiper-nav-btn" id="btnPrevHot"><i class="fa fa-chevron-left"></i></button>
+        <button class="swiper-nav-btn" id="btnNextHot"><i class="fa fa-chevron-right"></i></button>
+      </div>
     </div>
   </div>
-
-  <div class="swiper" id="swiperHot">
+  <div class="swiper swiper-produtos" id="swiperHot">
     <div class="swiper-wrapper">
       {% for p in mas_vendidos %}
       <div class="swiper-slide">
-        <div class="product-card"
-             data-id="{{ p.id }}"
-             data-nombre="{{ p.nombre }}"
-             data-precio="{{ p.precio }}"
-             data-imagen="{{ p.imagen_url }}"
-             data-stock="{{ p.stock }}">
+        <div class="product-card" data-id="{{ p.id }}" data-nombre="{{ p.nombre }}" data-precio="{{ p.precio }}" data-imagen="{{ p.imagen_url }}" data-stock="{{ p.stock }}">
           <div class="pc-img-wrap">
             <img src="{{ p.imagen_url }}" class="pc-img" alt="{{ p.nombre }}" loading="lazy"
-                 onerror="this.src='https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60';">
+                 onerror="this.src='https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=400&q=60'">
             <span class="pc-badge badge-hot"><i class="fa fa-fire"></i> Top</span>
           </div>
           <div class="pc-body">
             <div class="pc-cat">{{ p.categoria or 'General' }}</div>
             <div class="pc-name">{{ p.nombre }}</div>
             <div class="pc-bottom">
-              <div class="pc-price">S/. {{ "%.2f"|format(p.precio|float) }}</div>
-              <button type="button" class="pc-add-btn" onclick="agregarAlCarrito(this)" title="Agregar al pedido"><i class="fa fa-plus"></i></button>
+              <div class="pc-price"><span>S/.</span> {{ "%.2f"|format(p.precio|float) }}</div>
+              <button class="pc-add-btn" onclick="agregarAlCarrito(this)" title="Agregar al pedido"><i class="fa fa-plus"></i></button>
             </div>
           </div>
         </div>
       </div>
       {% else %}
       <div class="swiper-slide">
-        <p class="section-sub" style="padding: 2rem;">Aún no hay ventas registradas. Explora el <a href="/catalogo" style="color:var(--gold);">catálogo completo</a>.</p>
+        <p style="color:var(--txt-2);padding:2rem;">Explora el <a href="/catalogo" style="color:var(--primary);">catálogo completo</a>.</p>
       </div>
       {% endfor %}
     </div>
   </div>
-</section>
+</div>
 
 
-<!-- ══════════════════════════════════════════════
-     NOVEDADES DE LA SEMANA (CARRUSEL)
-══════════════════════════════════════════════ -->
-<section class="swiper-section" style="padding-top: 0;">
-  <div class="swiper-header">
-    <div data-aos="fade-right">
-      <div class="section-eyebrow" style="color: var(--blue);"><i class="fa fa-sparkles" style="margin-right:.4rem;"></i> Recién llegados</div>
-      <h2 class="section-title">Novedades</h2>
+<!-- ═══════════════════════════════════════
+     BANNERS MEDIOS
+═══════════════════════════════════════ -->
+<div class="mid-banners">
+  <a href="/catalogo?cat=abarrotes" class="mid-banner mid-banner-1">
+    <div class="mid-banner-content">
+      <div class="mid-banner-tag">Novedad</div>
+      <div class="mid-banner-title">Abarrotes frescos<br>cada mañana</div>
+      <span class="mid-banner-btn">Ver productos <i class="fa fa-arrow-right"></i></span>
     </div>
-    <div class="swiper-navs">
-      <a href="/catalogo" class="swiper-btn swiper-link-btn" title="Ver catálogo completo">Ver todo</a>
-      <button class="swiper-btn" id="btnPrevNew"><i class="fa fa-arrow-left"></i></button>
-      <button class="swiper-btn" id="btnNextNew"><i class="fa fa-arrow-right"></i></button>
+  </a>
+  <a href="/catalogo?cat=bebidas" class="mid-banner mid-banner-2">
+    <div class="mid-banner-content">
+      <div class="mid-banner-tag">Delivery gratis</div>
+      <div class="mid-banner-title">Bebidas & Snacks<br>para tu hogar</div>
+      <span class="mid-banner-btn">Ver productos <i class="fa fa-arrow-right"></i></span>
     </div>
-  </div>
+  </a>
+</div>
 
-  <div class="swiper" id="swiperNew">
-    <div class="swiper-wrapper">
-      {% for p in novedades %}
-      <div class="swiper-slide">
-        <div class="product-card"
-             data-id="{{ p.id }}"
-             data-nombre="{{ p.nombre }}"
-             data-precio="{{ p.precio }}"
-             data-imagen="{{ p.imagen_url }}"
-             data-stock="{{ p.stock }}">
-          <div class="pc-img-wrap">
-            <img src="{{ p.imagen_url }}" class="pc-img" alt="{{ p.nombre }}" loading="lazy"
-                 onerror="this.src='https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60';">
-            <span class="pc-badge badge-new">Nuevo</span>
-          </div>
-          <div class="pc-body">
-            <div class="pc-cat">{{ p.categoria or 'General' }}</div>
-            <div class="pc-name">{{ p.nombre }}</div>
-            <div class="pc-bottom">
-              <div class="pc-price">S/. {{ "%.2f"|format(p.precio|float) }}</div>
-              <button type="button" class="pc-add-btn" onclick="agregarAlCarrito(this)" title="Agregar al pedido"><i class="fa fa-plus"></i></button>
+
+<!-- ═══════════════════════════════════════
+     NOVEDADES (SWIPER)
+═══════════════════════════════════════ -->
+<div class="section-wrap" style="background:var(--bg-subtle);padding-top:3rem;padding-bottom:3rem;max-width:100%;">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem;">
+    <div class="section-header">
+      <div>
+        <div class="section-tag" style="color:var(--primary)"><i class="fa fa-sparkles" style="margin-right:.35rem;"></i> Recién llegados</div>
+        <h2 class="section-title-h2">Novedades</h2>
+      </div>
+      <div style="display:flex;gap:.5rem;align-items:center;">
+        <a href="/catalogo" class="btn-ver-todo">Ver todos</a>
+        <div class="swiper-navs-row">
+          <button class="swiper-nav-btn" id="btnPrevNew"><i class="fa fa-chevron-left"></i></button>
+          <button class="swiper-nav-btn" id="btnNextNew"><i class="fa fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="swiper swiper-produtos" id="swiperNew">
+      <div class="swiper-wrapper">
+        {% for p in novedades %}
+        <div class="swiper-slide">
+          <div class="product-card" data-id="{{ p.id }}" data-nombre="{{ p.nombre }}" data-precio="{{ p.precio }}" data-imagen="{{ p.imagen_url }}" data-stock="{{ p.stock }}">
+            <div class="pc-img-wrap">
+              <img src="{{ p.imagen_url }}" class="pc-img" alt="{{ p.nombre }}" loading="lazy"
+                   onerror="this.src='https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=400&q=60'">
+              <span class="pc-badge badge-new">Nuevo</span>
+            </div>
+            <div class="pc-body">
+              <div class="pc-cat">{{ p.categoria or 'General' }}</div>
+              <div class="pc-name">{{ p.nombre }}</div>
+              <div class="pc-bottom">
+                <div class="pc-price"><span>S/.</span> {{ "%.2f"|format(p.precio|float) }}</div>
+                <button class="pc-add-btn" onclick="agregarAlCarrito(this)" title="Agregar al pedido"><i class="fa fa-plus"></i></button>
+              </div>
             </div>
           </div>
         </div>
+        {% else %}
+        <div class="swiper-slide"><p style="color:var(--txt-2);padding:2rem;">Pronto agregaremos nuevos productos.</p></div>
+        {% endfor %}
       </div>
-      {% else %}
-      <div class="swiper-slide">
-        <p class="section-sub" style="padding: 2rem;">Pronto agregaremos productos nuevos.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     CÓMO FUNCIONA
+═══════════════════════════════════════ -->
+<div class="steps-wrap">
+  <div class="steps-inner">
+    <div style="text-align:center;">
+      <div class="section-tag" style="justify-content:center;color:#fb923c;">Proceso simple</div>
+      <h2 class="steps-title">¿Cómo hacer tu pedido?</h2>
+      <p class="steps-sub">En 3 pasos tienes lo que necesitas en casa. Sin registro ni complicaciones.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Elige tus productos</h3>
+        <p>Navega el catálogo por categorías o búsqueda. Agrega todo lo que necesitas.</p>
       </div>
-      {% endfor %}
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Envía por WhatsApp</h3>
+        <p>Con un clic mandas tu lista completa con cantidades y precio estimado.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Recibe en tu puerta</h3>
+        <p>Coordinamos contigo la entrega y confirmamos disponibilidad al instante.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     NOSOTROS
+═══════════════════════════════════════ -->
+<section class="about-section">
+  <div class="about-inner">
+    <div class="about-img-col">
+      <img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Nuestra tienda" class="about-img">
+      <div class="about-stats-float">
+        <div><div class="asf-num">15+</div><div class="asf-lbl">Años abiertos</div></div>
+        <div><div class="asf-num">{{ stats.ventas_con_productos }}+</div><div class="asf-lbl">Pedidos</div></div>
+        <div><div class="asf-num">{{ stats.productos_disponibles }}+</div><div class="asf-lbl">Productos</div></div>
+        <div><div class="asf-num">4.9</div><div class="asf-lbl">Estrellas</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="section-tag">Conócenos</div>
+      <h2 class="section-title-h2" style="margin-bottom:1rem;">Más que una bodega,<br>somos parte del barrio</h2>
+      <p style="color:var(--txt-2);font-size:.95rem;line-height:1.75;margin-bottom:1.5rem;">Por generaciones hemos sido parte de tu día a día. Conoce nuestro local en Trujillo donde la calidad y el servicio siempre están primero.</p>
+      <div class="about-features">
+        <div class="about-feat">
+          <div class="af-icon"><i class="fa fa-truck-fast"></i></div>
+          <div class="af-text"><h4>Delivery Express</h4><p>Llevamos tu pedido en menos de 45 minutos en la zona.</p></div>
+        </div>
+        <div class="about-feat">
+          <div class="af-icon"><i class="fa fa-shield-halved"></i></div>
+          <div class="af-text"><h4>Calidad Garantizada</h4><p>Revisamos fechas y estado de cada producto antes de despachar.</p></div>
+        </div>
+        <div class="about-feat">
+          <div class="af-icon"><i class="fa fa-hand-holding-heart"></i></div>
+          <div class="af-text"><h4>Atención Personalizada</h4><p>Te conocemos por tu nombre. Siempre con la mejor disposición.</p></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 
-<!-- ══════════════════════════════════════════════
-     CÓMO COMPRAR (3 PASOS)
-══════════════════════════════════════════════ -->
-<section class="steps-section">
-  <div style="text-align:center; margin-bottom: 1rem;" data-aos="fade-up">
-    <div class="section-eyebrow" style="justify-content: center;">Fácil y rápido</div>
-    <h2 class="section-title">¿Cómo hacer tu pedido?</h2>
-    <p class="section-sub" style="margin: 0 auto;">En tres pasos tienes lo que necesitas en casa. Sin registrarte, sin tarjeta.</p>
-  </div>
-  <div class="steps-grid">
-    <div class="step-card" data-aos="fade-up" data-aos-delay="0">
-      <div class="step-num">1</div>
-      <h3>Elige productos</h3>
-      <p>Explora el catálogo, busca por nombre o categoría y agrégalos al carrito.</p>
-    </div>
-    <div class="step-card" data-aos="fade-up" data-aos-delay="100">
-      <div class="step-num">2</div>
-      <h3>Envía por WhatsApp</h3>
-      <p>Con un clic mandas tu lista con cantidades y total estimado.</p>
-    </div>
-    <div class="step-card" data-aos="fade-up" data-aos-delay="200">
-      <div class="step-num">3</div>
-      <h3>Recibe en casa</h3>
-      <p>Coordinamos contigo la entrega y confirmamos disponibilidad al instante.</p>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════
+<!-- ═══════════════════════════════════════
      TESTIMONIOS
-══════════════════════════════════════════════ -->
-<section class="testimonials-section">
-  <div style="text-align:center; margin-bottom: 1rem;" data-aos="fade-up">
-    <div class="section-eyebrow" style="justify-content: center;">Lo que dicen nuestros clientes</div>
-    <h2 class="section-title">Confianza del barrio</h2>
+═══════════════════════════════════════ -->
+<div class="section-wrap">
+  <div class="section-header" style="justify-content:center;text-align:center;flex-direction:column;align-items:center;">
+    <div class="section-tag" style="justify-content:center;">Nuestros clientes</div>
+    <h2 class="section-title-h2">Lo que dicen de nosotros</h2>
   </div>
-  <div class="testimonials-grid">
-    <div class="testi-card" data-aos="fade-up">
-      <div class="testi-stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
-      <p class="testi-text">"Siempre encuentro lo que busco y me lo traen rapidísimo. Mejor que ir a varias tiendas."</p>
-      <div class="testi-author">María L.</div>
-      <div class="testi-meta">Cliente frecuente</div>
-    </div>
-    <div class="testi-card" data-aos="fade-up" data-aos-delay="100">
-      <div class="testi-stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
-      <p class="testi-text">"Los precios son justos y el pedido por WhatsApp es súper práctico para la casa."</p>
-      <div class="testi-author">Carlos R.</div>
-      <div class="testi-meta">San Martín de Porres</div>
-    </div>
-    <div class="testi-card" data-aos="fade-up" data-aos-delay="200">
-      <div class="testi-stars"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></div>
-      <p class="testi-text">"Productos frescos, buena atención y siempre con una sonrisa. Mi bodega de confianza."</p>
-      <div class="testi-author">Rosa V.</div>
-      <div class="testi-meta">Vecina del sector</div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════
-     NUESTRA TIENDA (ABOUT + IMAGEN REAL)
-══════════════════════════════════════════════ -->
-<section class="store-section">
-  <div class="store-img-container" data-aos="fade-right">
-    <img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="store-img" alt="Local Comercial Verastegui">
-    <div class="store-floating-stats">
-      <div>
-        <div class="sf-stat-num">15+</div>
-        <div class="sf-stat-lbl">Años abiertos</div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Siempre encuentro lo que busco y me lo traen rapidísimo. Mejor que ir a varias tiendas juntas."</p>
+      <div class="testi-author">
+        <div class="testi-avatar">ML</div>
+        <div><div class="testi-name">María L.</div><div class="testi-meta">Cliente frecuente · Trujillo</div></div>
       </div>
-      <div>
-        <div class="sf-stat-num">{{ stats.ventas_con_productos }}+</div>
-        <div class="sf-stat-lbl">Pedidos</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Los precios son justos y el pedido por WhatsApp es súper práctico para el hogar. Los recomiendo."</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:var(--accent-light);color:var(--accent)">CR</div>
+        <div><div class="testi-name">Carlos R.</div><div class="testi-meta">Vecino del sector</div></div>
       </div>
-      <div>
-        <div class="sf-stat-num">{{ stats.productos_disponibles }}+</div>
-        <div class="sf-stat-lbl">Productos</div>
-      </div>
-      <div>
-        <div class="sf-stat-num">4.9</div>
-        <div class="sf-stat-lbl">Estrellas</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-text">"Productos frescos, buena atención y siempre puntuales. Mi bodega de confianza definitivamente."</p>
+      <div class="testi-author">
+        <div class="testi-avatar" style="background:#fef9c3;color:#ca8a04">RV</div>
+        <div><div class="testi-name">Rosa V.</div><div class="testi-meta">Cliente fija · Trujillo</div></div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="store-content" data-aos="fade-left">
-    <div class="section-eyebrow">Conócenos</div>
-    <h2 class="section-title">Más que una bodega, somos tu familia</h2>
-    <p class="section-sub">Por generaciones, hemos sido parte del barrio. Conoce nuestro local en Trujillo donde la calidad y el servicio siempre están primero.</p>
-    
-    <div class="store-features">
-      <div class="store-feat">
-        <div class="sf-icon"><i class="fa fa-truck-fast"></i></div>
-        <div class="sf-text">
-          <h4>Delivery Express</h4>
-          <p>Llevamos tu pedido a la puerta de tu casa en menos de 45 minutos.</p>
-        </div>
+
+<!-- ═══════════════════════════════════════
+     FAQ
+═══════════════════════════════════════ -->
+<div class="section-wrap" style="background:var(--bg-subtle);max-width:100%;padding-top:3rem;padding-bottom:3rem;">
+  <div class="faq-wrap" style="max-width:820px;margin:0 auto;padding:0 1.5rem;">
+    <div style="text-align:center;margin-bottom:1rem;">
+      <div class="section-tag" style="justify-content:center;">Ayuda</div>
+      <h2 class="section-title-h2">Preguntas frecuentes</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Cómo pago mi pedido? <i class="fa fa-chevron-down"></i></button>
+        <div class="faq-a">Aceptamos efectivo, Yape y Plin al momento de la entrega o recojo en tienda. Te confirmamos todo por WhatsApp.</div>
       </div>
-      <div class="store-feat">
-        <div class="sf-icon"><i class="fa fa-shield-halved"></i></div>
-        <div class="sf-text">
-          <h4>Calidad Garantizada</h4>
-          <p>Revisamos las fechas de vencimiento y el estado de cada producto.</p>
-        </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Hacen delivery a domicilio? <i class="fa fa-chevron-down"></i></button>
+        <div class="faq-a">Sí, llevamos tu pedido a domicilio en la zona. El tiempo varía según la demanda; te confirmamos al escribirnos.</div>
       </div>
-      <div class="store-feat">
-        <div class="sf-icon"><i class="fa fa-hand-holding-heart"></i></div>
-        <div class="sf-text">
-          <h4>Atención Personalizada</h4>
-          <p>Te conocemos por tu nombre. Siempre con una sonrisa y la mejor disposición.</p>
-        </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Los precios del catálogo son finales? <i class="fa fa-chevron-down"></i></button>
+        <div class="faq-a">Los precios están sincronizados con nuestro sistema. Te confirmamos el total por WhatsApp antes de preparar tu pedido.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si un producto no tiene stock? <i class="fa fa-chevron-down"></i></button>
+        <div class="faq-a">Te avisamos de inmediato y te proponemos alternativas similares. Solo llevas lo que esté disponible.</div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
 
-<!-- ══════════════════════════════════════════════
-     PREGUNTAS FRECUENTES
-══════════════════════════════════════════════ -->
-<section class="faq-section">
-  <div style="text-align:center; margin-bottom: 1rem;" data-aos="fade-up">
-    <div class="section-eyebrow" style="justify-content: center;">Ayuda</div>
-    <h2 class="section-title">Preguntas frecuentes</h2>
-  </div>
-  <div class="faq-list" data-aos="fade-up">
-    <div class="faq-item">
-      <button type="button" class="faq-q" onclick="toggleFaq(this)">¿Cómo pago mi pedido? <i class="fa fa-chevron-down"></i></button>
-      <div class="faq-a">Coordinamos contigo por WhatsApp. Aceptamos efectivo, Yape y Plin al momento de la entrega o recojo en tienda.</div>
-    </div>
-    <div class="faq-item">
-      <button type="button" class="faq-q" onclick="toggleFaq(this)">¿Hacen delivery a domicilio? <i class="fa fa-chevron-down"></i></button>
-      <div class="faq-a">Sí, llevamos tu pedido a domicilio en la zona. El tiempo depende de la demanda del día; te confirmamos al escribirnos.</div>
-    </div>
-    <div class="faq-item">
-      <button type="button" class="faq-q" onclick="toggleFaq(this)">¿Los precios del catálogo son finales? <i class="fa fa-chevron-down"></i></button>
-      <div class="faq-a">Los precios están sincronizados con nuestro sistema. Te confirmamos el total final por WhatsApp antes de preparar tu pedido.</div>
-    </div>
-    <div class="faq-item">
-      <button type="button" class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si un producto no hay stock? <i class="fa fa-chevron-down"></i></button>
-      <div class="faq-a">Te avisamos de inmediato y te proponemos alternativas similares. Solo llevas lo que esté disponible.</div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════════════════════════════════════════
-     CTA WHATSAPP FINAL
-══════════════════════════════════════════════ -->
-<section class="cta-wa-section" data-aos="zoom-in">
+<!-- ═══════════════════════════════════════
+     CTA WHATSAPP
+═══════════════════════════════════════ -->
+<div class="cta-wa">
   <div class="cta-wa-inner">
     <div class="cta-wa-text">
       <h2>¿Hacemos un pedido ahora? 🛒</h2>
-      <p>Escríbenos por WhatsApp con lo que necesitas y lo llevamos a tu puerta. Rápido, fácil y sin complicaciones.</p>
+      <p>Escríbenos con lo que necesitas y lo coordinamos de inmediato. Rápido, fácil y sin complicaciones.</p>
     </div>
-    <a href="https://wa.me/51968495632?text=Hola!%20Quiero%20hacer%20un%20pedido" target="_blank" class="btn-wa-big">
+    <a href="https://wa.me/51968495632?text=Hola!%20Quiero%20hacer%20un%20pedido" target="_blank" class="btn-cta-wa">
       <i class="fab fa-whatsapp"></i> Escribir por WhatsApp
     </a>
   </div>
-</section>
+</div>
 
 
-<a href="/catalogo" class="cart-fab-inicio" id="cartFabInicio" title="Ver mi pedido">
+<!-- Cart FAB & Toast -->
+<a href="/catalogo" class="cart-fab-inicio" id="cartFabInicio" title="Ver carrito">
   <i class="fa fa-basket-shopping"></i>
-  <span class="cart-fab-inicio-count" id="cartFabInicioCount">0</span>
+  <span class="cart-fab-count" id="cartFabInicioCount">0</span>
 </a>
-<div class="toast-inicio" id="toastInicio"><i class="fa fa-circle-check"></i> Agregado al pedido</div>
+<div class="toast-inicio" id="toastInicio"><i class="fa fa-circle-check"></i> Producto agregado al pedido</div>
 
 
-<!-- Scripts de Terceros -->
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <script>
+  /* Carrito */
   function agregarAlCarrito(btn) {
     const card = btn.closest('.product-card');
     let cart = JSON.parse(localStorage.getItem('bv_cart') || '[]');
     const id = card.dataset.id;
     const item = cart.find(i => i.id === id);
-    if (item) {
-      item.qty += 1;
-    } else {
-      cart.push({
-        id,
-        nombre: card.dataset.nombre,
-        precio: parseFloat(card.dataset.precio),
-        imagen: card.dataset.imagen || '',
-        qty: 1
-      });
-    }
+    if (item) { item.qty += 1; }
+    else { cart.push({ id, nombre: card.dataset.nombre, precio: parseFloat(card.dataset.precio), imagen: card.dataset.imagen || '', qty: 1 }); }
     localStorage.setItem('bv_cart', JSON.stringify(cart));
-    actualizarFabCarrito();
-    mostrarToastInicio();
-
+    actualizarFab();
+    mostrarToast();
     btn.innerHTML = '<i class="fa fa-check"></i>';
-    btn.style.background = 'var(--green)';
-    btn.style.color = '#fff';
-    btn.style.borderColor = 'var(--green)';
-    setTimeout(() => {
-      btn.innerHTML = '<i class="fa fa-plus"></i>';
-      btn.style.background = '';
-      btn.style.color = '';
-      btn.style.borderColor = '';
-    }, 1200);
+    btn.style.background = '#059669';
+    setTimeout(() => { btn.innerHTML = '<i class="fa fa-plus"></i>'; btn.style.background = ''; }, 1200);
   }
 
-  function actualizarFabCarrito() {
+  function actualizarFab() {
     const cart = JSON.parse(localStorage.getItem('bv_cart') || '[]');
     const count = cart.reduce((s, i) => s + i.qty, 0);
     const badge = document.getElementById('cartFabInicioCount');
-    if (badge) {
-      badge.textContent = count;
-      badge.classList.toggle('on', count > 0);
-    }
+    if (badge) { badge.textContent = count; badge.classList.toggle('on', count > 0); }
   }
 
-  function mostrarToastInicio() {
+  function mostrarToast() {
     const t = document.getElementById('toastInicio');
     if (!t) return;
     t.classList.add('show');
-    clearTimeout(window._toastInicioTimer);
-    window._toastInicioTimer = setTimeout(() => t.classList.remove('show'), 2200);
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
   }
 
   function toggleFaq(btn) {
@@ -942,46 +951,28 @@
     if (!abierto) item.classList.add('open');
   }
 
-  actualizarFabCarrito();
+  actualizarFab();
 
-  // Inicializar AOS
-  AOS.init({
-    once: true,
-    duration: 800,
-    easing: 'ease-out-cubic'
-  });
-
-  // Inicializar Swiper - Más Vendidos
+  /* Swipers */
   const swiperHot = new Swiper('#swiperHot', {
-    slidesPerView: 1,
-    spaceBetween: 20,
-    grabCursor: true,
+    slidesPerView: 1.3, spaceBetween: 14, grabCursor: true,
     autoplay: { delay: 4500, disableOnInteraction: false, pauseOnMouseEnter: true },
-    navigation: {
-      nextEl: '#btnNextHot',
-      prevEl: '#btnPrevHot',
-    },
+    navigation: { nextEl: '#btnNextHot', prevEl: '#btnPrevHot' },
     breakpoints: {
-      640: { slidesPerView: 2, spaceBetween: 20 },
-      960: { slidesPerView: 3, spaceBetween: 24 },
-      1260: { slidesPerView: 4, spaceBetween: 24 },
+      480: { slidesPerView: 2, spaceBetween: 14 },
+      768: { slidesPerView: 3, spaceBetween: 16 },
+      1024: { slidesPerView: 4, spaceBetween: 18 },
     }
   });
 
-  // Inicializar Swiper - Novedades
   const swiperNew = new Swiper('#swiperNew', {
-    slidesPerView: 1,
-    spaceBetween: 20,
-    grabCursor: true,
+    slidesPerView: 1.3, spaceBetween: 14, grabCursor: true,
     autoplay: { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true },
-    navigation: {
-      nextEl: '#btnNextNew',
-      prevEl: '#btnPrevNew',
-    },
+    navigation: { nextEl: '#btnNextNew', prevEl: '#btnPrevNew' },
     breakpoints: {
-      640: { slidesPerView: 2, spaceBetween: 20 },
-      960: { slidesPerView: 3, spaceBetween: 24 },
-      1260: { slidesPerView: 4, spaceBetween: 24 },
+      480: { slidesPerView: 2, spaceBetween: 14 },
+      768: { slidesPerView: 3, spaceBetween: 16 },
+      1024: { slidesPerView: 4, spaceBetween: 18 },
     }
   });
 </script>
