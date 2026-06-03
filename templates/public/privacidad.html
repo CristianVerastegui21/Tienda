@@ -1,0 +1,228 @@
+{% extends 'public/layout_public.html' %}
+{% block title %}Política de Privacidad — Comercial Verastegui{% endblock %}
+
+{% block content %}
+
+<style>
+/* ══════════════════════════════════════════
+   PÁGINA LEGAL — LAYOUT
+══════════════════════════════════════════ */
+.legal-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1a56db 100%);
+  position: relative; overflow: hidden; padding: 4rem 0;
+}
+.legal-hero-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 1rem;
+  text-align: center; position: relative; z-index: 2;
+}
+.legal-hero h1 {
+  font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800; color: #fff; letter-spacing: -.03em; margin-bottom: .75rem;
+}
+.legal-hero p {
+  font-size: 1rem; color: rgba(255,255,255,.65); max-width: 500px; margin: 0 auto;
+}
+.legal-hero .legal-icon {
+  width: 56px; height: 56px; border-radius: var(--radius-sm);
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.5rem; color: #fff; margin-bottom: 1.25rem;
+}
+
+.legal-content {
+  max-width: 820px; margin: -2rem auto 0; padding: 0 1rem 4rem;
+  position: relative; z-index: 5;
+}
+.legal-card {
+  background: var(--bg-white); border: 1.5px solid var(--border);
+  border-radius: var(--radius); box-shadow: var(--shadow-md);
+  padding: 2.5rem 2rem; margin-bottom: 1.5rem;
+}
+@media(max-width:768px){ .legal-card { padding: 1.5rem 1.15rem; } }
+
+.legal-updated {
+  display: inline-flex; align-items: center; gap: .4rem;
+  font-family: var(--font-display); font-size: .75rem; font-weight: 600;
+  color: var(--txt-3); background: var(--bg-subtle);
+  border: 1px solid var(--border); border-radius: 999px;
+  padding: .3rem .75rem; margin-bottom: 1.5rem;
+}
+
+.legal-toc {
+  background: var(--bg-subtle); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+}
+.legal-toc h3 {
+  font-family: var(--font-display); font-size: .82rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--txt-2);
+  margin-bottom: .75rem;
+}
+.legal-toc ol {
+  margin: 0; padding-left: 1.25rem;
+  display: flex; flex-direction: column; gap: .4rem;
+}
+.legal-toc li { font-size: .88rem; color: var(--txt-2); }
+.legal-toc a { color: var(--primary); font-weight: 600; transition: color .15s; }
+.legal-toc a:hover { color: var(--primary-dark); text-decoration: underline; }
+
+.legal-section { margin-bottom: 2rem; }
+.legal-section:last-child { margin-bottom: 0; }
+.legal-section h2 {
+  font-family: var(--font-display); font-size: 1.15rem; font-weight: 800;
+  color: var(--txt); margin-bottom: .75rem; padding-bottom: .5rem;
+  border-bottom: 2px solid var(--primary-light);
+  display: flex; align-items: center; gap: .5rem;
+}
+.legal-section h2 .sec-num {
+  width: 28px; height: 28px; border-radius: 6px;
+  background: var(--primary-light); color: var(--primary);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: .78rem; font-weight: 800; flex-shrink: 0;
+}
+.legal-section p {
+  font-size: .92rem; color: var(--txt-2); line-height: 1.8;
+  margin-bottom: .75rem;
+}
+.legal-section ul, .legal-section ol {
+  margin: .5rem 0 .75rem 1.25rem; font-size: .92rem;
+  color: var(--txt-2); line-height: 1.8;
+}
+.legal-section li { margin-bottom: .35rem; }
+.legal-section strong { color: var(--txt); font-weight: 600; }
+
+.legal-contact-box {
+  background: var(--primary-light); border: 1px solid rgba(26,86,219,.15);
+  border-radius: var(--radius-sm); padding: 1.25rem;
+  margin-top: 1rem;
+}
+.legal-contact-box p { margin: 0; font-size: .88rem; color: var(--txt-2); }
+.legal-contact-box a { color: var(--primary); font-weight: 600; }
+</style>
+
+
+<!-- Hero -->
+<section class="legal-hero">
+  <div class="legal-hero-inner">
+    <div class="legal-icon"><i class="fa fa-shield-halved"></i></div>
+    <h1>Política de Privacidad</h1>
+    <p>Tu privacidad es importante para nosotros. Conoce cómo protegemos tus datos.</p>
+  </div>
+</section>
+
+<!-- Contenido -->
+<div class="legal-content">
+  <div class="legal-card">
+
+    <div class="legal-updated"><i class="fa fa-calendar"></i> Última actualización: Enero 2025</div>
+
+    <!-- Tabla de contenidos -->
+    <div class="legal-toc">
+      <h3>Contenido</h3>
+      <ol>
+        <li><a href="#priv-1">Información que recopilamos</a></li>
+        <li><a href="#priv-2">Cómo utilizamos tu información</a></li>
+        <li><a href="#priv-3">Compartir información con terceros</a></li>
+        <li><a href="#priv-4">Protección de datos</a></li>
+        <li><a href="#priv-5">Cookies y tecnologías similares</a></li>
+        <li><a href="#priv-6">Tus derechos</a></li>
+        <li><a href="#priv-7">Cambios a esta política</a></li>
+        <li><a href="#priv-8">Contacto</a></li>
+      </ol>
+    </div>
+
+    <!-- Secciones -->
+    <div class="legal-section" id="priv-1">
+      <h2><span class="sec-num">1</span> Información que recopilamos</h2>
+      <p>En Comercial Verastegui recopilamos información necesaria para procesar tus pedidos y mejorar tu experiencia de compra. Esta información incluye:</p>
+      <ul>
+        <li><strong>Datos de contacto:</strong> Nombre completo, número de teléfono y correo electrónico (cuando se proporcionan en el formulario de contacto o al hacer un pedido).</li>
+        <li><strong>Datos de entrega:</strong> Dirección de entrega para los pedidos con delivery.</li>
+        <li><strong>Información de pedidos:</strong> Productos solicitados, cantidades, preferencias y historial de compras.</li>
+        <li><strong>Comunicaciones por WhatsApp:</strong> Mensajes intercambiados para coordinar pedidos y entregas.</li>
+        <li><strong>Datos de navegación:</strong> Información de uso del sitio web recogida automáticamente (tipo de navegador, páginas visitadas, tiempo de permanencia).</li>
+      </ul>
+    </div>
+
+    <div class="legal-section" id="priv-2">
+      <h2><span class="sec-num">2</span> Cómo utilizamos tu información</h2>
+      <p>Utilizamos la información recopilada para los siguientes fines:</p>
+      <ul>
+        <li>Procesar y confirmar tus pedidos.</li>
+        <li>Coordinar la entrega de productos a tu dirección.</li>
+        <li>Comunicarnos contigo para resolver consultas o problemas con tu pedido.</li>
+        <li>Mejorar nuestros productos, servicios y la experiencia del usuario en el sitio.</li>
+        <li>Enviar notificaciones sobre el estado de tu pedido.</li>
+        <li>Cumplir con obligaciones legales aplicables.</li>
+      </ul>
+    </div>
+
+    <div class="legal-section" id="priv-3">
+      <h2><span class="sec-num">3</span> Compartir información con terceros</h2>
+      <p><strong>No vendemos ni alquilamos</strong> tu información personal a terceros. Solo compartimos datos en las siguientes situaciones:</p>
+      <ul>
+        <li><strong>Proveedores de servicio:</strong> Compartimos tu dirección y teléfono con nuestro personal de delivery para completar las entregas.</li>
+        <li><strong>Plataformas de comunicación:</strong> Utilizamos WhatsApp Business para gestionar pedidos; los mensajes están sujetos a la política de privacidad de Meta.</li>
+        <li><strong>Obligación legal:</strong> Cuando sea requerido por ley, autoridad competente o proceso judicial.</li>
+      </ul>
+    </div>
+
+    <div class="legal-section" id="priv-4">
+      <h2><span class="sec-num">4</span> Protección de datos</h2>
+      <p>Implementamos medidas de seguridad técnicas y organizativas para proteger tu información contra acceso no autorizado, pérdida o alteración. Sin embargo, ningún sistema es completamente infalible, por lo que no podemos garantizar la seguridad absoluta de los datos transmitidos a través de internet.</p>
+    </div>
+
+    <div class="legal-section" id="priv-5">
+      <h2><span class="sec-num">5</span> Cookies y tecnologías similares</h2>
+      <p>Nuestro sitio web utiliza cookies y tecnologías de almacenamiento local para:</p>
+      <ul>
+        <li>Recordar tu preferencia de tema (claro/oscuro).</li>
+        <li>Mantener los productos de tu carrito de compras.</li>
+        <li>Analizar el tráfico del sitio y mejorar la navegación.</li>
+      </ul>
+      <p>Puedes configurar tu navegador para bloquear o eliminar cookies, aunque esto podría afectar la funcionalidad del sitio.</p>
+    </div>
+
+    <div class="legal-section" id="priv-6">
+      <h2><span class="sec-num">6</span> Tus derechos</h2>
+      <p>De acuerdo con la legislación peruana sobre protección de datos personales (Ley N° 29733), tienes los siguientes derechos:</p>
+      <ul>
+        <li><strong>Acceso:</strong> Solicitar información sobre los datos personales que tenemos sobre ti.</li>
+        <li><strong>Rectificación:</strong> Solicitar la corrección de datos inexactos o incompletos.</li>
+        <li><strong>Cancelación:</strong> Solicitar la eliminación de tus datos personales de nuestros registros.</li>
+        <li><strong>Oposición:</strong> Oponerte al tratamiento de tus datos para fines específicos.</li>
+      </ul>
+      <p>Para ejercer cualquiera de estos derechos, contáctanos a través de los canales indicados abajo.</p>
+    </div>
+
+    <div class="legal-section" id="priv-7">
+      <h2><span class="sec-num">7</span> Cambios a esta política</h2>
+      <p>Nos reservamos el derecho de actualizar esta Política de Privacidad en cualquier momento. Cualquier cambio será publicado en esta página con la fecha de actualización. Te recomendamos revisar esta página periódicamente.</p>
+    </div>
+
+    <div class="legal-section" id="priv-8">
+      <h2><span class="sec-num">8</span> Contacto</h2>
+      <p>Si tienes preguntas o solicitudes sobre esta política o el tratamiento de tus datos personales, puedes contactarnos:</p>
+      <div class="legal-contact-box">
+        <p><strong>Comercial Verastegui</strong></p>
+        <p>📧 Email: <a href="mailto:verasteguivictor07@gmail.com">verasteguivictor07@gmail.com</a></p>
+        <p>📱 WhatsApp: <a href="https://wa.me/51968495632">+51 968 495 632</a></p>
+        <p>📍 Dirección: Av. Central 123, San Martín de Porres, Trujillo, La Libertad</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  /* Smooth scroll para anchors */
+  document.querySelectorAll('.legal-toc a').forEach(a => {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
+{% endblock %}

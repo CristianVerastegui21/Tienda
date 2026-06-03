@@ -7,7 +7,7 @@
 
 <style>
 /* ══════════════════════════════════════════
-   CATÁLOGO — RETAIL CLEAN (Estilo Ripley/Falabella)
+   CATÁLOGO — RETAIL CLEAN
 ══════════════════════════════════════════ */
 
 /* ── Page Header ── */
@@ -16,7 +16,7 @@
   border-bottom: 1px solid var(--border);
 }
 .catalog-header-inner {
-  max-width: 1280px; margin: 0 auto; padding: 1.75rem 1.5rem 0;
+  max-width: 1280px; margin: 0 auto; padding: 1.75rem 1rem 0;
 }
 .breadcrumb {
   font-size: .82rem; color: var(--txt-3); margin-bottom: 1rem;
@@ -28,11 +28,12 @@
 .breadcrumb span { color: var(--txt); font-weight: 600; }
 
 .catalog-h1 {
-  font-family: var(--font-display); font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  font-family: var(--font-display); font-size: clamp(1.5rem, 3.5vw, 2.4rem);
   font-weight: 800; color: var(--txt); letter-spacing: -.03em;
   margin-bottom: .4rem;
 }
 .catalog-h1 em { font-style: normal; color: var(--primary); }
+.catalog-sub { color: var(--txt-2); font-size: .9rem; margin-bottom: 1rem; }
 
 /* Categoría tabs */
 .cat-tabs-wrap {
@@ -70,11 +71,11 @@
   box-shadow: var(--shadow-xs);
 }
 .toolbar-inner {
-  max-width: 1280px; margin: 0 auto; padding: .75rem 1.5rem;
+  max-width: 1280px; margin: 0 auto; padding: .75rem 1rem;
   display: flex; align-items: center; gap: .75rem; flex-wrap: wrap;
 }
 .search-field {
-  flex: 1; min-width: 200px; max-width: 380px; position: relative;
+  flex: 1; min-width: 0; max-width: 380px; position: relative;
 }
 .search-field i { position: absolute; left: .85rem; top: 50%; transform: translateY(-50%); color: var(--txt-3); font-size: .8rem; pointer-events: none; }
 .search-field input {
@@ -130,9 +131,24 @@
 .view-btn-t.active { background: var(--primary); color: #fff; }
 .view-btn-t:hover:not(.active) { background: var(--border); color: var(--txt-2); }
 
+/* Botón filtro móvil */
+.btn-filter-mobile {
+  display: none;
+  padding: .5rem .85rem; border-radius: var(--radius-xs);
+  background: var(--bg-subtle); border: 1.5px solid var(--border);
+  color: var(--txt-2); font-family: var(--font-display); font-size: .82rem; font-weight: 600;
+  cursor: pointer; align-items: center; gap: .4rem; transition: all .2s;
+}
+.btn-filter-mobile:hover { border-color: var(--primary-light); color: var(--primary); }
+.btn-filter-mobile .filter-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--accent);
+  display: none;
+}
+.btn-filter-mobile .filter-dot.on { display: block; }
+
 /* Results bar */
 .results-bar {
-  max-width: 1280px; margin: 0 auto; padding: .85rem 1.5rem;
+  max-width: 1280px; margin: 0 auto; padding: .85rem 1rem;
   display: flex; align-items: center; justify-content: space-between;
   font-size: .82rem; color: var(--txt-3); flex-wrap: wrap; gap: .5rem;
 }
@@ -145,7 +161,7 @@
 .active-filter-tag button { background: none; border: none; cursor: pointer; color: var(--primary); font-size: .6rem; display: flex; align-items: center; }
 
 /* ── Products Area ── */
-.catalog-body { max-width: 1280px; margin: 0 auto; padding: 1.25rem 1.5rem 5rem; }
+.catalog-body { max-width: 1280px; margin: 0 auto; padding: 1.25rem 1rem 6rem; }
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -176,16 +192,51 @@
 .prod-thumb { width: 100%; height: 100%; object-fit: cover; transition: transform .4s ease; }
 .prod-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 3rem; opacity: .07; }
 
+/* Overlay ver producto */
+.prod-hover-overlay {
+  position: absolute; inset: 0; z-index: 2;
+  background: rgba(0,0,0,.3);
+  display: flex; align-items: center; justify-content: center; gap: .5rem;
+  opacity: 0; transition: opacity .3s;
+}
+.prod-card-c:hover .prod-hover-overlay { opacity: 1; }
+.prod-hover-btn {
+  padding: .5rem 1rem; border-radius: var(--radius-xs);
+  background: #fff; border: none; color: var(--txt);
+  font-family: var(--font-display); font-size: .75rem; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; gap: .3rem;
+  transition: background .2s; text-decoration: none;
+}
+.prod-hover-btn:hover { background: var(--primary); color: #fff; }
+
 .stock-badge {
   position: absolute; top: .6rem; left: .6rem;
   font-family: var(--font-display); font-size: .62rem; font-weight: 700;
   border-radius: 5px; padding: .2rem .55rem; border: 1px solid; letter-spacing: .02em;
+  z-index: 3;
 }
 .badge-avail { background: #d1fae5; border-color: #6ee7b7; color: #065f46; }
 .badge-low { background: #fef3c7; border-color: #fcd34d; color: #92400e; }
 .badge-out { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+.badge-new-cat { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+
+/* Favorito */
+.prod-fav-btn {
+  position: absolute; top: .6rem; right: .6rem; z-index: 3;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(255,255,255,.9); border: 1px solid var(--border);
+  color: var(--txt-3); cursor: pointer; font-size: .7rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s; backdrop-filter: blur(4px);
+}
+.prod-fav-btn:hover { color: #ef4444; border-color: #fca5a5; background: #fff; }
+.prod-fav-btn.faved { color: #ef4444; background: #fee2e2; border-color: #fca5a5; }
 
 .prod-info { padding: 1rem 1.1rem; flex: 1; display: flex; flex-direction: column; }
+.prod-cat-label {
+  font-size: .68rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--primary); margin-bottom: .3rem;
+}
 .prod-title {
   font-family: var(--font-display); font-size: .95rem; font-weight: 700;
   color: var(--txt); line-height: 1.4; margin-bottom: .75rem;
@@ -195,6 +246,10 @@
 .price-sym { font-size: .75rem; color: var(--txt-3); font-weight: 500; }
 .price-num { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--txt); letter-spacing: -.02em; }
 .price-unit { font-size: .75rem; color: var(--txt-3); }
+.price-old {
+  font-size: .8rem; font-weight: 500; color: var(--txt-3);
+  text-decoration: line-through; margin-right: .5rem;
+}
 
 .prod-actions-row { display: flex; align-items: center; gap: .5rem; }
 .qty-ctl { display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: var(--radius-xs); overflow: hidden; }
@@ -236,6 +291,87 @@
   cursor: pointer; transition: all .2s;
 }
 .btn-reset:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+/* ══════════════════════════════════════════
+   MOBILE FILTER DRAWER
+══════════════════════════════════════════ */
+.filter-overlay {
+  position: fixed; inset: 0; z-index: 1050;
+  background: rgba(0,0,0,.45);
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.filter-overlay.open { opacity: 1; pointer-events: all; }
+
+.filter-drawer {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 1051;
+  background: var(--bg-white); border-radius: var(--radius) var(--radius) 0 0;
+  transform: translateY(100%); transition: transform .35s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 -8px 32px rgba(0,0,0,.12);
+  max-height: 80vh; overflow-y: auto;
+}
+.filter-drawer.open { transform: translateY(0); }
+
+.filter-drawer-head {
+  padding: 1.25rem 1.25rem .75rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; background: var(--bg-white); z-index: 2;
+}
+.filter-drawer-head h3 {
+  font-family: var(--font-display); font-size: 1rem; font-weight: 800; color: var(--txt);
+}
+.filter-drawer-close {
+  width: 32px; height: 32px; border-radius: var(--radius-xs);
+  background: var(--bg-subtle); border: none; color: var(--txt-2);
+  cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: .78rem;
+}
+.filter-drawer-section {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.filter-drawer-section:last-child { border-bottom: none; }
+.fds-title {
+  font-family: var(--font-display); font-size: .72rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .08em; color: var(--txt-3);
+  margin-bottom: .75rem;
+}
+.fds-chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.fds-chip {
+  padding: .45rem .85rem; border-radius: 999px;
+  border: 1.5px solid var(--border); background: var(--bg-white);
+  font-family: var(--font-display); font-size: .82rem; font-weight: 600;
+  color: var(--txt-2); cursor: pointer; transition: all .2s;
+  display: flex; align-items: center; gap: .35rem;
+}
+.fds-chip:hover { border-color: var(--primary-light); color: var(--primary); }
+.fds-chip.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+.fds-chip i { font-size: .75rem; }
+.fds-sort-option {
+  display: flex; align-items: center; gap: .65rem;
+  padding: .75rem; border-radius: var(--radius-xs);
+  border: 1.5px solid var(--border); background: var(--bg-white);
+  font-family: var(--font-display); font-size: .88rem; font-weight: 600;
+  color: var(--txt-2); cursor: pointer; transition: all .2s; margin-bottom: .4rem;
+}
+.fds-sort-option:hover { border-color: var(--primary-light); color: var(--primary); }
+.fds-sort-option.active { border-color: var(--primary); background: var(--primary-light); color: var(--primary); }
+.fds-sort-option i { width: 18px; text-align: center; }
+
+.filter-drawer-footer {
+  padding: 1rem 1.25rem;
+  display: flex; gap: .5rem;
+  position: sticky; bottom: 0; background: var(--bg-white);
+  border-top: 1px solid var(--border);
+}
+.filter-drawer-footer button {
+  flex: 1; padding: .75rem; border-radius: var(--radius-xs);
+  font-family: var(--font-display); font-size: .88rem; font-weight: 700;
+  cursor: pointer; transition: all .2s;
+}
+.fdf-reset { background: var(--bg-subtle); border: 1.5px solid var(--border); color: var(--txt-2); }
+.fdf-reset:hover { border-color: var(--red); color: var(--red); }
+.fdf-apply { background: var(--primary); border: none; color: #fff; box-shadow: var(--shadow-primary); }
+.fdf-apply:hover { background: var(--primary-dark); }
 
 /* ══════════════════════════════════════════
    CARRITO PANEL
@@ -308,6 +444,11 @@
 }
 .cart-empty-msg i { font-size: 3.5rem; opacity: .07; color: var(--txt); margin-bottom: 1.25rem; display: block; }
 .cart-empty-msg p { font-size: .88rem; color: var(--txt-2); line-height: 1.7; }
+.cart-empty-msg a {
+  display: inline-flex; align-items: center; gap: .4rem;
+  margin-top: 1.25rem; color: var(--primary); font-family: var(--font-display);
+  font-size: .88rem; font-weight: 700;
+}
 
 .cart-item {
   display: flex; align-items: center; gap: .85rem;
@@ -366,25 +507,37 @@
 .btn-clear:hover { color: var(--red); border-color: #fca5a5; background: #fee2e2; }
 .cart-note { font-size: .68rem; color: var(--txt-3); text-align: center; margin-top: .9rem; line-height: 1.6; }
 
-/* Toast */
-.toast-msg {
-  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(10px);
-  background: #111827; border-radius: var(--radius-xs); padding: .7rem 1.2rem;
-  font-family: var(--font-display); font-size: .82rem; font-weight: 600; color: #fff;
-  box-shadow: var(--shadow-lg); z-index: 3000; opacity: 0; pointer-events: none;
-  transition: all .3s; display: flex; align-items: center; gap: .5rem; white-space: nowrap;
+/* ── Mobile bottom bar ── */
+.mobile-cart-bar {
+  display: none;
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 690;
+  background: var(--bg-white); border-top: 1px solid var(--border);
+  box-shadow: 0 -4px 16px rgba(0,0,0,.08);
+  padding: .75rem 1rem;
 }
-.toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-.toast-msg.ok i { color: #4ade80; }
-.toast-msg.warn i { color: #f87171; }
+.mcb-inner {
+  display: flex; align-items: center; gap: .75rem;
+}
+.mcb-info { flex: 1; min-width: 0; }
+.mcb-count { font-family: var(--font-display); font-size: .82rem; font-weight: 700; color: var(--txt); }
+.mcb-total { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; color: var(--primary); }
+.mcb-btn {
+  padding: .75rem 1.5rem; border-radius: var(--radius-xs);
+  background: #22c55e; border: none; color: #fff;
+  font-family: var(--font-display); font-size: .88rem; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; gap: .4rem;
+  transition: all .2s; box-shadow: 0 2px 8px rgba(34,197,94,.3);
+  text-decoration: none; white-space: nowrap;
+}
+.mcb-btn:hover { background: #16a34a; color: #fff; }
 
 /* ── How-to mini bar ── */
 .how-bar {
   background: var(--bg-white); border-top: 1px solid var(--border);
-  margin-top: 1.5rem;
+  margin-top: 1.5rem; border-radius: var(--radius);
 }
 .how-bar-inner {
-  max-width: 1280px; margin: 0 auto; padding: 1.5rem;
+  padding: 1.5rem;
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
 }
 .how-item {
@@ -396,24 +549,68 @@
 .how-item strong { font-family: var(--font-display); font-size: .85rem; color: var(--txt); display: block; margin-bottom: .1rem; }
 .how-item span { font-size: .78rem; color: var(--txt-3); }
 
+/* ── Back to top ── */
+.btn-back-top {
+  position: fixed; bottom: 6rem; left: 1.5rem; z-index: 600;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: var(--bg-white); border: 1.5px solid var(--border);
+  color: var(--txt-2); font-size: .8rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-sm); transition: all .25s;
+  opacity: 0; pointer-events: none; transform: translateY(10px);
+}
+.btn-back-top.show { opacity: 1; pointer-events: all; transform: translateY(0); }
+.btn-back-top:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+/* Toast */
+.toast-msg {
+  position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(10px);
+  background: #111827; border-radius: var(--radius-xs); padding: .7rem 1.2rem;
+  font-family: var(--font-display); font-size: .82rem; font-weight: 600; color: #fff;
+  box-shadow: var(--shadow-lg); z-index: 3000; opacity: 0; pointer-events: none;
+  transition: all .3s; display: flex; align-items: center; gap: .5rem; white-space: nowrap;
+  max-width: calc(100vw - 2rem);
+}
+.toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast-msg.ok i { color: #4ade80; }
+.toast-msg.warn i { color: #f87171; }
+
 /* ══════════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════════ */
 @media(max-width:768px){
-  .toolbar-inner { padding: .65rem 1rem; }
-  .toolbar-right { width: 100%; }
-  .status-chips { display: none; }
-  .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: .75rem; }
-  .catalog-body { padding: 1rem 1rem 5rem; }
-  .catalog-header-inner { padding: 1.25rem 1rem 0; }
+  .toolbar-inner { padding: .65rem 1rem; flex-wrap: nowrap; }
+  .search-field { max-width: none; }
+  .toolbar-right .status-chips,
+  .toolbar-right .sort-sel,
+  .toolbar-right .view-toggle { display: none; }
+  .btn-filter-mobile { display: flex; }
+  .mobile-cart-bar { display: block; }
+  .cart-fab { bottom: 5rem; right: 1rem; width: 46px; height: 46px; font-size: 1rem; }
+  .btn-back-top { bottom: 5rem; left: 1rem; width: 36px; height: 36px; }
+  .products-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: .65rem; }
+  .catalog-body { padding: .75rem .75rem 7rem; }
+  .catalog-header-inner { padding: 1.25rem .75rem 0; }
   .how-bar-inner { grid-template-columns: 1fr; gap: .5rem; }
-  .results-bar { padding: .65rem 1rem; }
+  .results-bar { padding: .65rem .75rem; }
+  .prod-img-area { height: 155px; }
+  .prod-info { padding: .75rem; }
+  .price-num { font-size: 1.2rem; }
+  .prod-title { font-size: .88rem; }
+  .btn-add-cart { font-size: .78rem; padding: .5rem .6rem; }
 }
 @media(max-width:480px){
-  .products-grid { grid-template-columns: 1fr 1fr; gap: .6rem; }
-  .prod-img-area { height: 150px; }
-  .prod-info { padding: .85rem; }
-  .price-num { font-size: 1.2rem; }
+  .products-grid { grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .prod-img-area { height: 140px; }
+  .prod-info { padding: .65rem; }
+  .price-num { font-size: 1.1rem; }
+  .prod-title { font-size: .82rem; -webkit-line-clamp: 1; }
+  .qty-ctl-btn { width: 24px; height: 26px; }
+  .qty-ctl-num { width: 24px; line-height: 26px; font-size: .72rem; }
+  .btn-add-cart { font-size: .72rem; padding: .45rem .5rem; gap: .25rem; }
+  .btn-add-cart .btn-text { display: none; }
+  .cat-tab { padding: .65rem .75rem; font-size: .78rem; }
+  .breadcrumb { font-size: .75rem; }
 }
 </style>
 
@@ -437,12 +634,12 @@
         Todo lo que <em>necesitas</em>
       {% endif %}
     </h1>
-    <p style="color:var(--txt-2);font-size:.9rem;margin-bottom:1rem;">Agrega al carrito y envía tu pedido por WhatsApp en un clic.</p>
+    <p class="catalog-sub">Agrega al carrito y envía tu pedido por WhatsApp en un clic.</p>
 
     <!-- Tabs de categorías -->
     <div class="cat-tabs-wrap">
       <div class="cat-tabs" id="catTabs">
-        <button class="cat-tab{% if cat_activa == 'all' %} active{% endif %}" data-filter="all">
+        <button class="cat-tab{% if not cat_activa or cat_activa == 'all' %} active{% endif %}" data-filter="all">
           <i class="fa fa-layer-group"></i> Todos
           <span class="cat-tab-count">{{ productos|length }}</span>
         </button>
@@ -481,6 +678,11 @@
         <button class="view-btn-t active" id="btnViewGrid" onclick="setView('grid')" title="Cuadrícula"><i class="fa fa-grid-2"></i></button>
         <button class="view-btn-t" id="btnViewList" onclick="setView('list')" title="Lista"><i class="fa fa-list"></i></button>
       </div>
+      <!-- Filtro móvil -->
+      <button class="btn-filter-mobile" id="btnFilterMobile" onclick="openFilterDrawer()">
+        <i class="fa fa-sliders"></i> Filtrar
+        <span class="filter-dot" id="filterDot"></span>
+      </button>
     </div>
   </div>
 </div>
@@ -503,8 +705,9 @@
          data-stock="{{ p.stock }}"
          data-cat="{{ p.categoria_slug }}"
          data-status="{% if p.stock > 5 %}disponible{% elif p.stock > 0 %}últimas{% else %}agotado{% endif %}"
-         data-imagen="{% if p.imagen %}{{ p.imagen }}{% endif %}"
-         data-nombrecompleto="{{ p.nombre }}">
+         data-imagen="{% if p.imagen_url %}{{ p.imagen_url }}{% elif p.imagen %}{{ p.imagen }}{% endif %}"
+         data-nombrecompleto="{{ p.nombre }}"
+         data-catnombre="{{ p.categoria or 'General' }}">
 
       <div class="prod-img-area">
         {% if p.imagen_url or p.imagen %}
@@ -514,6 +717,19 @@
         {% else %}
           <div class="prod-placeholder">📦</div>
         {% endif %}
+
+        <!-- Hover overlay -->
+        <div class="prod-hover-overlay">
+          <button class="prod-hover-btn" onclick="quickAddFromOverlay(this)" title="Agregar rápido">
+            <i class="fa fa-cart-plus"></i> Agregar
+          </button>
+        </div>
+
+        <!-- Favorito -->
+        <button class="prod-fav-btn" onclick="toggleFav(this)" title="Favorito">
+          <i class="fa fa-heart"></i>
+        </button>
+
         {% if p.stock > 5 %}
           <span class="stock-badge badge-avail">✓ Disponible</span>
         {% elif p.stock > 0 %}
@@ -524,6 +740,7 @@
       </div>
 
       <div class="prod-info">
+        <div class="prod-cat-label">{{ p.categoria or 'General' }}</div>
         <div class="prod-title">{{ p.nombre }}</div>
         <div class="prod-price-area">
           <span class="price-sym">S/.</span>
@@ -537,9 +754,9 @@
             <button class="qty-ctl-btn" onclick="changeQty(this,1)" {% if p.stock == 0 %}disabled{% endif %}><i class="fa fa-plus"></i></button>
           </div>
           {% if p.stock > 0 %}
-          <button class="btn-add-cart" onclick="addToCart(this)"><i class="fa fa-cart-plus"></i> Agregar</button>
+          <button class="btn-add-cart" onclick="addToCart(this)"><i class="fa fa-cart-plus"></i> <span class="btn-text">Agregar</span></button>
           {% else %}
-          <button class="btn-add-cart out" disabled>Sin stock</button>
+          <button class="btn-add-cart out" disabled><i class="fa fa-ban"></i> <span class="btn-text">Sin stock</span></button>
           {% endif %}
         </div>
       </div>
@@ -561,6 +778,48 @@
       <div class="how-item"><i class="fa fa-cart-plus how-ico"></i><div><strong>Arma tu pedido</strong><span>Carrito con total en vivo</span></div></div>
       <div class="how-item"><i class="fab fa-whatsapp how-ico" style="color:#22c55e;"></i><div><strong>Envía y coordina</strong><span>Por WhatsApp, sin registro</span></div></div>
     </div>
+  </div>
+</div>
+
+
+<!-- ── MOBILE FILTER DRAWER ── -->
+<div class="filter-overlay" id="filterOverlay" onclick="closeFilterDrawer()"></div>
+<div class="filter-drawer" id="filterDrawer">
+  <div class="filter-drawer-head">
+    <h3><i class="fa fa-sliders" style="margin-right:.5rem;color:var(--primary);"></i> Filtrar y ordenar</h3>
+    <button class="filter-drawer-close" onclick="closeFilterDrawer()"><i class="fa fa-xmark"></i></button>
+  </div>
+
+  <div class="filter-drawer-section">
+    <div class="fds-title">Disponibilidad</div>
+    <div class="fds-chips" id="filterDrawerStatus">
+      <button class="fds-chip active" data-filter="disponible"><i class="fa fa-check-circle"></i> En stock</button>
+      <button class="fds-chip" data-filter="últimas"><i class="fa fa-clock"></i> Últimas unidades</button>
+      <button class="fds-chip" data-filter="agotado"><i class="fa fa-ban"></i> Agotados</button>
+    </div>
+  </div>
+
+  <div class="filter-drawer-section">
+    <div class="fds-title">Ordenar por</div>
+    <div id="filterDrawerSort">
+      <div class="fds-sort-option active" data-sort=""><i class="fa fa-arrows-up-down"></i> Relevancia</div>
+      <div class="fds-sort-option" data-sort="precio-asc"><i class="fa fa-arrow-up-short-wide"></i> Menor precio</div>
+      <div class="fds-sort-option" data-sort="precio-desc"><i class="fa fa-arrow-down-wide-short"></i> Mayor precio</div>
+      <div class="fds-sort-option" data-sort="nombre-asc"><i class="fa fa-arrow-down-a-z"></i> A → Z</div>
+    </div>
+  </div>
+
+  <div class="filter-drawer-section">
+    <div class="fds-title">Vista</div>
+    <div class="fds-chips" id="filterDrawerView">
+      <button class="fds-chip active" data-view="grid"><i class="fa fa-grid-2"></i> Cuadrícula</button>
+      <button class="fds-chip" data-view="list"><i class="fa fa-list"></i> Lista</button>
+    </div>
+  </div>
+
+  <div class="filter-drawer-footer">
+    <button class="fdf-reset" onclick="resetAll(); closeFilterDrawer();"><i class="fa fa-rotate-left"></i> Limpiar</button>
+    <button class="fdf-apply" onclick="closeFilterDrawer();">Aplicar filtros</button>
   </div>
 </div>
 
@@ -588,6 +847,7 @@
     <div class="cart-empty-msg" id="cartEmptyMsg">
       <i class="fa fa-basket-shopping"></i>
       <p>Tu carrito está vacío.<br>Agrega productos para armar tu pedido.</p>
+      <a href="#" onclick="closeCart(); return false;">Explorar productos</a>
     </div>
     <div id="cartItemsList"></div>
   </div>
@@ -605,11 +865,27 @@
   </div>
 </aside>
 
+<!-- Mobile bottom bar -->
+<div class="mobile-cart-bar" id="mobileCartBar">
+  <div class="mcb-inner">
+    <div class="mcb-info">
+      <div class="mcb-count" id="mcbCount">0 productos</div>
+      <div class="mcb-total">S/. <span id="mcbTotal">0.00</span></div>
+    </div>
+    <a href="#" class="mcb-btn" onclick="openCart(); return false;">
+      <i class="fab fa-whatsapp"></i> Ver pedido
+    </a>
+  </div>
+</div>
+
+<!-- Back to top -->
+<button class="btn-back-top" id="btnBackTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Volver arriba">
+  <i class="fa fa-chevron-up"></i>
+</button>
+
 <!-- Toast -->
 <div class="toast-msg" id="toastMsg"></div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
 /* ══════════════════════════════
@@ -642,10 +918,42 @@ function addToCart(btn) {
 
   const orig = btn.innerHTML;
   btn.classList.add('added');
-  btn.innerHTML = '<i class="fa fa-check"></i> Listo';
+  btn.innerHTML = '<i class="fa fa-check"></i> <span class="btn-text">Listo</span>';
   setTimeout(() => { btn.classList.remove('added'); btn.innerHTML = orig; }, 1200);
-  showToast(nombre.slice(0,28) + ' agregado', 'ok');
+  showToast(nombre.slice(0,28) + (nombre.length > 28 ? '…' : '') + ' agregado', 'ok');
 }
+
+/* Agregar rápido desde overlay hover */
+function quickAddFromOverlay(btn) {
+  const card = btn.closest('.prod-card-c');
+  const addBtn = card.querySelector('.btn-add-cart:not(.out)');
+  if (addBtn) addToCart(addBtn);
+}
+
+/* Favorito (localStorage) */
+function toggleFav(btn) {
+  btn.classList.toggle('faved');
+  const card = btn.closest('.prod-card-c');
+  const id = card.dataset.id;
+  let favs = JSON.parse(localStorage.getItem('bv_favs') || '[]');
+  if (favs.includes(id)) {
+    favs = favs.filter(f => f !== id);
+    showToast('Eliminado de favoritos', 'ok');
+  } else {
+    favs.push(id);
+    showToast('Agregado a favoritos', 'ok');
+  }
+  localStorage.setItem('bv_favs', JSON.stringify(favs));
+}
+
+/* Restaurar favoritos al cargar */
+(function(){
+  const favs = JSON.parse(localStorage.getItem('bv_favs') || '[]');
+  document.querySelectorAll('.prod-fav-btn').forEach(btn => {
+    const id = btn.closest('.prod-card-c').dataset.id;
+    if (favs.includes(id)) btn.classList.add('faved');
+  });
+})();
 
 function changeItemQty(idx, d) {
   cart[idx].qty += d;
@@ -654,25 +962,38 @@ function changeItemQty(idx, d) {
 }
 function removeItem(idx) { cart.splice(idx, 1); saveCart(); renderCart(); }
 function clearCart() {
-  if (!confirm('¿Vaciar el carrito?')) return;
+  if (!cart.length) return;
   cart = []; saveCart(); renderCart();
+  showToast('Carrito vaciado', 'ok');
 }
 
 function renderCart() {
   const total = cart.reduce((s, i) => s + i.precio * i.qty, 0);
   const count = cart.reduce((s, i) => s + i.qty, 0);
 
-  const fab   = document.getElementById('cartFabBadge');
+  /* FAB badge */
+  const fab = document.getElementById('cartFabBadge');
   fab.textContent = count; fab.classList.toggle('on', count > 0);
 
+  /* Head badge */
   const hb = document.getElementById('cartHeadBadge');
   hb.textContent = count + ' ítem' + (count !== 1 ? 's' : '');
   hb.style.display = count > 0 ? '' : 'none';
 
+  /* Total */
   document.getElementById('cartTotalAmt').textContent = total.toFixed(2);
   document.getElementById('cartFooter').style.display = cart.length ? '' : 'none';
   document.getElementById('cartEmptyMsg').style.display = cart.length ? 'none' : '';
 
+  /* Mobile bar */
+  const mcbCount = document.getElementById('mcbCount');
+  const mcbTotal = document.getElementById('mcbTotal');
+  const mobileBar = document.getElementById('mobileCartBar');
+  if(mcbCount) mcbCount.textContent = count + ' producto' + (count !== 1 ? 's' : '');
+  if(mcbTotal) mcbTotal.textContent = total.toFixed(2);
+  if(mobileBar) mobileBar.style.display = count > 0 ? '' : 'none';
+
+  /* Items list */
   document.getElementById('cartItemsList').innerHTML = cart.map((item, i) => `
     <div class="cart-item">
       <div class="cart-item-img">
@@ -680,7 +1001,7 @@ function renderCart() {
       </div>
       <div style="flex:1;min-width:0;">
         <div class="cart-item-name">${item.nombre}</div>
-        <div class="cart-item-price">S/. ${(item.precio * item.qty).toFixed(2)}</div>
+        <div class="cart-item-price">S/. ${(item.precio * item.qty).toFixed(2)} <span style="color:var(--txt-3);font-weight:400;font-size:.72rem;">(x${item.qty})</span></div>
       </div>
       <div class="cart-item-controls">
         <button class="ci-btn" onclick="changeItemQty(${i},-1)"><i class="fa fa-minus"></i></button>
@@ -712,7 +1033,7 @@ function closeCart() {
   document.getElementById('cartOverlay').classList.remove('open');
   document.body.style.overflow = '';
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCart(); closeFilterDrawer(); } });
 
 let toastT;
 function showToast(msg, tipo = 'ok') {
@@ -754,6 +1075,36 @@ function applyFilters() {
 
   document.getElementById('visCount').textContent = filtered.length;
   document.getElementById('emptyState').classList.toggle('show', filtered.length === 0);
+
+  /* Update filter dot indicator */
+  const hasFilters = activeCat !== 'all' || activeStatus !== 'disponible' || sortM !== '';
+  const dot = document.getElementById('filterDot');
+  if(dot) dot.classList.toggle('on', hasFilters);
+
+  /* Active filters tags */
+  const area = document.getElementById('activeFiltersArea');
+  let tags = '';
+  if(activeCat !== 'all') {
+    const tab = document.querySelector(`.cat-tab[data-filter="${activeCat}"]`);
+    tags += `<span class="active-filter-tag">${tab ? tab.textContent.trim() : activeCat} <button onclick="clearCatFilter()"><i class="fa fa-xmark"></i></button></span>`;
+  }
+  if(activeStatus !== 'disponible') {
+    tags += `<span class="active-filter-tag">${activeStatus} <button onclick="clearStatusFilter()"><i class="fa fa-xmark"></i></button></span>`;
+  }
+  area.innerHTML = tags;
+}
+
+function clearCatFilter() {
+  activeCat = 'all';
+  document.querySelectorAll('.cat-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
+  syncFilterDrawer();
+  applyFilters();
+}
+function clearStatusFilter() {
+  activeStatus = 'disponible';
+  document.querySelectorAll('.status-chip').forEach((c, i) => c.classList.toggle('active', i === 0));
+  syncFilterDrawer();
+  applyFilters();
 }
 
 /* Search */
@@ -776,21 +1127,25 @@ document.getElementById('catTabs').addEventListener('click', function (e) {
   activeCat = tab.dataset.filter; applyFilters();
 });
 
-/* Status chips */
+/* Status chips (desktop) */
 document.getElementById('statusChips').addEventListener('click', function (e) {
   const chip = e.target.closest('.status-chip'); if (!chip) return;
   document.querySelectorAll('.status-chip').forEach(c => c.classList.remove('active'));
-  chip.classList.add('active'); activeStatus = chip.dataset.filter; applyFilters();
+  chip.classList.add('active'); activeStatus = chip.dataset.filter;
+  syncFilterDrawer();
+  applyFilters();
 });
 
-/* Sort */
-document.getElementById('sortSel').addEventListener('change', function () { sortM = this.value; applyFilters(); });
+/* Sort (desktop) */
+document.getElementById('sortSel').addEventListener('change', function () { sortM = this.value; syncFilterDrawer(); applyFilters(); });
 
 /* View */
 function setView(mode) {
   document.getElementById('productsGrid').classList.toggle('list-mode', mode === 'list');
   document.getElementById('btnViewGrid').classList.toggle('active', mode === 'grid');
   document.getElementById('btnViewList').classList.toggle('active', mode === 'list');
+  /* Sync mobile drawer */
+  document.querySelectorAll('#filterDrawerView .fds-chip').forEach(c => c.classList.toggle('active', c.dataset.view === mode));
 }
 
 function resetAll() {
@@ -800,12 +1155,87 @@ function resetAll() {
   document.querySelectorAll('.cat-tab').forEach((t, i) => t.classList.toggle('active', i === 0));
   document.querySelectorAll('.status-chip').forEach((c, i) => c.classList.toggle('active', i === 0));
   document.getElementById('sortSel').value = '';
+  setView('grid');
+  syncFilterDrawer();
   applyFilters();
 }
 
-/* URL params */
+/* ══════════════════════════════
+   MOBILE FILTER DRAWER
+══════════════════════════════ */
+function openFilterDrawer() {
+  document.getElementById('filterDrawer').classList.add('open');
+  document.getElementById('filterOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeFilterDrawer() {
+  document.getElementById('filterDrawer').classList.remove('open');
+  document.getElementById('filterOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* Sync drawer state from current filters */
+function syncFilterDrawer() {
+  /* Status */
+  document.querySelectorAll('#filterDrawerStatus .fds-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.filter === activeStatus);
+  });
+  /* Sort */
+  document.querySelectorAll('#filterDrawerSort .fds-sort-option').forEach(o => {
+    o.classList.toggle('active', o.dataset.sort === sortM);
+  });
+  /* View */
+  const isList = document.getElementById('productsGrid').classList.contains('list-mode');
+  document.querySelectorAll('#filterDrawerView .fds-chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.view === (isList ? 'list' : 'grid'));
+  });
+}
+
+/* Drawer: status chips */
+document.getElementById('filterDrawerStatus').addEventListener('click', function(e) {
+  const chip = e.target.closest('.fds-chip'); if (!chip) return;
+  this.querySelectorAll('.fds-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  activeStatus = chip.dataset.filter;
+  /* Sync desktop */
+  document.querySelectorAll('.status-chip').forEach(c => c.classList.toggle('active', c.dataset.filter === activeStatus));
+  applyFilters();
+});
+
+/* Drawer: sort */
+document.getElementById('filterDrawerSort').addEventListener('click', function(e) {
+  const opt = e.target.closest('.fds-sort-option'); if (!opt) return;
+  this.querySelectorAll('.fds-sort-option').forEach(o => o.classList.remove('active'));
+  opt.classList.add('active');
+  sortM = opt.dataset.sort;
+  /* Sync desktop */
+  document.getElementById('sortSel').value = sortM;
+  applyFilters();
+});
+
+/* Drawer: view */
+document.getElementById('filterDrawerView').addEventListener('click', function(e) {
+  const chip = e.target.closest('.fds-chip'); if (!chip) return;
+  this.querySelectorAll('.fds-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  setView(chip.dataset.view);
+});
+
+/* ══════════════════════════════
+   BACK TO TOP
+══════════════════════════════ */
+window.addEventListener('scroll', () => {
+  const btn = document.getElementById('btnBackTop');
+  btn.classList.toggle('show', window.scrollY > 600);
+}, { passive: true });
+
+/* ══════════════════════════════
+   INIT
+══════════════════════════════ */
 (function () {
-  const uQ = {{ buscar_inicial|tojson }};
+  /* URL search param */
+  const urlParams = new URLSearchParams(window.location.search);
+  const uQ = urlParams.get('q') || '';
   if (uQ) {
     document.getElementById('searchInp').value = uQ;
     searchQ = uQ.toLowerCase().trim();
@@ -814,6 +1244,7 @@ function resetAll() {
   if (activeCat && activeCat !== 'all') {
     document.querySelectorAll('.cat-tab').forEach(t => t.classList.toggle('active', t.dataset.filter === activeCat));
   }
+  syncFilterDrawer();
   applyFilters();
 })();
 

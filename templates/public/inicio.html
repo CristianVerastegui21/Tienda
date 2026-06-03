@@ -7,26 +7,41 @@
 
 <style>
 /* ══════════════════════════════════════════
-   HERO — MODERNO RETAIL (Estilo Falabella)
+   HERO — MODERNO RETAIL
 ══════════════════════════════════════════ */
 .hero-banner {
   background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1a56db 100%);
   position: relative; overflow: hidden;
-  padding: 4rem 0 0;
+  padding: 3.5rem 0 0;
 }
 .hero-banner::before {
   content: '';
   position: absolute; inset: 0;
   background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
+/* Partículas flotantes decorativas */
+.hero-particle {
+  position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,.04);
+  animation: floatParticle 8s ease-in-out infinite;
+}
+.hero-particle:nth-child(1){ width:120px;height:120px;top:10%;left:5%;animation-delay:0s; }
+.hero-particle:nth-child(2){ width:80px;height:80px;top:60%;left:70%;animation-delay:2s; }
+.hero-particle:nth-child(3){ width:60px;height:60px;top:30%;left:85%;animation-delay:4s; }
+.hero-particle:nth-child(4){ width:100px;height:100px;top:70%;left:20%;animation-delay:1s; }
+@keyframes floatParticle {
+  0%,100%{ transform: translateY(0) scale(1); }
+  50%{ transform: translateY(-20px) scale(1.05); }
+}
+
 .hero-inner {
   max-width: 1280px; margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
   display: grid; grid-template-columns: 1fr 1fr;
-  gap: 3rem; align-items: flex-end;
+  gap: 2rem; align-items: flex-end;
   position: relative; z-index: 2;
 }
-.hero-left { padding-bottom: 4rem; }
+.hero-left { padding-bottom: 3.5rem; }
 
 .hero-tag {
   display: inline-flex; align-items: center; gap: .5rem;
@@ -35,11 +50,16 @@
   font-family: var(--font-display); font-size: .72rem; font-weight: 700;
   color: #fb923c; text-transform: uppercase; letter-spacing: .08em;
   margin-bottom: 1.25rem;
+  animation: tagPulse 3s ease-in-out infinite;
+}
+@keyframes tagPulse {
+  0%,100%{ box-shadow: 0 0 0 0 rgba(249,115,22,.3); }
+  50%{ box-shadow: 0 0 0 8px rgba(249,115,22,0); }
 }
 
 .hero-h1 {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  font-size: clamp(1.8rem, 4.5vw, 3.4rem);
   font-weight: 800; line-height: 1.1; letter-spacing: -.03em;
   color: #fff; margin-bottom: 1.25rem;
 }
@@ -88,7 +108,7 @@
 }
 .hero-stat-lbl { font-size: .8rem; color: rgba(255,255,255,.55); }
 
-/* Hero derecha — imagen con producto floating */
+/* Hero derecha */
 .hero-right {
   position: relative; align-self: flex-end;
   display: flex; justify-content: center;
@@ -111,9 +131,30 @@
   background: #fff; border-radius: var(--radius-sm);
   padding: .85rem 1rem; box-shadow: var(--shadow-md);
   text-align: center; min-width: 110px;
+  animation: badgeFloat 3s ease-in-out infinite;
+}
+@keyframes badgeFloat {
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-6px); }
 }
 .hfb-num { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--accent); line-height: 1; }
 .hfb-lbl { font-size: .72rem; color: var(--txt-2); font-weight: 500; margin-top: .25rem; }
+
+.hero-float-badge-2 {
+  position: absolute; bottom: 4rem; left: -1.2rem;
+  background: #fff; border-radius: var(--radius-sm);
+  padding: .7rem .9rem; box-shadow: var(--shadow-md);
+  display: flex; align-items: center; gap: .6rem;
+  animation: badgeFloat 3.5s ease-in-out infinite;
+  animation-delay: 1s;
+}
+.hfb2-icon {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #dcfce7; display: flex; align-items: center; justify-content: center;
+  color: #16a34a; font-size: .8rem;
+}
+.hfb2-text strong { display: block; font-family: var(--font-display); font-size: .78rem; font-weight: 700; color: var(--txt); }
+.hfb2-text span { font-size: .65rem; color: var(--txt-3); }
 
 /* ══════════════════════════════════════════
    TRUST BAR
@@ -124,12 +165,12 @@
   box-shadow: var(--shadow-xs);
 }
 .trust-strip-inner {
-  max-width: 1280px; margin: 0 auto; padding: 0 1.5rem;
+  max-width: 1280px; margin: 0 auto; padding: 0 1rem;
   display: grid; grid-template-columns: repeat(4, 1fr);
 }
 .trust-item {
   display: flex; align-items: center; gap: .85rem;
-  padding: 1.1rem 1rem; border-right: 1px solid var(--border);
+  padding: 1.1rem .75rem; border-right: 1px solid var(--border);
   transition: background .2s;
 }
 .trust-item:last-child { border-right: none; }
@@ -148,7 +189,7 @@
 /* ══════════════════════════════════════════
    SECCIONES GENERALES
 ══════════════════════════════════════════ */
-.section-wrap { max-width: 1280px; margin: 0 auto; padding: 3rem 1.5rem; }
+.section-wrap { max-width: 1280px; margin: 0 auto; padding: 3rem 1rem; }
 .section-header {
   display: flex; align-items: flex-end; justify-content: space-between;
   margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem;
@@ -160,7 +201,7 @@
 }
 .section-tag::before { content: ''; display: block; width: 16px; height: 2px; background: currentColor; border-radius: 2px; }
 .section-title-h2 {
-  font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem);
+  font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2rem);
   font-weight: 800; color: var(--txt); letter-spacing: -.02em;
 }
 .btn-ver-todo {
@@ -205,7 +246,7 @@
 .cat-count { font-size: .72rem; color: var(--txt-3); margin-top: .2rem; }
 
 /* ══════════════════════════════════════════
-   PRODUCT CARD (Swiper)
+   PRODUCT CARD
 ══════════════════════════════════════════ */
 .product-card {
   background: var(--bg-white); border: 1.5px solid var(--border);
@@ -234,6 +275,25 @@
 }
 .badge-hot { background: #ef4444; }
 .badge-new { background: var(--primary); }
+.badge-sale { background: #059669; }
+
+/* Botón ver producto overlay */
+.pc-overlay {
+  position: absolute; inset: 0; z-index: 2;
+  background: rgba(0,0,0,.35);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .3s;
+}
+.product-card:hover .pc-overlay { opacity: 1; }
+.pc-overlay-btn {
+  padding: .55rem 1.1rem; border-radius: var(--radius-xs);
+  background: #fff; border: none; color: var(--txt);
+  font-family: var(--font-display); font-size: .78rem; font-weight: 700;
+  cursor: pointer; text-decoration: none;
+  display: flex; align-items: center; gap: .35rem;
+  transition: background .2s;
+}
+.pc-overlay-btn:hover { background: var(--primary); color: #fff; }
 
 .pc-body { padding: 1rem 1.1rem; flex: 1; display: flex; flex-direction: column; }
 .pc-cat {
@@ -251,6 +311,10 @@
   color: var(--txt);
 }
 .pc-price span { font-size: .75rem; font-weight: 500; color: var(--txt-3); }
+.pc-price-old {
+  font-size: .8rem; font-weight: 500; color: var(--txt-3);
+  text-decoration: line-through; margin-right: .5rem;
+}
 .pc-add-btn {
   width: 36px; height: 36px; border-radius: var(--radius-xs);
   background: var(--primary); border: none; color: #fff;
@@ -260,11 +324,9 @@
 }
 .pc-add-btn:hover { background: var(--primary-dark); transform: scale(1.08); }
 
-/* Swiper config */
+/* Swiper */
 .swiper-section-wrap { position: relative; }
-.swiper-navs-row {
-  display: flex; gap: .4rem;
-}
+.swiper-navs-row { display: flex; gap: .4rem; }
 .swiper-nav-btn {
   width: 36px; height: 36px; border-radius: var(--radius-xs);
   background: var(--bg-white); border: 1.5px solid var(--border);
@@ -276,10 +338,56 @@
 .swiper-produtos { padding: 4px 0 16px !important; overflow: visible !important; }
 
 /* ══════════════════════════════════════════
+   OFERTAS COUNTDOWN
+══════════════════════════════════════════ */
+.deals-section {
+  background: linear-gradient(135deg, #fef3c7 0%, #fff7ed 100%);
+  border-top: 1px solid #fde68a;
+  border-bottom: 1px solid #fde68a;
+}
+.deals-inner {
+  max-width: 1280px; margin: 0 auto; padding: 3rem 1rem;
+}
+.deals-header {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem; margin-bottom: 1.75rem;
+}
+.deals-title-wrap {
+  display: flex; align-items: center; gap: 1rem;
+}
+.deals-flame {
+  width: 48px; height: 48px; border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #ef4444, #f97316);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 1.3rem;
+  box-shadow: 0 4px 16px rgba(239,68,68,.3);
+}
+.deals-title {
+  font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 1.75rem);
+  font-weight: 800; color: #92400e;
+}
+.deals-subtitle { font-size: .88rem; color: #a16207; margin-top: .15rem; }
+.countdown-wrap {
+  display: flex; gap: .5rem; align-items: center;
+}
+.countdown-label { font-size: .75rem; color: #92400e; font-weight: 600; margin-right: .25rem; }
+.countdown-block {
+  display: flex; flex-direction: column; align-items: center;
+  background: #fff; border: 1.5px solid #fde68a; border-radius: var(--radius-xs);
+  padding: .45rem .6rem; min-width: 48px;
+}
+.countdown-num {
+  font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; color: #dc2626;
+  line-height: 1;
+}
+.countdown-lbl { font-size: .55rem; color: #a16207; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+.countdown-sep { font-size: 1.2rem; font-weight: 800; color: #dc2626; }
+
+/* ══════════════════════════════════════════
    BANNER MEDIO (2 col)
 ══════════════════════════════════════════ */
 .mid-banners {
-  max-width: 1280px; margin: 0 auto; padding: 0 1.5rem 3rem;
+  max-width: 1280px; margin: 0 auto; padding: 0 1rem 3rem;
   display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
 }
 .mid-banner {
@@ -296,14 +404,14 @@
 }
 .mid-banner-1 { background-image: url('https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=800&q=80'); }
 .mid-banner-2 { background-image: url('https://images.unsplash.com/photo-1585619307200-44be7b6ade4a?auto=format&fit=crop&w=800&q=80'); }
-.mid-banner-content { position: relative; z-index: 2; padding: 1.5rem; }
+.mid-banner-content { position: relative; z-index: 2; padding: 1.25rem; width: 100%; }
 .mid-banner-tag {
   font-family: var(--font-display); font-size: .65rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: .1em; color: #fb923c;
   margin-bottom: .4rem;
 }
 .mid-banner-title {
-  font-family: var(--font-display); font-size: 1.2rem; font-weight: 800;
+  font-family: var(--font-display); font-size: 1.15rem; font-weight: 800;
   color: #fff; margin-bottom: .65rem; line-height: 1.2;
 }
 .mid-banner-btn {
@@ -315,6 +423,33 @@
 .mid-banner:hover .mid-banner-btn { background: var(--accent); color: #fff; }
 
 /* ══════════════════════════════════════════
+   MARCAS SCROLL
+══════════════════════════════════════════ */
+.brands-section {
+  background: var(--bg-white);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.brands-inner {
+  max-width: 1280px; margin: 0 auto; padding: 2.5rem 1rem;
+  text-align: center;
+}
+.brands-track {
+  display: flex; align-items: center; justify-content: center;
+  gap: 2.5rem; flex-wrap: wrap; margin-top: 1.5rem;
+}
+.brand-item {
+  display: flex; align-items: center; gap: .5rem;
+  padding: .6rem 1.2rem;
+  background: var(--bg-subtle); border-radius: var(--radius-sm);
+  font-family: var(--font-display); font-size: .85rem; font-weight: 700;
+  color: var(--txt-2); transition: all .2s; cursor: default;
+  border: 1px solid transparent;
+}
+.brand-item:hover { color: var(--primary); border-color: var(--primary-light); transform: translateY(-2px); }
+.brand-item i { font-size: .95rem; color: var(--txt-3); }
+
+/* ══════════════════════════════════════════
    ABOUT SECTION
 ══════════════════════════════════════════ */
 .about-section {
@@ -323,8 +458,8 @@
   border-bottom: 1px solid var(--border);
 }
 .about-inner {
-  max-width: 1280px; margin: 0 auto; padding: 4rem 1.5rem;
-  display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; align-items: center;
+  max-width: 1280px; margin: 0 auto; padding: 4rem 1rem;
+  display: grid; grid-template-columns: 1fr 1.1fr; gap: 3rem; align-items: center;
 }
 .about-img-col { position: relative; }
 .about-img {
@@ -334,17 +469,17 @@
 .about-stats-float {
   position: absolute; bottom: -1.5rem; right: -1.5rem;
   background: var(--bg-white); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow-md);
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
-  min-width: 220px;
+  border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow-md);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  min-width: 200px;
 }
-.asf-num { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; color: var(--primary); line-height: 1; }
-.asf-lbl { font-size: .78rem; color: var(--txt-3); margin-top: .2rem; }
+.asf-num { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: var(--primary); line-height: 1; }
+.asf-lbl { font-size: .75rem; color: var(--txt-3); margin-top: .2rem; }
 
-.about-features { margin-top: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+.about-features { margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
 .about-feat {
   display: flex; gap: 1rem; align-items: flex-start;
-  padding: 1.1rem; border-radius: var(--radius-sm);
+  padding: 1rem; border-radius: var(--radius-sm);
   border: 1px solid var(--border); background: var(--bg-subtle);
   transition: all .2s;
 }
@@ -355,7 +490,7 @@
   color: var(--primary); font-size: .95rem;
 }
 .about-feat:hover .af-icon { background: var(--primary); color: #fff; }
-.af-text h4 { font-family: var(--font-display); font-size: .95rem; font-weight: 700; color: var(--txt); margin-bottom: .2rem; }
+.af-text h4 { font-family: var(--font-display); font-size: .92rem; font-weight: 700; color: var(--txt); margin-bottom: .2rem; }
 .af-text p { font-size: .85rem; color: var(--txt-2); line-height: 1.5; }
 
 /* ══════════════════════════════════════════
@@ -365,11 +500,11 @@
   background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
   padding: 4rem 0;
 }
-.steps-inner { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+.steps-inner { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
 .steps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; }
 .step-card {
   background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
-  border-radius: var(--radius); padding: 2rem;
+  border-radius: var(--radius); padding: 2rem 1.5rem;
   text-align: center; transition: all .3s;
   backdrop-filter: blur(8px);
 }
@@ -383,7 +518,7 @@
 }
 .step-card h3 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; color: #fff; margin-bottom: .65rem; }
 .step-card p { font-size: .88rem; color: rgba(255,255,255,.65); line-height: 1.65; }
-.steps-title { font-family: var(--font-display); font-size: 1.75rem; font-weight: 800; color: #fff; letter-spacing: -.02em; }
+.steps-title { font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 1.75rem); font-weight: 800; color: #fff; letter-spacing: -.02em; }
 .steps-sub { color: rgba(255,255,255,.6); font-size: .95rem; margin-top: .5rem; }
 
 /* ══════════════════════════════════════════
@@ -416,12 +551,12 @@
   background-image: linear-gradient(135deg, #15803d 0%, #166534 100%);
 }
 .cta-wa-inner {
-  max-width: 1280px; margin: 0 auto; padding: 3rem 1.5rem;
+  max-width: 1280px; margin: 0 auto; padding: 3rem 1rem;
   display: flex; align-items: center; justify-content: space-between;
   gap: 2rem; flex-wrap: wrap;
 }
 .cta-wa-text h2 {
-  font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2rem);
+  font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 2rem);
   font-weight: 800; color: #fff; margin-bottom: .45rem;
 }
 .cta-wa-text p { color: rgba(255,255,255,.75); font-size: .95rem; max-width: 460px; }
@@ -451,7 +586,7 @@
 .faq-q {
   width: 100%; text-align: left; background: transparent; border: none;
   padding: 1.1rem 1.25rem; cursor: pointer;
-  font-family: var(--font-display); font-size: .95rem; font-weight: 700; color: var(--txt);
+  font-family: var(--font-display); font-size: .92rem; font-weight: 700; color: var(--txt);
   display: flex; justify-content: space-between; align-items: center; gap: 1rem;
   transition: background .15s;
 }
@@ -467,7 +602,44 @@
 .faq-item.open .faq-a { max-height: 180px; padding-bottom: 1.25rem; padding-top: .75rem; }
 
 /* ══════════════════════════════════════════
-   CARRITO FAB (Inicio)
+   NEWSLETTER
+══════════════════════════════════════════ */
+.newsletter-section {
+  background: var(--bg-white);
+  border-top: 1px solid var(--border);
+}
+.newsletter-inner {
+  max-width: 640px; margin: 0 auto; padding: 3.5rem 1rem;
+  text-align: center;
+}
+.newsletter-title {
+  font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 1.75rem);
+  font-weight: 800; color: var(--txt); margin-bottom: .5rem;
+}
+.newsletter-sub { font-size: .92rem; color: var(--txt-2); margin-bottom: 1.5rem; }
+.newsletter-form {
+  display: flex; gap: .5rem;
+  max-width: 480px; margin: 0 auto;
+}
+.newsletter-form input {
+  flex: 1; border: 1.5px solid var(--border); border-radius: var(--radius-xs);
+  padding: .75rem 1rem; font-family: var(--font-body); font-size: .9rem;
+  color: var(--txt); background: var(--bg-subtle); outline: none;
+  transition: border-color .2s;
+  min-width: 0;
+}
+.newsletter-form input:focus { border-color: var(--primary); }
+.newsletter-form button {
+  padding: .75rem 1.5rem; border-radius: var(--radius-xs);
+  background: var(--primary); color: #fff; border: none;
+  font-family: var(--font-display); font-size: .9rem; font-weight: 700;
+  cursor: pointer; transition: background .2s; white-space: nowrap;
+}
+.newsletter-form button:hover { background: var(--primary-dark); }
+.newsletter-note { font-size: .75rem; color: var(--txt-3); margin-top: .75rem; }
+
+/* ══════════════════════════════════════════
+   CARRITO FAB
 ══════════════════════════════════════════ */
 .cart-fab-inicio {
   position: fixed; bottom: 6rem; right: 1.5rem; z-index: 700;
@@ -497,18 +669,18 @@
 .toast-inicio i { color: #4ade80; }
 
 /* ══════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE INICIO
 ══════════════════════════════════════════ */
 @media(max-width:1024px){
   .cats-grid { grid-template-columns: repeat(4, 1fr); }
-  .about-inner { grid-template-columns: 1fr; gap: 3rem; }
+  .about-inner { grid-template-columns: 1fr; gap: 2.5rem; }
   .about-stats-float { position: relative; bottom: auto; right: auto; margin-top: 1.5rem; }
   .about-img { height: 300px; }
   .testi-grid { grid-template-columns: 1fr 1fr; }
-  .footer-strip-inner { grid-template-columns: 1fr 1fr; }
 }
 @media(max-width:768px){
-  .hero-inner { grid-template-columns: 1fr; text-align: center; }
+  .hero-inner { grid-template-columns: 1fr; text-align: center; padding: 0 1rem; }
+  .hero-left { padding-bottom: 2.5rem; }
   .hero-right { display: none; }
   .hero-cta-row { justify-content: center; }
   .hero-stats { justify-content: center; }
@@ -518,17 +690,31 @@
   .trust-item:nth-child(even) { border-left: 1px solid var(--border); }
   .cats-grid { grid-template-columns: repeat(3, 1fr); }
   .mid-banners { grid-template-columns: 1fr; }
-  .steps-grid { grid-template-columns: 1fr; }
+  .steps-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
   .testi-grid { grid-template-columns: 1fr; }
   .cta-wa-inner { text-align: center; flex-direction: column; }
   .section-header { flex-direction: column; align-items: flex-start; }
+  .deals-header { flex-direction: column; align-items: flex-start; }
+  .countdown-wrap { flex-wrap: wrap; }
+  .about-stats-float { grid-template-columns: 1fr 1fr; }
+  .newsletter-form { flex-direction: column; }
+  .newsletter-form button { width: 100%; }
 }
 @media(max-width:480px){
-  .cats-grid { grid-template-columns: repeat(2, 1fr); }
+  .cats-grid { grid-template-columns: repeat(2, 1fr); gap: .75rem; }
   .trust-strip-inner { grid-template-columns: 1fr; }
   .trust-item { border-right: none; border-left: none; }
-  .hero-banner { padding: 2.5rem 0 0; }
-  .hero-h1 { font-size: 1.9rem; }
+  .hero-banner { padding: 2rem 0 0; }
+  .hero-h1 { font-size: 1.8rem; }
+  .hero-cta-row { flex-direction: column; }
+  .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; }
+  .hero-stats { gap: 1.25rem; }
+  .cat-card { padding: 1rem .5rem; }
+  .cat-icon-wrap { width: 44px; height: 44px; }
+  .countdown-block { min-width: 40px; padding: .35rem .45rem; }
+  .countdown-num { font-size: 1rem; }
+  .brands-track { gap: 1rem; }
+  .brand-item { font-size: .78rem; padding: .5rem .85rem; }
 }
 </style>
 
@@ -537,8 +723,13 @@
      HERO BANNER
 ═══════════════════════════════════════ -->
 <section class="hero-banner">
+  <div class="hero-particle"></div>
+  <div class="hero-particle"></div>
+  <div class="hero-particle"></div>
+  <div class="hero-particle"></div>
+
   <div class="hero-inner">
-    <div class="hero-left" data-aos="fade-right" data-aos-duration="800">
+    <div class="hero-left">
       <div class="hero-tag">
         <i class="fa fa-truck-fast"></i> Delivery Rápido · Trujillo
       </div>
@@ -568,11 +759,18 @@
       </div>
     </div>
 
-    <div class="hero-right" data-aos="fade-left" data-aos-duration="800" data-aos-delay="200">
+    <div class="hero-right">
       <div class="hero-img-wrap">
         <div class="hero-float-badge">
           <div class="hfb-num">{{ stats.productos_disponibles }}+</div>
           <div class="hfb-lbl">Productos<br>disponibles</div>
+        </div>
+        <div class="hero-float-badge-2">
+          <div class="hfb2-icon"><i class="fa fa-check"></i></div>
+          <div class="hfb2-text">
+            <strong>Entrega rápida</strong>
+            <span>En tu zona</span>
+          </div>
         </div>
       </div>
     </div>
@@ -661,6 +859,9 @@
             <img src="{{ p.imagen_url }}" class="pc-img" alt="{{ p.nombre }}" loading="lazy"
                  onerror="this.src='https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=400&q=60'">
             <span class="pc-badge badge-hot"><i class="fa fa-fire"></i> Top</span>
+            <div class="pc-overlay">
+              <a href="/catalogo" class="pc-overlay-btn"><i class="fa fa-eye"></i> Ver</a>
+            </div>
           </div>
           <div class="pc-body">
             <div class="pc-cat">{{ p.categoria or 'General' }}</div>
@@ -677,6 +878,65 @@
         <p style="color:var(--txt-2);padding:2rem;">Explora el <a href="/catalogo" style="color:var(--primary);">catálogo completo</a>.</p>
       </div>
       {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     OFERTAS CON COUNTDOWN
+═══════════════════════════════════════ -->
+<div class="deals-section">
+  <div class="deals-inner">
+    <div class="deals-header">
+      <div class="deals-title-wrap">
+        <div class="deals-flame"><i class="fa fa-bolt"></i></div>
+        <div>
+          <div class="deals-title">Ofertas por tiempo limitado</div>
+          <div class="deals-subtitle">No te pierdas estas promociones exclusivas</div>
+        </div>
+      </div>
+      <div class="countdown-wrap">
+        <span class="countdown-label">Termina en:</span>
+        <div class="countdown-block"><span class="countdown-num" id="cdHours">00</span><span class="countdown-lbl">Hrs</span></div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-block"><span class="countdown-num" id="cdMins">00</span><span class="countdown-lbl">Min</span></div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-block"><span class="countdown-num" id="cdSecs">00</span><span class="countdown-lbl">Seg</span></div>
+      </div>
+    </div>
+    <div class="swiper swiper-produtos" id="swiperDeals">
+      <div class="swiper-wrapper">
+        {% for p in ofertas %}
+        <div class="swiper-slide">
+          <div class="product-card" data-id="{{ p.id }}" data-nombre="{{ p.nombre }}" data-precio="{{ p.precio }}" data-imagen="{{ p.imagen_url }}" data-stock="{{ p.stock }}">
+            <div class="pc-img-wrap">
+              <img src="{{ p.imagen_url }}" class="pc-img" alt="{{ p.nombre }}" loading="lazy"
+                   onerror="this.src='https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=400&q=60'">
+              <span class="pc-badge badge-sale"><i class="fa fa-tag"></i> Oferta</span>
+              <div class="pc-overlay">
+                <a href="/catalogo" class="pc-overlay-btn"><i class="fa fa-eye"></i> Ver</a>
+              </div>
+            </div>
+            <div class="pc-body">
+              <div class="pc-cat">{{ p.categoria or 'General' }}</div>
+              <div class="pc-name">{{ p.nombre }}</div>
+              <div class="pc-bottom">
+                <div class="pc-price">
+                  {% if p.precio_original %}<span class="pc-price-old">S/. {{ "%.2f"|format(p.precio_original|float) }}</span>{% endif %}
+                  <span>S/.</span> {{ "%.2f"|format(p.precio|float) }}
+                </div>
+                <button class="pc-add-btn" onclick="agregarAlCarrito(this)" title="Agregar al pedido"><i class="fa fa-plus"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="swiper-slide">
+          <p style="color:var(--txt-2);padding:2rem;">Pronto tendremos ofertas especiales. <a href="/catalogo" style="color:var(--primary);">Ver catálogo</a>.</p>
+        </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 </div>
@@ -706,8 +966,8 @@
 <!-- ═══════════════════════════════════════
      NOVEDADES (SWIPER)
 ═══════════════════════════════════════ -->
-<div class="section-wrap" style="background:var(--bg-subtle);padding-top:3rem;padding-bottom:3rem;max-width:100%;">
-  <div style="max-width:1280px;margin:0 auto;padding:0 1.5rem;">
+<div style="background:var(--bg-subtle);padding:3rem 0;">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1rem;">
     <div class="section-header">
       <div>
         <div class="section-tag" style="color:var(--primary)"><i class="fa fa-sparkles" style="margin-right:.35rem;"></i> Recién llegados</div>
@@ -730,6 +990,9 @@
               <img src="{{ p.imagen_url }}" class="pc-img" alt="{{ p.nombre }}" loading="lazy"
                    onerror="this.src='https://images.unsplash.com/photo-1604719312566-8912e9227c6a?auto=format&fit=crop&w=400&q=60'">
               <span class="pc-badge badge-new">Nuevo</span>
+              <div class="pc-overlay">
+                <a href="/catalogo" class="pc-overlay-btn"><i class="fa fa-eye"></i> Ver</a>
+              </div>
             </div>
             <div class="pc-body">
               <div class="pc-cat">{{ p.categoria or 'General' }}</div>
@@ -745,6 +1008,28 @@
         <div class="swiper-slide"><p style="color:var(--txt-2);padding:2rem;">Pronto agregaremos nuevos productos.</p></div>
         {% endfor %}
       </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     MARCAS
+═══════════════════════════════════════ -->
+<div class="brands-section">
+  <div class="brands-inner">
+    <div class="section-tag" style="justify-content:center;">Trabajamos con</div>
+    <h2 class="section-title-h2">Marcas de confianza</h2>
+    <div class="brands-track">
+      <div class="brand-item"><i class="fa fa-wheat-awn"></i> Alicorp</div>
+      <div class="brand-item"><i class="fa fa-droplet"></i> Gloria</div>
+      <div class="brand-item"><i class="fa fa-bottle-water"></i> Aruba</div>
+      <div class="brand-item"><i class="fa fa-mug-hot"></i> Nestlé</div>
+      <div class="brand-item"><i class="fa fa-cookie"></i> Oreo</div>
+      <div class="brand-item"><i class="fa fa-spray-can-sparkles"></i> Clorox</div>
+      <div class="brand-item"><i class="fa fa-pump-soap"></i> Palmolive</div>
+      <div class="brand-item"><i class="fa fa-drumstick-bite"></i> San Fernando</div>
+      <div class="brand-item"><i class="fa fa-mug-saucer"></i> Café Kirma</div>
     </div>
   </div>
 </div>
@@ -858,8 +1143,8 @@
 <!-- ═══════════════════════════════════════
      FAQ
 ═══════════════════════════════════════ -->
-<div class="section-wrap" style="background:var(--bg-subtle);max-width:100%;padding-top:3rem;padding-bottom:3rem;">
-  <div class="faq-wrap" style="max-width:820px;margin:0 auto;padding:0 1.5rem;">
+<div style="background:var(--bg-subtle);padding:3rem 0;">
+  <div class="faq-wrap" style="padding:0 1rem;">
     <div style="text-align:center;margin-bottom:1rem;">
       <div class="section-tag" style="justify-content:center;">Ayuda</div>
       <h2 class="section-title-h2">Preguntas frecuentes</h2>
@@ -881,7 +1166,28 @@
         <button class="faq-q" onclick="toggleFaq(this)">¿Qué pasa si un producto no tiene stock? <i class="fa fa-chevron-down"></i></button>
         <div class="faq-a">Te avisamos de inmediato y te proponemos alternativas similares. Solo llevas lo que esté disponible.</div>
       </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">¿Cuál es el monto mínimo de pedido? <i class="fa fa-chevron-down"></i></button>
+        <div class="faq-a">No tenemos monto mínimo. Puedes pedir desde un solo producto. El delivery tiene un costo según la distancia.</div>
+      </div>
     </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     NEWSLETTER
+═══════════════════════════════════════ -->
+<div class="newsletter-section">
+  <div class="newsletter-inner">
+    <div class="section-tag" style="justify-content:center;">Entérate primero</div>
+    <h2 class="newsletter-title">Recibe ofertas exclusivas</h2>
+    <p class="newsletter-sub">Déjanos tu celular y te avisamos de promociones y productos nuevos antes que nadie.</p>
+    <form class="newsletter-form" onsubmit="event.preventDefault(); mostrarToastNewsletter();">
+      <input type="tel" placeholder="Ej: 968 495 632" required>
+      <button type="submit"><i class="fa fa-paper-plane"></i> Suscribirme</button>
+    </form>
+    <p class="newsletter-note"><i class="fa fa-lock" style="margin-right:.25rem;"></i> Solo enviamos ofertas, nada de spam.</p>
   </div>
 </div>
 
@@ -913,7 +1219,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 <script>
-  /* Carrito */
+  /* ═══ Carrito ═══ */
   function agregarAlCarrito(btn) {
     const card = btn.closest('.product-card');
     let cart = JSON.parse(localStorage.getItem('bv_cart') || '[]');
@@ -944,6 +1250,17 @@
     window._toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
   }
 
+  function mostrarToastNewsletter() {
+    const t = document.getElementById('toastInicio');
+    if (!t) return;
+    t.querySelector('i').className = 'fa fa-circle-check';
+    t.childNodes[1] && t.removeChild(t.childNodes[1]);
+    t.innerHTML = '<i class="fa fa-circle-check"></i> ¡Suscrito! Te avisaremos pronto.';
+    t.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
   function toggleFaq(btn) {
     const item = btn.closest('.faq-item');
     const abierto = item.classList.contains('open');
@@ -953,7 +1270,30 @@
 
   actualizarFab();
 
-  /* Swipers */
+  /* ═══ Countdown ═══ */
+  (function(){
+    /* La oferta termina a medianoche de hoy */
+    function updateCountdown(){
+      const now = new Date();
+      const end = new Date();
+      end.setHours(23,59,59,0);
+      if(now > end) end.setDate(end.getDate()+1);
+      const diff = end - now;
+      const h = Math.floor(diff/3600000);
+      const m = Math.floor((diff%3600000)/60000);
+      const s = Math.floor((diff%60000)/1000);
+      const elH = document.getElementById('cdHours');
+      const elM = document.getElementById('cdMins');
+      const elS = document.getElementById('cdSecs');
+      if(elH) elH.textContent = String(h).padStart(2,'0');
+      if(elM) elM.textContent = String(m).padStart(2,'0');
+      if(elS) elS.textContent = String(s).padStart(2,'0');
+    }
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  })();
+
+  /* ═══ Swipers ═══ */
   const swiperHot = new Swiper('#swiperHot', {
     slidesPerView: 1.3, spaceBetween: 14, grabCursor: true,
     autoplay: { delay: 4500, disableOnInteraction: false, pauseOnMouseEnter: true },
@@ -969,6 +1309,16 @@
     slidesPerView: 1.3, spaceBetween: 14, grabCursor: true,
     autoplay: { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true },
     navigation: { nextEl: '#btnNextNew', prevEl: '#btnPrevNew' },
+    breakpoints: {
+      480: { slidesPerView: 2, spaceBetween: 14 },
+      768: { slidesPerView: 3, spaceBetween: 16 },
+      1024: { slidesPerView: 4, spaceBetween: 18 },
+    }
+  });
+
+  const swiperDeals = new Swiper('#swiperDeals', {
+    slidesPerView: 1.3, spaceBetween: 14, grabCursor: true,
+    autoplay: { delay: 4000, disableOnInteraction: false, pauseOnMouseEnter: true },
     breakpoints: {
       480: { slidesPerView: 2, spaceBetween: 14 },
       768: { slidesPerView: 3, spaceBetween: 16 },

@@ -17,7 +17,6 @@
        DESIGN TOKENS — RETAIL PREMIUM
     ══════════════════════════════════════════ */
     :root {
-      /* Paleta principal — Azul corporativo limpio + Naranja cálido */
       --primary:        #1a56db;
       --primary-dark:   #1341b0;
       --primary-light:  #e8f0fe;
@@ -28,23 +27,19 @@
       --accent-light:   #fff4ed;
       --accent-hover:   #ef6a08;
 
-      /* Fondos */
       --bg:             #f5f6fa;
       --bg-white:       #ffffff;
       --bg-card:        #ffffff;
       --bg-subtle:      #f0f2f7;
 
-      /* Texto */
       --txt:            #111827;
       --txt-2:          #4b5563;
       --txt-3:          #9ca3af;
       --txt-inv:        #ffffff;
 
-      /* Bordes */
       --border:         #e5e7eb;
       --border-focus:   #1a56db;
 
-      /* Estados */
       --green:          #059669;
       --green-bg:       #d1fae5;
       --red:            #dc2626;
@@ -52,14 +47,12 @@
       --yellow:         #d97706;
       --yellow-bg:      #fef3c7;
 
-      /* Sombras */
       --shadow-xs:      0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
       --shadow-sm:      0 4px 12px rgba(0,0,0,.06), 0 2px 4px rgba(0,0,0,.04);
       --shadow-md:      0 8px 24px rgba(0,0,0,.08), 0 4px 8px rgba(0,0,0,.04);
       --shadow-lg:      0 20px 40px rgba(0,0,0,.10), 0 8px 16px rgba(0,0,0,.06);
       --shadow-primary: 0 4px 14px rgba(26,86,219,.25);
 
-      /* Layout */
       --nav-h:          60px;
       --top-bar-h:      36px;
       --radius:         12px;
@@ -67,7 +60,6 @@
       --radius-xs:      6px;
       --max-w:          1280px;
 
-      /* Tipografía */
       --font-display:   'Plus Jakarta Sans', sans-serif;
       --font-body:      'DM Sans', sans-serif;
     }
@@ -126,7 +118,7 @@
     }
     .top-bar-inner {
       max-width: var(--max-w); width: 100%;
-      padding: 0 1.5rem;
+      padding: 0 1rem;
       display: flex; align-items: center; justify-content: space-between;
     }
     .top-bar span, .top-bar a {
@@ -162,10 +154,10 @@
       max-width: var(--max-w); margin: 0 auto;
       height: 100%;
       display: flex; align-items: center;
-      padding: 0 1.5rem; gap: 1.25rem;
+      padding: 0 1rem; gap: 1.25rem;
     }
 
-    /* Hamburger — izquierda */
+    /* Hamburger */
     .hamburger {
       display: none;
       width: 40px; height: 40px;
@@ -210,7 +202,7 @@
       text-transform: uppercase; letter-spacing: .07em;
     }
 
-    /* Search bar (centro) */
+    /* Search bar */
     .nav-search {
       flex: 1; max-width: 520px;
       display: flex; align-items: center;
@@ -227,6 +219,7 @@
       flex: 1; border: none; background: transparent;
       padding: .6rem 1rem; font-family: var(--font-body);
       font-size: .9rem; color: var(--txt); outline: none;
+      min-width: 0;
     }
     .nav-search input::placeholder { color: var(--txt-3); }
     .nav-search-btn {
@@ -238,7 +231,7 @@
     }
     .nav-search-btn:hover { background: var(--primary-hover); }
 
-    /* Nav acciones derecha */
+    /* Nav acciones */
     .nav-actions {
       display: flex; align-items: center; gap: .5rem;
       flex-shrink: 0; margin-left: auto;
@@ -260,6 +253,18 @@
     }
     .nav-action-btn.wa-btn:hover { background: #16a34a; border-color: #16a34a; color: #fff; }
 
+    /* Botón login en desktop */
+    .nav-action-btn.login-btn {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-color: transparent;
+    }
+    .nav-action-btn.login-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
     .btn-theme-nav {
       width: 36px; height: 36px;
       background: var(--bg-subtle); border: 1px solid var(--border);
@@ -269,7 +274,6 @@
     }
     .btn-theme-nav:hover { color: var(--primary); border-color: var(--primary-light); }
 
-    /* Nav divider */
     .nav-divider { width: 1px; height: 24px; background: var(--border); flex-shrink: 0; }
 
     /* ══════════════════════════════════════════
@@ -283,7 +287,7 @@
     .nav-sec-inner {
       max-width: var(--max-w); margin: 0 auto;
       display: flex; align-items: center;
-      padding: 0 1.5rem; gap: .25rem;
+      padding: 0 1rem; gap: .25rem;
       overflow-x: auto;
       scrollbar-width: none;
     }
@@ -347,6 +351,7 @@
     .drawer-search input {
       flex: 1; border: none; background: transparent;
       padding: .65rem .5rem; font-size: .9rem; color: var(--txt); outline: none;
+      min-width: 0;
     }
 
     .drawer-section-title {
@@ -367,6 +372,20 @@
     .drawer-link i { width: 18px; text-align: center; font-size: .9rem; color: var(--txt-3); flex-shrink: 0; }
     .drawer-link:hover i, .drawer-link.active i { color: var(--primary); }
 
+    /* Login link destacado en drawer */
+    .drawer-link.login-drawer {
+      background: var(--primary-light);
+      color: var(--primary);
+      border-left-color: var(--primary);
+      font-weight: 700;
+    }
+    .drawer-link.login-drawer i { color: var(--primary); }
+    .drawer-link.login-drawer:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .drawer-link.login-drawer:hover i { color: #fff; }
+
     .drawer-link-cat {
       display: flex; align-items: center; gap: .75rem;
       padding: .65rem 1.25rem;
@@ -385,6 +404,18 @@
       padding: .85rem; font-family: var(--font-display); font-size: .9rem; font-weight: 700;
       cursor: pointer; text-decoration: none;
       box-shadow: 0 4px 12px rgba(34,197,94,.3);
+    }
+
+    .drawer-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border);
+      margin-top: auto;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .drawer-footer-info {
+      font-size: .75rem; color: var(--txt-3);
+      display: flex; align-items: center; gap: .35rem;
     }
 
     /* ══════════════════════════════════════════
@@ -428,7 +459,7 @@
     }
     .footer-strip-inner {
       max-width: var(--max-w); margin: 0 auto;
-      padding: 1.5rem;
+      padding: 1.5rem 1rem;
       display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
     }
     .footer-strip-item {
@@ -446,7 +477,7 @@
     }
     .fsi-text span { font-size: .78rem; color: #64748b; }
 
-    .footer-main { max-width: var(--max-w); margin: 0 auto; padding: 3rem 1.5rem 2rem; }
+    .footer-main { max-width: var(--max-w); margin: 0 auto; padding: 3rem 1rem 2rem; }
     .footer-grid {
       display: grid; grid-template-columns: 2fr 1fr 1fr 1.4fr;
       gap: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid rgba(255,255,255,.06);
@@ -568,9 +599,21 @@
       .hamburger { display: flex; }
       .nav-secondary { display: none; }
       .nav-search { display: none; }
-      .nav-action-btn { display: none; }
-      .nav-actions .btn-theme-nav { display: flex; }
+      .nav-action-btn:not(.login-btn):not(.wa-btn) { display: none; }
       .nav-actions .nav-divider { display: none; }
+
+      /* En móvil mostrar login como ícono compacto */
+      .nav-action-btn.login-btn {
+        display: flex;
+        padding: .45rem .6rem;
+      }
+      .nav-action-btn.login-btn span { display: none; }
+      .nav-action-btn.wa-btn {
+        display: flex;
+        padding: .45rem .6rem;
+      }
+      .nav-action-btn.wa-btn span { display: none; }
+
       .top-bar-center { display: none; }
 
       .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
@@ -582,6 +625,8 @@
       .logo-tagline { display: none; }
       .footer-strip-inner { grid-template-columns: 1fr; }
       .top-bar { display: none; }
+      .nav-action-btn.login-btn span { display: none; }
+      .nav-action-btn.wa-btn span { display: none; }
     }
   </style>
 </head>
@@ -607,7 +652,7 @@
   <nav class="navbar" id="navbar">
     <div class="nav-inner">
 
-      <!-- Hamburger (mobile — izquierda) -->
+      <!-- Hamburger -->
       <button class="hamburger" id="btnHamburger" aria-label="Abrir menú" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -632,7 +677,10 @@
       <!-- Acciones -->
       <div class="nav-actions">
         <a href="https://wa.me/51968495632" target="_blank" rel="noopener noreferrer" class="nav-action-btn wa-btn" aria-label="WhatsApp">
-          <i class="fab fa-whatsapp"></i> WhatsApp
+          <i class="fab fa-whatsapp"></i> <span>WhatsApp</span>
+        </a>
+        <a href="/login" class="nav-action-btn login-btn" aria-label="Acceso Admin">
+          <i class="fa fa-user-lock"></i> <span>Admin</span>
         </a>
         <div class="nav-divider"></div>
         <button class="btn-theme-nav" id="btnTheme" aria-label="Cambiar tema">
@@ -643,7 +691,7 @@
     </div>
   </nav>
 
-  <!-- Navbar Secundario — Categorías -->
+  <!-- Navbar Secundario -->
   <div class="nav-secondary" id="navSecondary">
     <div class="nav-sec-inner">
       <a href="/" class="nav-sec-link"><i class="fa fa-house"></i> Inicio</a>
@@ -671,7 +719,6 @@
       <span class="marquee-item">🧴 Higiene y Limpieza del Hogar <span class="marquee-sep">●</span></span>
       <span class="marquee-item">🍿 Snacks & Bebidas Frías <span class="marquee-sep">●</span></span>
       <span class="marquee-item">⭐ Calidad garantizada <span class="marquee-sep">●</span></span>
-      <!-- duplicado -->
       <span class="marquee-item">🚚 Delivery Express en Trujillo <span class="marquee-sep">●</span></span>
       <span class="marquee-item">✨ Abarrotes frescos cada día <span class="marquee-sep">●</span></span>
       <span class="marquee-item">💬 Pedidos por WhatsApp sin complicaciones <span class="marquee-sep">●</span></span>
@@ -687,7 +734,7 @@
   ══════════════════════════════════════════ -->
   <div class="mobile-overlay" id="mobileOverlay"></div>
   <aside class="mobile-drawer" id="mobileDrawer" role="dialog" aria-label="Menú de navegación">
-    
+
     <div class="drawer-header">
       <div class="footer-logo-wrap">
         <div class="footer-logo-icon" style="width:30px;height:30px;"><i class="fa fa-store" style="font-size:.75rem;"></i></div>
@@ -708,6 +755,14 @@
     <a href="/contacto" class="drawer-link"><i class="fa fa-envelope"></i> Contacto</a>
 
     <div class="drawer-divider"></div>
+
+    <!-- Login destacado en drawer -->
+    <div class="drawer-section-title">Acceso</div>
+    <a href="/login" class="drawer-link login-drawer">
+      <i class="fa fa-user-lock"></i> Acceso Administrador
+    </a>
+
+    <div class="drawer-divider"></div>
     <div class="drawer-section-title">Categorías</div>
     <a href="/catalogo?cat=abarrotes" class="drawer-link-cat"><i class="fa fa-wheat-awn"></i> Abarrotes</a>
     <a href="/catalogo?cat=lacteos" class="drawer-link-cat"><i class="fa fa-droplet"></i> Lácteos Frescos</a>
@@ -723,8 +778,11 @@
       <i class="fab fa-whatsapp"></i> Escribir por WhatsApp
     </a>
 
-    <div style="padding: .75rem 1.25rem; font-size: .75rem; color: #9ca3af; text-align: center;">
-      <i class="fa fa-phone" style="margin-right:.3rem;"></i> +51 968 495 632
+    <div class="drawer-footer">
+      <div class="drawer-footer-info"><i class="fa fa-phone"></i> +51 968 495 632</div>
+      <button class="btn-theme-nav" id="btnThemeDrawer" aria-label="Cambiar tema">
+        <i id="themeIconDrawer" class="fa fa-moon"></i>
+      </button>
     </div>
 
   </aside>
@@ -740,8 +798,7 @@
        FOOTER
   ══════════════════════════════════════════ -->
   <footer class="footer">
-    
-    <!-- Strip de beneficios -->
+
     <div class="footer-top-strip">
       <div class="footer-strip-inner">
         <div class="footer-strip-item">
@@ -763,11 +820,9 @@
       </div>
     </div>
 
-    <!-- Cuerpo del footer -->
     <div class="footer-main">
       <div class="footer-grid">
 
-        <!-- Marca -->
         <div>
           <div class="footer-logo-wrap">
             <div class="footer-logo-icon"><i class="fa fa-store"></i></div>
@@ -785,7 +840,6 @@
           </div>
         </div>
 
-        <!-- Navegación -->
         <div>
           <div class="footer-col-title">Tienda</div>
           <ul class="footer-links">
@@ -797,7 +851,6 @@
           </ul>
         </div>
 
-        <!-- Horario -->
         <div>
           <div class="footer-col-title">Horario</div>
           <div class="open-status" id="openChip">
@@ -811,7 +864,6 @@
           </ul>
         </div>
 
-        <!-- Contacto -->
         <div>
           <div class="footer-col-title">Contacto</div>
           <div class="footer-contact-item">
@@ -833,8 +885,8 @@
       <div class="footer-bottom">
         <span>© 2024 Comercial Verastegui. Todos los derechos reservados.</span>
         <div class="footer-bottom-links">
-          <a href="#">Privacidad</a>
-          <a href="#">Términos</a>
+          <a href="/privacidad">Privacidad</a>
+          <a href="/terminos">Términos</a>
         </div>
         <span class="made-badge"><i class="fa fa-heart"></i> Hecho con amor en Trujillo, Perú</span>
       </div>
@@ -858,24 +910,34 @@
       const sys   = window.matchMedia('(prefers-color-scheme: dark)').matches;
       const t     = saved || (sys ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', t);
-      const icon = document.getElementById('themeIcon');
-      if(icon) icon.className = t === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
+      updateThemeIcons(t);
     })();
 
-    document.getElementById('btnTheme').addEventListener('click', function(){
+    function updateThemeIcons(theme) {
+      const icon = document.getElementById('themeIcon');
+      const iconD = document.getElementById('themeIconDrawer');
+      const cls = theme === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
+      if(icon) icon.className = cls;
+      if(iconD) iconD.className = cls;
+    }
+
+    function toggleTheme() {
       const html = document.documentElement;
       const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-theme', next);
       localStorage.setItem('bv_theme', next);
-      document.getElementById('themeIcon').className = next === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
-    });
+      updateThemeIcons(next);
+    }
+
+    document.getElementById('btnTheme').addEventListener('click', toggleTheme);
+    document.getElementById('btnThemeDrawer').addEventListener('click', toggleTheme);
 
     /* ── Navbar scroll ── */
     window.addEventListener('scroll', () => {
       document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 30);
     }, { passive: true });
 
-    /* ── Drawer (Hamburger izquierda) ── */
+    /* ── Drawer ── */
     const btnH    = document.getElementById('btnHamburger');
     const drawer  = document.getElementById('mobileDrawer');
     const overlay = document.getElementById('mobileOverlay');
@@ -901,7 +963,6 @@
     dClose.addEventListener('click', closeDrawer);
     document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDrawer(); });
 
-    /* Drawer search → redirect */
     document.getElementById('drawerSearch').addEventListener('keydown', function(e){
       if(e.key === 'Enter' && this.value.trim()){
         window.location.href = '/catalogo?q=' + encodeURIComponent(this.value.trim());
@@ -909,11 +970,11 @@
     });
 
     /* ── Active nav link ── */
-    document.querySelectorAll('.nav-sec-link').forEach(link => {
-      if(link.getAttribute('href') === window.location.pathname) link.classList.add('active');
-    });
-    document.querySelectorAll('.drawer-link').forEach(link => {
-      if(link.getAttribute('href') === window.location.pathname) link.classList.add('active');
+    document.querySelectorAll('.nav-sec-link, .drawer-link, .drawer-link-cat').forEach(link => {
+      const href = link.getAttribute('href');
+      if(href && (href === window.location.pathname || href === window.location.pathname + window.location.search)){
+        link.classList.add('active');
+      }
     });
 
     /* ── Reveal on scroll ── */

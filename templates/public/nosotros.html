@@ -3,394 +3,466 @@
 
 {% block content %}
 
-<!-- Dependencia de Animaciones -->
-<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
 <style>
-/* ══════════════════════════════════════════════
-   HERO NOSOTROS - INMERSIVO Y LIMPIO
-══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════
+   HERO NOSOTROS
+══════════════════════════════════════════ */
 .hero-nosotros {
-  position: relative;
-  min-height: 70vh;
-  display: flex; align-items: center; justify-content: center;
-  overflow: hidden; padding: 8rem 2rem 5rem;
-  text-align: center; color: #fff;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 60%, #1a56db 100%);
+  position: relative; overflow: hidden;
+  padding: 5rem 0;
 }
-
-.hero-nos-bg {
-  position: absolute; inset: 0; z-index: 0;
-  background: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') center/cover no-repeat;
+.hero-nosotros::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
-.hero-nos-bg::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, var(--bg) 85%, transparent 100%);
+.hero-nos-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 1rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+  align-items: center; position: relative; z-index: 2;
 }
-[data-theme="light"] .hero-nos-bg::after {
-  background: linear-gradient(135deg, rgba(248,249,252,0.95) 85%, rgba(248,249,252,0.7) 100%);
-}
-
-/* Orbs sutiles */
-.hero-orb {
-  position: absolute; border-radius: 50%; filter: blur(100px); z-index: 1; pointer-events: none; opacity: .3;
-}
-.hero-orb.o1 { width: 400px; height: 400px; background: var(--gold-glow); top: -100px; left: -100px; animation: float 12s ease-in-out infinite; }
-.hero-orb.o2 { width: 300px; height: 300px; background: var(--blue-glow); bottom: -50px; right: -50px; animation: float 15s ease-in-out infinite reverse; }
-
-.hero-particles { position: absolute; inset: 0; z-index: 1; overflow: hidden; }
-.gold-particle {
-  position: absolute; width: 2px; height: 2px;
-  background: var(--gold); border-radius: 50%;
-  animation: particleRise linear infinite;
-  opacity: 0;
-}
-[data-theme="light"] .gold-particle { opacity: 0.3 !important; box-shadow: none !important; }
-
-@keyframes particleRise {
-  0% { opacity: 0; transform: translateY(100vh) scale(0); }
-  10% { opacity: .6; } 90% { opacity: .6; }
-  100% { opacity: 0; transform: translateY(-20vh) scale(1); }
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  50% { transform: translateY(-20px) translateX(10px); }
-}
-
-.hero-nos-content { position: relative; z-index: 3; max-width: 800px; }
-
-.hero-nos-badge {
+.hero-nos-left { text-align: left; }
+.hero-nos-tag {
   display: inline-flex; align-items: center; gap: .5rem;
-  background: var(--bg-card); backdrop-filter: blur(12px);
-  border: 1px solid var(--border-h); border-radius: 50px;
-  padding: .45rem 1.2rem; font-size: .78rem; font-weight: 600;
-  margin-bottom: 1.5rem; color: var(--gold);
+  background: rgba(249,115,22,.15); border: 1px solid rgba(249,115,22,.3);
+  border-radius: 999px; padding: .35rem .9rem;
+  font-family: var(--font-display); font-size: .72rem; font-weight: 700;
+  color: #fb923c; text-transform: uppercase; letter-spacing: .08em;
+  margin-bottom: 1.5rem;
 }
-.hero-nos-badge i { color: var(--gold); }
-
-.hero-nos-content h1 {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 800;
-  letter-spacing: -0.03em; margin-bottom: 1.2rem;
-  color: var(--txt);
+.hero-nos-left h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  font-weight: 800; line-height: 1.1; letter-spacing: -.03em;
+  color: #fff; margin-bottom: 1.25rem;
 }
-.hero-nos-content h1 span { color: var(--gold); }
-
-.hero-nos-content p {
-  font-size: 1.15rem; color: var(--txt-2); line-height: 1.8;
-  max-width: 600px; margin: 0 auto;
+.hero-nos-left h1 .hl {
+  background: linear-gradient(135deg, #60a5fa, #93c5fd);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-
-/* ══════════════════════════════════════════════
-   FEATURES (MISIÓN, VISIÓN, VALORES)
-══════════════════════════════════════════════ */
-.features-section { padding: 6rem 0; position: relative; z-index: 1; }
-
-.section-header { text-align: center; max-width: 620px; margin: 0 auto 3.5rem; }
-.section-label {
-  display: inline-flex; align-items: center; gap: .4rem;
-  font-family: 'Outfit', sans-serif;
-  font-size: .75rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .1em; margin-bottom: .8rem; color: var(--gold);
+.hero-nos-left h1 .acc { color: #fb923c; }
+.hero-nos-left p {
+  font-size: 1.05rem; color: rgba(255,255,255,.7);
+  line-height: 1.7; max-width: 480px; margin-bottom: 2rem;
 }
-.section-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800;
-  color: var(--txt); letter-spacing: -.03em; margin-bottom: .7rem;
+.hero-nos-stats {
+  display: flex; gap: 2rem; flex-wrap: wrap;
+  padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,.1);
 }
-.section-desc { font-size: .95rem; color: var(--txt-2); line-height: 1.7; }
+.hns-num {
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; color: #fff;
+}
+.hns-lbl { font-size: .8rem; color: rgba(255,255,255,.5); }
 
+.hero-nos-right {
+  position: relative; display: flex; justify-content: center;
+}
+.hero-nos-img-wrap {
+  width: 100%; max-width: 460px; height: 400px;
+  background: url('https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80') center/cover no-repeat;
+  border-radius: 20px; position: relative; overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,.3);
+}
+.hero-nos-img-wrap::before {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(15,23,42,.3) 0%, transparent 50%);
+}
+.hero-nos-float {
+  position: absolute; bottom: 1.5rem; left: -1.2rem;
+  background: #fff; border-radius: var(--radius-sm);
+  padding: .85rem 1.1rem; box-shadow: var(--shadow-md);
+  display: flex; align-items: center; gap: .7rem;
+  animation: floatBadge 3s ease-in-out infinite;
+}
+@keyframes floatBadge { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+.hnf-icon {
+  width: 38px; height: 38px; border-radius: var(--radius-xs);
+  background: rgba(249,115,22,.1); color: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .9rem;
+}
+.hnf-text strong {
+  display: block; font-family: var(--font-display);
+  font-size: .82rem; font-weight: 700; color: var(--txt);
+}
+.hnf-text span { font-size: .68rem; color: var(--txt-3); }
+
+.hero-nos-float-2 {
+  position: absolute; top: 1.5rem; right: -1rem;
+  background: #fff; border-radius: var(--radius-sm);
+  padding: .75rem 1rem; box-shadow: var(--shadow-md);
+  text-align: center;
+  animation: floatBadge 3.5s ease-in-out infinite;
+  animation-delay: 1s;
+}
+.hnf2-num { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; color: var(--primary); line-height: 1; }
+.hnf2-lbl { font-size: .65rem; color: var(--txt-3); font-weight: 500; margin-top: .2rem; }
+
+/* ══════════════════════════════════════════
+   QUICK TRUST STRIP
+══════════════════════════════════════════ */
+.trust-nos-strip {
+  background: var(--bg-white);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-xs);
+}
+.trust-nos-inner {
+  max-width: 1280px; margin: 0 auto; padding: 0 1rem;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.trust-nos-item {
+  display: flex; align-items: center; gap: .85rem;
+  padding: 1.1rem .75rem; border-right: 1px solid var(--border);
+  transition: background .2s;
+}
+.trust-nos-item:last-child { border-right: none; }
+.trust-nos-item:hover { background: var(--bg-subtle); }
+.tni-icon {
+  width: 38px; height: 38px; border-radius: var(--radius-sm); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .9rem;
+}
+.tni-icon.i-primary { background: var(--primary-light); color: var(--primary); }
+.tni-icon.i-accent { background: var(--accent-light); color: var(--accent); }
+.tni-icon.i-green { background: #dcfce7; color: #16a34a; }
+.tni-icon.i-yellow { background: #fef9c3; color: #ca8a04; }
+.trust-nos-item strong {
+  display: block; font-family: var(--font-display); font-size: .86rem; font-weight: 700;
+  color: var(--txt); margin-bottom: .1rem;
+}
+.trust-nos-item span { font-size: .78rem; color: var(--txt-3); line-height: 1.35; }
+
+/* ══════════════════════════════════════════
+   SECCIONES GENERALES
+══════════════════════════════════════════ */
+.nos-section-wrap { max-width: 1280px; margin: 0 auto; padding: 4rem 1rem; }
+.nos-section-header { text-align: center; max-width: 620px; margin: 0 auto 2.5rem; }
+.nos-section-tag {
+  font-family: var(--font-display); font-size: .7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em; color: var(--accent);
+  margin-bottom: .4rem; display: flex; align-items: center; justify-content: center; gap: .4rem;
+}
+.nos-section-tag::before, .nos-section-tag::after {
+  content: ''; display: block; width: 16px; height: 2px; background: currentColor; border-radius: 2px;
+}
+.nos-section-title {
+  font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800; color: var(--txt); letter-spacing: -.02em; margin-bottom: .6rem;
+}
+.nos-section-desc { font-size: .95rem; color: var(--txt-2); line-height: 1.7; }
+
+/* ══════════════════════════════════════════
+   MISIÓN, VISIÓN, VALORES
+══════════════════════════════════════════ */
 .features-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.25rem;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;
 }
-
 .feature-card {
-  background: var(--bg-card); backdrop-filter: blur(12px);
-  border: 1px solid var(--border); border-radius: 18px;
-  padding: 2.5rem 2rem; text-align: center;
-  transition: all .3s ease; position: relative; overflow: hidden;
+  background: var(--bg-white); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 2rem 1.75rem;
+  text-align: center; transition: all .3s; position: relative; overflow: hidden;
 }
 .feature-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: var(--gold); opacity: 0; transition: opacity .3s;
+  opacity: 0; transition: opacity .3s;
 }
+.feature-card:nth-child(1)::before { background: var(--accent); }
+.feature-card:nth-child(2)::before { background: var(--primary); }
+.feature-card:nth-child(3)::before { background: #16a34a; }
 .feature-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--border-h);
-  box-shadow: var(--shadow);
+  transform: translateY(-4px); border-color: var(--primary-light);
+  box-shadow: var(--shadow-md);
 }
 .feature-card:hover::before { opacity: 1; }
 
-.feature-icon {
-  width: 60px; height: 60px; border-radius: 14px;
+.fc-icon {
+  width: 56px; height: 56px; border-radius: var(--radius-sm);
   display: inline-flex; align-items: center; justify-content: center;
-  font-size: 1.4rem; margin-bottom: 1.5rem;
-  transition: transform .3s;
+  font-size: 1.3rem; margin-bottom: 1.25rem; transition: transform .3s;
 }
-.feature-icon.ico-gold { background: var(--gold-soft); color: var(--gold); border: 1px solid rgba(212,175,55,.15); }
-.feature-icon.ico-blue { background: var(--blue-soft); color: var(--blue); border: 1px solid rgba(91,127,255,.15); }
-.feature-icon.ico-cyan { background: var(--cyan-glow); color: var(--cyan); border: 1px solid rgba(34,211,238,.15); }
-
-.feature-card:hover .feature-icon { transform: scale(1.1) translateY(-2px); }
+.fc-icon.i-acc { background: var(--accent-light); color: var(--accent); }
+.fc-icon.i-pri { background: var(--primary-light); color: var(--primary); }
+.fc-icon.i-grn { background: #dcfce7; color: #16a34a; }
+.feature-card:hover .fc-icon { transform: scale(1.1) translateY(-2px); }
 
 .feature-card h3 {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.15rem; font-weight: 700; color: var(--txt); margin-bottom: .8rem;
+  font-family: var(--font-display); font-size: 1.1rem; font-weight: 700;
+  color: var(--txt); margin-bottom: .75rem;
 }
 .feature-card p { font-size: .9rem; color: var(--txt-2); line-height: 1.75; }
 
-.values-list { list-style: none; text-align: left; display: inline-block; margin-top: .6rem; width: 100%; }
+.values-list { list-style: none; text-align: left; margin-top: .6rem; width: 100%; }
 .values-list li {
   display: flex; align-items: center; gap: .7rem;
-  font-size: .88rem; color: var(--txt-2); margin-bottom: .65rem;
+  font-size: .88rem; color: var(--txt-2); margin-bottom: .6rem;
   transition: transform .2s;
 }
 .values-list li:hover { transform: translateX(4px); color: var(--txt); }
-.values-list li i { color: var(--gold); font-size: .7rem; width: 18px; text-align: center; }
+.values-list li i { color: #16a34a; font-size: .7rem; width: 18px; text-align: center; }
 
-/* ══════════════════════════════════════════════
+/* ══════════════════════════════════════════
    STATS COUNTER
-══════════════════════════════════════════════ */
-.stats-section { padding: 2rem 0 6rem; position: relative; z-index: 1; }
-
-.stats-glass-card {
-  background: var(--bg-card); backdrop-filter: blur(16px);
-  border: 1px solid var(--border); border-radius: 20px;
-  padding: 3.5rem 2rem;
-  box-shadow: var(--shadow);
-  position: relative; overflow: hidden;
+══════════════════════════════════════════ */
+.stats-section {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+  padding: 4rem 0;
 }
-.stats-glass-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--border), transparent);
-}
-
+.stats-inner { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
 .stats-grid {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem;
 }
-
-.stat-item { text-align: center; padding: 1rem; }
+.stat-item { text-align: center; padding: 1.5rem; }
 .stat-number {
-  font-family: 'Outfit', sans-serif;
-  font-size: 2.8rem; font-weight: 800; color: var(--gold);
-  letter-spacing: -0.03em; margin-bottom: .3rem;
+  font-family: var(--font-display); font-size: 2.8rem; font-weight: 800;
+  color: var(--accent); letter-spacing: -.03em; margin-bottom: .3rem;
 }
 .stat-label {
-  font-family: 'Outfit', sans-serif;
-  font-size: .75rem; color: var(--txt-2);
+  font-family: var(--font-display); font-size: .75rem; color: rgba(255,255,255,.55);
   text-transform: uppercase; letter-spacing: .08em; font-weight: 600;
 }
-.stat-divider { width: 40px; height: 2px; margin: .8rem auto 0; background: var(--border); }
+.stat-divider { width: 40px; height: 2px; margin: .8rem auto 0; background: rgba(255,255,255,.1); }
 
-/* ══════════════════════════════════════════════
+/* ══════════════════════════════════════════
    HISTORIA / STORY
-══════════════════════════════════════════════ */
-.story-section { padding: 4rem 0 6rem; position: relative; z-index: 1; }
-
+══════════════════════════════════════════ */
+.story-section {
+  background: var(--bg-white);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
 .story-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 4rem; align-items: center;
+  display: grid; grid-template-columns: 1fr 1.1fr; gap: 3.5rem; align-items: center;
 }
-
-.story-img-wrapper {
-  position: relative; border-radius: 18px; overflow: hidden;
-  box-shadow: var(--shadow);
-  transform: rotate(-2deg); transition: transform .5s ease;
-  border: 1px solid var(--border);
-}
-.story-img-wrapper:hover { transform: rotate(0deg); border-color: var(--border-h); }
+.story-img-col { position: relative; }
 .story-img {
-  width: 100%; height: 500px; object-fit: cover; display: block;
-  transition: filter .3s;
+  width: 100%; height: 440px; object-fit: cover;
+  border-radius: var(--radius); box-shadow: var(--shadow-lg);
 }
-[data-theme="light"] .story-img { filter: brightness(1); }
-
 .story-year-badge {
-  position: absolute; bottom: 20px; left: 20px; z-index: 3;
-  background: var(--bg-card); backdrop-filter: blur(12px);
-  border: 1px solid var(--border); border-radius: 12px;
-  padding: .8rem 1.2rem; text-align: center;
+  position: absolute; bottom: -1rem; right: -1rem;
+  background: var(--bg-white); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow-md);
+  text-align: center;
 }
-.story-year-badge .year {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.8rem; font-weight: 800; color: var(--gold); line-height: 1;
+.syb-year {
+  font-family: var(--font-display); font-size: 1.8rem; font-weight: 800;
+  color: var(--accent); line-height: 1;
 }
-.story-year-badge .year-label {
-  font-family: 'Outfit', sans-serif;
-  font-size: .65rem; color: var(--txt-2); text-transform: uppercase; letter-spacing: .1em; font-weight: 700;
+.syb-label {
+  font-family: var(--font-display); font-size: .65rem; color: var(--txt-3);
+  text-transform: uppercase; letter-spacing: .1em; font-weight: 700; margin-top: .15rem;
 }
 
-.story-content { padding-left: 2rem; }
 .story-content h2 {
-  font-family: 'Outfit', sans-serif;
-  font-size: 2.2rem; font-weight: 800; color: var(--txt);
-  letter-spacing: -0.03em; margin-bottom: 1.2rem;
+  font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800; color: var(--txt); letter-spacing: -.02em; margin-bottom: 1rem;
 }
-.story-content h2 span { color: var(--gold); }
-.story-content p { font-size: .95rem; color: var(--txt-2); line-height: 1.85; margin-bottom: 1.2rem; }
+.story-content h2 span { color: var(--accent); }
+.story-content p { font-size: .95rem; color: var(--txt-2); line-height: 1.85; margin-bottom: 1rem; }
 
-.story-cta {
-  display: inline-flex; align-items: center; gap: .6rem;
-  background: linear-gradient(135deg, var(--blue), var(--gold));
-  color: #fff; font-family: 'Outfit'; font-weight: 700; font-size: .9rem;
-  padding: .8rem 1.6rem; border-radius: 12px; text-decoration: none;
-  transition: all .25s; box-shadow: 0 4px 12px var(--blue-glow);
+.story-features { margin-top: 1.75rem; display: flex; flex-direction: column; gap: 1rem; }
+.story-feat {
+  display: flex; gap: 1rem; align-items: flex-start;
+  padding: 1rem; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); background: var(--bg-subtle);
+  transition: all .2s;
 }
-.story-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--blue-glow); color: #fff; }
-.story-cta i { transition: transform .2s; }
-.story-cta:hover i { transform: translateX(3px); }
-
-/* ══════════════════════════════════════════════
-   CTA SECTION - WHATSAPP
-══════════════════════════════════════════════ */
-.cta-section { padding: 0 0 6rem; position: relative; z-index: 1; }
-
-.cta-wa-inner {
-  background: var(--bg-card); backdrop-filter: blur(16px);
-  border: 1px solid rgba(37,211,102,.2); border-radius: 20px;
-  padding: 3.5rem; text-align: center;
-  position: relative; overflow: hidden;
-  box-shadow: var(--shadow-sm);
+.story-feat:hover { border-color: var(--primary-light); background: var(--primary-light); }
+.sf-icon {
+  width: 42px; height: 42px; border-radius: var(--radius-xs); flex-shrink: 0;
+  background: var(--primary-light); display: flex; align-items: center; justify-content: center;
+  color: var(--primary); font-size: .95rem;
 }
-.cta-wa-inner::before {
-  content: '\f232'; font-family: 'Font Awesome 6 Brands';
-  position: absolute; right: -50px; top: -50px;
-  font-size: 22rem; opacity: .03; color: #25d366; pointer-events: none;
-}
+.story-feat:hover .sf-icon { background: var(--primary); color: #fff; }
+.sf-text h4 { font-family: var(--font-display); font-size: .92rem; font-weight: 700; color: var(--txt); margin-bottom: .15rem; }
+.sf-text p { font-size: .85rem; color: var(--txt-2); line-height: 1.5; }
 
-.cta-wa-inner h2 {
-  font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800;
-  color: var(--txt); margin-bottom: .5rem; position: relative; z-index: 1;
-}
-.cta-wa-inner h2 span { color: var(--gold); }
-.cta-wa-inner p { color: var(--txt-2); max-width: 500px; margin: 0 auto 2rem; position: relative; z-index: 1; font-size: 1.05rem; line-height: 1.7; }
-
-.cta-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
-
-.btn-wa-big {
-  display: inline-flex; align-items: center; gap: .6rem;
-  background: #25d366; color: #fff; border: none; border-radius: 12px;
-  padding: 1rem 2rem; font-family: 'Outfit'; font-weight: 700; font-size: .95rem;
-  cursor: pointer; text-decoration: none; transition: all .25s;
-  box-shadow: 0 6px 20px rgba(37,211,102,.25);
-}
-.btn-wa-big:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(37,211,102,.35); color: #fff; }
-
-.btn-outline {
+.story-cta-row { margin-top: 2rem; display: flex; gap: .75rem; flex-wrap: wrap; }
+.btn-story-primary {
   display: inline-flex; align-items: center; gap: .5rem;
-  background: transparent; border: 1px solid var(--border); color: var(--txt-2);
-  font-family: 'Outfit'; font-weight: 600; font-size: .95rem;
-  padding: 1rem 2rem; border-radius: 12px; text-decoration: none; transition: all .2s;
+  background: var(--primary); color: #fff; border: none;
+  padding: .8rem 1.5rem; border-radius: var(--radius-sm);
+  font-family: var(--font-display); font-size: .9rem; font-weight: 700;
+  cursor: pointer; text-decoration: none; transition: all .25s;
+  box-shadow: var(--shadow-primary);
 }
-.btn-outline:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-soft); }
-
-/* ══════════════════════════════════════════════
-   CONTAINER & RESPONSIVE
-══════════════════════════════════════════════ */
-.container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-
-@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 768px) {
-  .hero-nosotros { min-height: 60vh; padding: 7rem 1.5rem 4rem; }
-  .story-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-  .story-content { padding-left: 0; margin-top: 2rem; }
-  .story-img-wrapper { transform: rotate(0deg); max-height: 350px; }
-  .story-img { height: 350px; }
-  .cta-wa-inner { padding: 2.5rem 1.5rem; }
+.btn-story-primary:hover { background: var(--primary-dark); transform: translateY(-2px); color: #fff; }
+.btn-story-secondary {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: transparent; color: var(--txt-2); border: 1.5px solid var(--border);
+  padding: .8rem 1.5rem; border-radius: var(--radius-sm);
+  font-family: var(--font-display); font-size: .9rem; font-weight: 700;
+  cursor: pointer; text-decoration: none; transition: all .2s;
 }
-@media (max-width: 480px) {
+.btn-story-secondary:hover { border-color: var(--primary-light); color: var(--primary); background: var(--primary-light); }
+
+/* ══════════════════════════════════════════
+   TEAM / COMPROMISO
+══════════════════════════════════════════ */
+.commitment-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem;
+}
+.commitment-card {
+  display: flex; align-items: flex-start; gap: 1.1rem;
+  padding: 1.5rem; border-radius: var(--radius);
+  border: 1.5px solid var(--border); background: var(--bg-white);
+  transition: all .25s;
+}
+.commitment-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+.cc-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-sm); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+}
+.cc-icon.i-acc { background: var(--accent-light); color: var(--accent); }
+.cc-icon.i-pri { background: var(--primary-light); color: var(--primary); }
+.cc-icon.i-grn { background: #dcfce7; color: #16a34a; }
+.cc-icon.i-yel { background: #fef9c3; color: #ca8a04; }
+.commitment-card h4 {
+  font-family: var(--font-display); font-size: .95rem; font-weight: 700;
+  color: var(--txt); margin-bottom: .3rem;
+}
+.commitment-card p { font-size: .85rem; color: var(--txt-2); line-height: 1.6; }
+
+/* ══════════════════════════════════════════
+   TESTIMONIOS MINI
+══════════════════════════════════════════ */
+.testi-mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.testi-mini-card {
+  background: var(--bg-white); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem;
+  transition: all .25s;
+}
+.testi-mini-card:hover { border-color: var(--primary-light); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+.tm-stars { color: #f59e0b; font-size: .85rem; letter-spacing: .05em; margin-bottom: .75rem; }
+.tm-text { font-size: .88rem; color: var(--txt-2); line-height: 1.75; margin-bottom: 1rem; }
+.tm-author { display: flex; align-items: center; gap: .65rem; }
+.tm-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--primary-light); color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: .8rem; font-weight: 700;
+}
+.tm-name { font-family: var(--font-display); font-size: .85rem; font-weight: 700; color: var(--txt); }
+.tm-meta { font-size: .72rem; color: var(--txt-3); }
+
+/* ══════════════════════════════════════════
+   CTA WHATSAPP
+══════════════════════════════════════════ */
+.cta-nos-wa {
+  background: #15803d;
+  background-image: linear-gradient(135deg, #15803d 0%, #166534 100%);
+}
+.cta-nos-wa-inner {
+  max-width: 1280px; margin: 0 auto; padding: 3.5rem 1rem;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 2rem; flex-wrap: wrap;
+}
+.cta-nos-wa-text h2 {
+  font-family: var(--font-display); font-size: clamp(1.3rem, 3vw, 2rem);
+  font-weight: 800; color: #fff; margin-bottom: .4rem;
+}
+.cta-nos-wa-text p { color: rgba(255,255,255,.75); font-size: .95rem; max-width: 460px; }
+.btn-cta-nos-wa {
+  display: inline-flex; align-items: center; gap: .65rem;
+  background: #fff; color: #166534;
+  padding: 1rem 2rem; border-radius: var(--radius-sm);
+  font-family: var(--font-display); font-size: 1rem; font-weight: 800;
+  cursor: pointer; text-decoration: none; flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(0,0,0,.2); transition: all .3s;
+}
+.btn-cta-nos-wa:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.25); color: #166534; }
+.btn-cta-nos-wa i { font-size: 1.2rem; color: #22c55e; }
+
+/* ══════════════════════════════════════════
+   REVEAL
+══════════════════════════════════════════ */
+.reveal-up {
+  opacity: 0; transform: translateY(20px);
+  transition: all .6s cubic-bezier(.25,.8,.25,1);
+}
+.reveal-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
+@media(max-width:1024px){
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .commitment-grid { grid-template-columns: 1fr; }
+  .testi-mini-grid { grid-template-columns: 1fr 1fr; }
+}
+@media(max-width:768px){
+  .hero-nos-inner { grid-template-columns: 1fr; text-align: center; }
+  .hero-nos-left { text-align: center; }
+  .hero-nos-left p { margin: 0 auto 2rem; }
+  .hero-nos-stats { justify-content: center; }
+  .hero-nos-right { display: none; }
+  .trust-nos-inner { grid-template-columns: 1fr 1fr; }
+  .trust-nos-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .trust-nos-item:nth-child(even) { border-left: 1px solid var(--border); }
   .features-grid { grid-template-columns: 1fr; }
+  .story-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .story-year-badge { position: relative; bottom: auto; right: auto; margin-top: 1rem; display: inline-flex; gap: .5rem; padding: .75rem 1rem; }
+  .cta-nos-wa-inner { text-align: center; flex-direction: column; }
+  .testi-mini-grid { grid-template-columns: 1fr; }
+}
+@media(max-width:480px){
+  .hero-nosotros { padding: 3rem 0; }
+  .hero-nos-left h1 { font-size: 1.8rem; }
+  .trust-nos-inner { grid-template-columns: 1fr; }
+  .trust-nos-item { border-left: none; }
   .stats-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .stat-number { font-size: 2.2rem; }
-  .cta-buttons { flex-direction: column; align-items: center; }
+  .stat-number { font-size: 2rem; }
+  .story-img { height: 280px; }
+  .commitment-grid { gap: .75rem; }
+  .commitment-card { padding: 1.1rem; }
+  .hero-nos-cta-row { flex-direction: column; }
+  .story-cta-row { flex-direction: column; }
+  .btn-story-primary, .btn-story-secondary { width: 100%; justify-content: center; }
 }
 </style>
 
 
-<!-- ═══════════════════════════════════════════════ -->
-<!-- HERO DORADO                                    -->
-<!-- ═══════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════
+     HERO NOSOTROS
+═══════════════════════════════════════ -->
 <section class="hero-nosotros">
-  <div class="hero-nos-bg"></div>
-  <div class="hero-orb o1"></div>
-  <div class="hero-orb o2"></div>
-  <div class="hero-particles" id="heroParticles"></div>
-
-  <div class="hero-nos-content" data-aos="fade-up" data-aos-duration="1000">
-    <span class="hero-nos-badge">
-      <i class="fa fa-crown"></i> Conócenos
-    </span>
-    <h1>Sobre Comercial <span>Verastegui</span></h1>
-    <p>Somos una bodega comprometida con ofrecer productos de calidad, buen servicio y precios justos para toda nuestra clientela.</p>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- MISIÓN, VISIÓN, VALORES                        -->
-<!-- ═══════════════════════════════════════════════ -->
-<section class="features-section">
-  <div class="container">
-    <div class="section-header" data-aos="fade-up">
-      <span class="section-label"><i class="fa fa-gem"></i> Nuestro Propósito</span>
-      <h2 class="section-title">Lo que nos mueve cada día</h2>
-      <p class="section-desc">Más que vender productos, buscamos ser parte importante de la vida de nuestros vecinos.</p>
-    </div>
-
-    <div class="features-grid">
-      <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-        <div class="feature-icon ico-gold"><i class="fa fa-bullseye"></i></div>
-        <h3>Nuestra Misión</h3>
-        <p>Brindar productos esenciales de calidad con atención rápida y confiable, mejorando la experiencia de compra de nuestros clientes.</p>
+  <div class="hero-nos-inner">
+    <div class="hero-nos-left">
+      <div class="hero-nos-tag">
+        <i class="fa fa-crown"></i> Conócenos
       </div>
-
-      <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-        <div class="feature-icon ico-blue"><i class="fa fa-eye"></i></div>
-        <h3>Nuestra Visión</h3>
-        <p>Ser la bodega de referencia en la zona, destacando por servicio, confianza y precios competitivos.</p>
-      </div>
-
-      <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-        <div class="feature-icon ico-cyan"><i class="fa fa-award"></i></div>
-        <h3>Nuestros Valores</h3>
-        <ul class="values-list">
-          <li><i class="fa fa-check-circle"></i> Honestidad en cada interacción</li>
-          <li><i class="fa fa-check-circle"></i> Responsabilidad y compromiso</li>
-          <li><i class="fa fa-check-circle"></i> Cercanía con el cliente</li>
-          <li><i class="fa fa-check-circle"></i> Calidad garantizada</li>
-        </ul>
+      <h1>Sobre Comercial<br><span class="hl">Verastegui</span></h1>
+      <p>Somos una bodega comprometida con ofrecer productos de calidad, buen servicio y precios justos para toda nuestra clientela en Trujillo.</p>
+      <div class="hero-nos-stats">
+        <div>
+          <div class="hns-num">15+</div>
+          <div class="hns-lbl">Años de experiencia</div>
+        </div>
+        <div>
+          <div class="hns-num">500+</div>
+          <div class="hns-lbl">Clientes satisfechos</div>
+        </div>
+        <div>
+          <div class="hns-num">1200+</div>
+          <div class="hns-lbl">Productos</div>
+        </div>
       </div>
     </div>
-  </div>
-</section>
-
-
-<!-- ═══════════════════════════════════════════════ -->
-<!-- STATS                                          -->
-<!-- ═══════════════════════════════════════════════ -->
-<section class="stats-section">
-  <div class="container">
-    <div class="stats-glass-card" data-aos="zoom-in" data-aos-duration="800">
-      <div class="stats-grid">
-        <div class="stat-item">
-          <div class="stat-number" data-target="5">0</div>
-          <div class="stat-label">Años de experiencia</div>
-          <div class="stat-divider"></div>
+    <div class="hero-nos-right">
+      <div class="hero-nos-img-wrap">
+        <div class="hero-nos-float">
+          <div class="hnf-icon"><i class="fa fa-truck-fast"></i></div>
+          <div class="hnf-text">
+            <strong>Delivery express</strong>
+            <span>En tu zona</span>
+          </div>
         </div>
-        <div class="stat-item">
-          <div class="stat-number" data-target="500">0</div>
-          <div class="stat-label">Clientes satisfechos</div>
-          <div class="stat-divider"></div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number" data-target="1200">0</div>
-          <div class="stat-label">Productos disponibles</div>
-          <div class="stat-divider"></div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number" data-target="98">0</div>
-          <div class="stat-label">% Satisfacción</div>
-          <div class="stat-divider"></div>
+        <div class="hero-nos-float-2">
+          <div class="hnf2-num">4.9★</div>
+          <div class="hnf2-lbl">Satisfacción</div>
         </div>
       </div>
     </div>
@@ -398,28 +470,139 @@
 </section>
 
 
-<!-- ═══════════════════════════════════════════════ -->
-<!-- NUESTRA HISTORIA                               -->
-<!-- ═══════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════
+     TRUST STRIP
+═══════════════════════════════════════ -->
+<div class="trust-nos-strip">
+  <div class="trust-nos-inner">
+    <div class="trust-nos-item">
+      <div class="tni-icon i-primary"><i class="fa fa-truck-fast"></i></div>
+      <div><strong>Delivery Express</strong><span>En tu zona en minutos</span></div>
+    </div>
+    <div class="trust-nos-item">
+      <div class="tni-icon i-accent"><i class="fa fa-box-open"></i></div>
+      <div><strong>Stock Actualizado</strong><span>Disponibilidad en tiempo real</span></div>
+    </div>
+    <div class="trust-nos-item">
+      <div class="tni-icon i-green"><i class="fab fa-whatsapp"></i></div>
+      <div><strong>Pedido por WhatsApp</strong><span>Sin apps ni registro</span></div>
+    </div>
+    <div class="trust-nos-item">
+      <div class="tni-icon i-yellow"><i class="fa fa-star"></i></div>
+      <div><strong>Calidad Garantizada</strong><span>Productos frescos y seguros</span></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     MISIÓN, VISIÓN, VALORES
+═══════════════════════════════════════ -->
+<div class="nos-section-wrap">
+  <div class="nos-section-header reveal-up">
+    <div class="nos-section-tag">Nuestro propósito</div>
+    <h2 class="nos-section-title">Lo que nos mueve cada día</h2>
+    <p class="nos-section-desc">Más que vender productos, buscamos ser parte importante de la vida de nuestros vecinos.</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card reveal-up">
+      <div class="fc-icon i-acc"><i class="fa fa-bullseye"></i></div>
+      <h3>Nuestra Misión</h3>
+      <p>Brindar productos esenciales de calidad con atención rápida y confiable, mejorando la experiencia de compra de nuestros clientes.</p>
+    </div>
+
+    <div class="feature-card reveal-up">
+      <div class="fc-icon i-pri"><i class="fa fa-eye"></i></div>
+      <h3>Nuestra Visión</h3>
+      <p>Ser la bodega de referencia en la zona, destacando por servicio, confianza y precios competitivos.</p>
+    </div>
+
+    <div class="feature-card reveal-up">
+      <div class="fc-icon i-grn"><i class="fa fa-award"></i></div>
+      <h3>Nuestros Valores</h3>
+      <ul class="values-list">
+        <li><i class="fa fa-check-circle"></i> Honestidad en cada interacción</li>
+        <li><i class="fa fa-check-circle"></i> Responsabilidad y compromiso</li>
+        <li><i class="fa fa-check-circle"></i> Cercanía con el cliente</li>
+        <li><i class="fa fa-check-circle"></i> Calidad garantizada</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     STATS COUNTER
+═══════════════════════════════════════ -->
+<div class="stats-section">
+  <div class="stats-inner">
+    <div style="text-align:center;margin-bottom:2rem;">
+      <div class="nos-section-tag" style="color:#fb923c;justify-content:center;">En números</div>
+      <h2 style="font-family:var(--font-display);font-size:clamp(1.4rem,3vw,1.75rem);font-weight:800;color:#fff;letter-spacing:-.02em;">Nuestra trayectoria</h2>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-number" data-target="15">0</div>
+        <div class="stat-label">Años de experiencia</div>
+        <div class="stat-divider"></div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="500">0</div>
+        <div class="stat-label">Clientes satisfechos</div>
+        <div class="stat-divider"></div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="1200">0</div>
+        <div class="stat-label">Productos disponibles</div>
+        <div class="stat-divider"></div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" data-target="98">0</div>
+        <div class="stat-label">% Satisfacción</div>
+        <div class="stat-divider"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     NUESTRA HISTORIA
+═══════════════════════════════════════ -->
 <section class="story-section">
-  <div class="container">
+  <div class="nos-section-wrap" style="padding-top:0;padding-bottom:0;">
     <div class="story-grid">
 
-      <div class="story-img-wrapper" data-aos="fade-right">
+      <div class="story-img-col reveal-up">
         <img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Nuestra tienda" class="story-img">
         <div class="story-year-badge">
-          <div class="year">2021</div>
-          <div class="year-label">Desde</div>
+          <div class="syb-year">15+</div>
+          <div class="syb-label">Años</div>
         </div>
       </div>
 
-      <div class="story-content" data-aos="fade-left">
-        <h2>Nuestra <span>Historia</span></h2>
+      <div class="story-content reveal-up">
+        <div class="nos-section-tag" style="justify-content:flex-start;">Nuestra historia</div>
+        <h2>De un pequeño sueño<br>a un <span>referente del barrio</span></h2>
         <p>Desde nuestros inicios, Comercial Verastegui nació con el sueño de ofrecer un servicio cercano y de calidad a nuestros vecinos. Lo que empezó como un pequeño emprendimiento familiar, hoy es un referente en la comunidad.</p>
         <p>A lo largo de los años, hemos crecido gracias a la confianza de nuestros clientes, manteniendo siempre la esencia que nos define: trato humano, productos frescos y precios justos.</p>
-        <a href="/contacto" class="story-cta">
-          Contáctanos <i class="fa fa-arrow-right"></i>
-        </a>
+
+        <div class="story-features">
+          <div class="story-feat">
+            <div class="sf-icon"><i class="fa fa-hand-holding-heart"></i></div>
+            <div class="sf-text"><h4>Trato Humano</h4><p>Te conocemos por tu nombre y siempre te atendemos con una sonrisa.</p></div>
+          </div>
+          <div class="story-feat">
+            <div class="sf-icon"><i class="fa fa-shield-halved"></i></div>
+            <div class="sf-text"><h4>Confianza Garantizada</h4><p>Revisamos cada producto antes de entregarlo para asegurar su calidad.</p></div>
+          </div>
+        </div>
+
+        <div class="story-cta-row">
+          <a href="/contacto" class="btn-story-primary"><i class="fa fa-envelope"></i> Contáctanos</a>
+          <a href="/catalogo" class="btn-story-secondary"><i class="fa fa-store"></i> Ver productos</a>
+        </div>
       </div>
 
     </div>
@@ -427,74 +610,125 @@
 </section>
 
 
-<!-- ═══════════════════════════════════════════════ -->
-<!-- CTA FINAL                                      -->
-<!-- ═══════════════════════════════════════════════ -->
-<section class="cta-section">
-  <div class="container">
-    <div class="cta-wa-inner" data-aos="fade-up">
-      <h2>Ven a <span>conocernos</span></h2>
-      <p>Estamos siempre listos para atenderte con la mejor disposición y los productos que necesitas.</p>
-      <div class="cta-buttons">
-        <a href="https://wa.me/51968495632?text=Hola!%20Quiero%20información" target="_blank" class="btn-wa-big">
-          <i class="fab fa-whatsapp"></i> Escríbenos por WhatsApp
-        </a>
-        <a href="/catalogo" class="btn-outline">
-          <i class="fa fa-store"></i> Ver productos
-        </a>
+<!-- ═══════════════════════════════════════
+     NUESTRO COMPROMISO
+═══════════════════════════════════════ -->
+<div class="nos-section-wrap">
+  <div class="nos-section-header reveal-up">
+    <div class="nos-section-tag">Lo que nos distingue</div>
+    <h2 class="nos-section-title">Nuestro compromiso contigo</h2>
+    <p class="nos-section-desc">Cada día trabajamos para darte la mejor experiencia de compra.</p>
+  </div>
+
+  <div class="commitment-grid">
+    <div class="commitment-card reveal-up">
+      <div class="cc-icon i-acc"><i class="fa fa-truck-fast"></i></div>
+      <div><h4>Delivery Rápido</h4><p>Llevamos tu pedido en menos de 45 minutos en la zona de cobertura.</p></div>
+    </div>
+    <div class="commitment-card reveal-up">
+      <div class="cc-icon i-pri"><i class="fa fa-box-open"></i></div>
+      <div><h4>Stock en Tiempo Real</h4><p>Lo que ves disponible en la web es lo que tenemos en la tienda.</p></div>
+    </div>
+    <div class="commitment-card reveal-up">
+      <div class="cc-icon i-grn"><i class="fa fa-leaf"></i></div>
+      <div><h4>Productos Frescos</h4><p>Revisamos fechas de vencimiento y calidad de cada producto a despachar.</p></div>
+    </div>
+    <div class="commitment-card reveal-up">
+      <div class="cc-icon i-yel"><i class="fa fa-tags"></i></div>
+      <div><h4>Precios Justos</h4><p>Precios competitivos y sincronizados con nuestra tienda física.</p></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     TESTIMONIOS
+═══════════════════════════════════════ -->
+<div style="background:var(--bg-subtle);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:4rem 0;">
+  <div style="max-width:1280px;margin:0 auto;padding:0 1rem;">
+    <div class="nos-section-header reveal-up">
+      <div class="nos-section-tag">Nuestros clientes</div>
+      <h2 class="nos-section-title">Lo que dicen de nosotros</h2>
+    </div>
+    <div class="testi-mini-grid">
+      <div class="testi-mini-card reveal-up">
+        <div class="tm-stars">★★★★★</div>
+        <p class="tm-text">"Siempre encuentro lo que busco y me lo traen rapidísimo. Mejor que ir a varias tiendas juntas."</p>
+        <div class="tm-author">
+          <div class="tm-avatar">ML</div>
+          <div><div class="tm-name">María L.</div><div class="tm-meta">Cliente frecuente · Trujillo</div></div>
+        </div>
+      </div>
+      <div class="testi-mini-card reveal-up">
+        <div class="tm-stars">★★★★★</div>
+        <p class="tm-text">"Los precios son justos y el pedido por WhatsApp es súper práctico para el hogar. Los recomiendo."</p>
+        <div class="tm-author">
+          <div class="tm-avatar" style="background:var(--accent-light);color:var(--accent)">CR</div>
+          <div><div class="tm-name">Carlos R.</div><div class="tm-meta">Vecino del sector</div></div>
+        </div>
+      </div>
+      <div class="testi-mini-card reveal-up">
+        <div class="tm-stars">★★★★★</div>
+        <p class="tm-text">"Productos frescos, buena atención y siempre puntuales. Mi bodega de confianza definitivamente."</p>
+        <div class="tm-author">
+          <div class="tm-avatar" style="background:#fef9c3;color:#ca8a04">RV</div>
+          <div><div class="tm-name">Rosa V.</div><div class="tm-meta">Cliente fija · Trujillo</div></div>
+        </div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
 
-<!-- Scripts -->
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<!-- ═══════════════════════════════════════
+     CTA WHATSAPP
+═══════════════════════════════════════ -->
+<div class="cta-nos-wa">
+  <div class="cta-nos-wa-inner">
+    <div class="cta-nos-wa-text">
+      <h2>¿Quieres conocernos mejor? 🏪</h2>
+      <p>Escríbenos por WhatsApp o visita nuestra tienda. Siempre te atenderemos con la mejor disposición.</p>
+    </div>
+    <a href="https://wa.me/51968495632?text=Hola!%20Quiero%20información" target="_blank" class="btn-cta-nos-wa">
+      <i class="fab fa-whatsapp"></i> Escribir por WhatsApp
+    </a>
+  </div>
+</div>
+
+
 <script>
-  // Inicializar AOS
-  AOS.init({ once: true, duration: 800, easing: 'ease-out-cubic' });
+/* ═══ Reveal on scroll ═══ */
+const nosIO = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); nosIO.unobserve(e.target); } });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal-up').forEach(el => nosIO.observe(el));
 
-  /* ─── Partículas Sutiles ─── */
-  (function createParticles() {
-    const container = document.getElementById('heroParticles');
-    if (!container) return;
-    const count = 15; // Reducidas para no saturar
-    for (let i = 0; i < count; i++) {
-      const p = document.createElement('div');
-      p.className = 'gold-particle';
-      p.style.left = Math.random() * 100 + '%';
-      p.style.animationDuration = (8 + Math.random() * 10) + 's';
-      p.style.animationDelay = (Math.random() * 8) + 's';
-      p.style.width = p.style.height = (1.5 + Math.random() * 2) + 'px';
-      container.appendChild(p);
-    }
-  })();
+/* ═══ Counter Animation ═══ */
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseInt(el.dataset.target);
+      const duration = 2000;
+      const start = performance.now();
+      const label = el.closest('.stat-item').querySelector('.stat-label').textContent;
+      const suffix = label.includes('%') ? '%' : '+';
 
-  /* ─── Counter Animation ─── */
-  const counterObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const target = parseInt(el.dataset.target);
-        const duration = 2000;
-        const start = performance.now();
-        const suffix = el.closest('.stat-item').querySelector('.stat-label').textContent.includes('%') ? '%' : '+';
-
-        function update(now) {
-          const elapsed = now - start;
-          const progress = Math.min(elapsed / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3); // Ease out cubic
-          const value = Math.round(eased * target);
-          el.textContent = value.toLocaleString() + suffix;
-          if (progress < 1) requestAnimationFrame(update);
-        }
-        requestAnimationFrame(update);
-        counterObserver.unobserve(el);
+      function update(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const value = Math.round(eased * target);
+        el.textContent = value.toLocaleString() + suffix;
+        if (progress < 1) requestAnimationFrame(update);
       }
-    });
-  }, { threshold: 0.5 });
+      requestAnimationFrame(update);
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
 
-  document.querySelectorAll('.stat-number[data-target]').forEach(el => counterObserver.observe(el));
+document.querySelectorAll('.stat-number[data-target]').forEach(el => counterObserver.observe(el));
 </script>
 
 {% endblock %}

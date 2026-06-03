@@ -278,3 +278,11 @@ def nosotros():
 @bp.route('/contacto')
 def contacto():
     return render_template('public/contacto.html')
+
+@bp.route('/privacidad')
+def privacidad():
+    return render_template('public/privacidad.html')
+
+@bp.route('/terminos')
+def terminos():
+    return render_template('public/terminos.html')
